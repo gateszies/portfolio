@@ -21,7 +21,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 
 Each case study is a Markdown file in `content/projects/`, named `<slug>.md` — the filename becomes the URL (`/projects/<slug>`). To add a new project, add a new file; nothing else needs to change. To edit one, just edit its text and save.
 
-```markdown
+````markdown
 ---
 title: Project Title
 description: One-sentence summary shown on the homepage card.
@@ -31,8 +31,21 @@ hero: /placeholders/project-hero.svg
 ---
 
 The write-up goes here as regular Markdown — paragraphs, **bold**,
-[links](https://example.com), lists, etc.
+[links](https://example.com), lists, `inline code`, and fenced code blocks
+all render with styling that matches the rest of the site:
+
+```ts
+function greet(name: string) {
+  return `hello, ${name}`;
+}
 ```
+
+Images work too — drop the file under `public/` (e.g.
+`public/projects/prodpi/screenshot.png`) and reference it by that
+absolute path:
+
+![a screenshot](/projects/prodpi/screenshot.png)
+````
 
 `src/lib/projects.ts` reads every file in that folder automatically (via `gray-matter` for the frontmatter and `marked` to render the body), so there's no separate list to keep in sync.
 

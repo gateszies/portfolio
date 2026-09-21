@@ -10,7 +10,18 @@ const backLinkClasses = "text-body-md fgColor-secondary transition hover:fgColor
 const titleClasses = "font-display text-display-sm fgColor-primary";
 const tagListClasses = "flex flex-wrap gap-2";
 const heroImageClasses = "w-full rounded-xl bgColor-secondary object-cover";
-const bodyClasses = "flex flex-col gap-4 text-body-lg fgColor-secondary [&_a]:fgColor-accent [&_a]:underline";
+const bodyClasses = [
+  "flex flex-col gap-4 text-body-lg fgColor-secondary",
+  // links
+  "[&_a]:fgColor-accent [&_a]:underline",
+  // inline `code`
+  "[&_:not(pre)>code]:bgColor-secondary [&_:not(pre)>code]:rounded [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5",
+  // ```fenced code blocks```
+  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bgColor-secondary [&_pre]:p-4",
+  "[&_code]:font-mono [&_code]:text-body-sm",
+  // ![inline images](in the write-up)
+  "[&_img]:w-full [&_img]:rounded-xl [&_img]:bgColor-secondary",
+].join(" ");
 
 export function generateStaticParams() {
   return getAllProjects().map((project) => ({ slug: project.slug }));
