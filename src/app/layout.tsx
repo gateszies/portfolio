@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://about-gateszies.vercel.app"),
   title: "Aly Gates",
   description:
     "Aly Gates — design-minded frontend engineer building scalable component systems and the interfaces that extend them.",
