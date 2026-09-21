@@ -6,7 +6,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 
 - **Next.js (App Router) + React + TypeScript** — Server Components for the static pages, a few client islands (`ThemeToggle`, `HoverReveal`) for interactivity.
 - **Tailwind CSS v4** — design tokens are plain CSS custom properties defined in `src/app/globals.css` via `@theme`, not a JS config file.
-- **No CMS** — content lives in typed data files under `src/data/`.
+- **No CMS** — project case studies are Markdown files (`content/projects/`); everything else (resume, social links) is typed data under `src/data/`.
 - **Vercel** — connect this repo in the Vercel dashboard for automatic deploys on push; the free Hobby plan covers a personal portfolio.
 
 ## Design system
@@ -15,13 +15,32 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 - **Fonts** (`src/app/fonts.ts`): `--font-display` / `--font-heading` / `--font-body`, currently wired to free Google Font stand-ins (Fraunces / Archivo / Inter) for GT Super / Acumin Pro Wide / Acumin Pro. Swap to `next/font/local` with the licensed font files once available — every component already reads the `--font-*` variables, so this is the only file to change.
 - **Type scale**: `text-display-sm/md/lg`, `text-heading-sm/md/lg`, `text-body-sm/md/lg` utilities, defined in the `@theme` block in `globals.css`.
 - **Theme switching**: an inline script in `src/app/layout.tsx` sets `data-theme` on `<html>` before hydration (localStorage choice, else system preference). `ThemeToggle` flips and persists it.
-- **Components** (`src/components/ui/`): `Button`, `ProjectCard`, `LineItem`, `HoverReveal` (the star-cursor hover interaction), `ThemeToggle`.
+- **Components** (`src/components/ui/`): `Button`, `ProjectCard`, `LineItem`, `Badge`, `Footer`, `LinkList`, `HoverReveal` (the star-cursor hover interaction), `ThemeToggle`.
+
+## Adding or editing a project
+
+Each case study is a Markdown file in `content/projects/`, named `<slug>.md` — the filename becomes the URL (`/projects/<slug>`). To add a new project, add a new file; nothing else needs to change. To edit one, just edit its text and save.
+
+```markdown
+---
+title: Project Title
+description: One-sentence summary shown on the homepage card.
+tags: [Typescript, JavaScript, CraftCMS]
+thumbnail: /placeholders/project-thumb.svg
+hero: /placeholders/project-hero.svg
+---
+
+The write-up goes here as regular Markdown — paragraphs, **bold**,
+[links](https://example.com), lists, etc.
+```
+
+`src/lib/projects.ts` reads every file in that folder automatically (via `gray-matter` for the frontmatter and `marked` to render the body), so there's no separate list to keep in sync.
 
 ## Placeholders to replace
 
 - `public/placeholders/*.svg` — swap for real photos (Aly, Ivy) and project images.
 - `public/star-cursor.svg` — the custom cursor graphic.
-- `src/data/projects.ts` / `src/data/experience.ts` — real copy and dates (Figma itself only had lorem ipsum / "2020 - Now" placeholders for these).
+- `content/projects/*.md` / `src/data/experience.ts` — real copy and dates (Figma itself only had lorem ipsum / "2020 - Now" placeholders for these).
 - Color palette and fonts, as above.
 
 ## Development

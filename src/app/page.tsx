@@ -5,8 +5,8 @@ import { LineItem } from "@/components/ui/LineItem";
 import { LinkList } from "@/components/ui/LinkList";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { experience } from "@/data/experience";
-import { projects } from "@/data/projects";
 import { socialLinks } from "@/data/social";
+import { getAllProjects } from "@/lib/projects";
 
 const pageClasses = "mx-auto flex w-full max-w-2xl flex-col gap-24 px-6 pb-24 pt-12";
 const sectionClasses = "flex flex-col gap-6";
@@ -21,6 +21,8 @@ const projectListClasses = "flex flex-col gap-4";
 const experienceListClasses = "flex flex-col";
 
 export default function Home() {
+  const projects = getAllProjects();
+
   return (
     <div className={pageClasses}>
       <section className={sectionClasses}>
