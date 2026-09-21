@@ -1,7 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/Badge";
+import { Footer } from "@/components/ui/Footer";
 import { projects } from "@/data/projects";
+
+const pageClasses = "mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12";
+const backLinkClasses = "text-body-md fgColor-secondary transition hover:fgColor-accent";
+const titleClasses = "font-display text-display-sm fgColor-primary";
+const tagListClasses = "flex flex-wrap gap-2";
+const heroImageClasses = "w-full rounded-xl bgColor-secondary object-cover";
+const bodyClasses = "flex flex-col gap-4 whitespace-pre-line text-body-lg fgColor-secondary";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -20,25 +29,17 @@ export default async function ProjectPage({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12">
-      <Link
-        href="/#work"
-        className="text-body-md fgColor-secondary transition hover:fgColor-accent"
-      >
+    <div className={pageClasses}>
+      <Link href="/#work" className={backLinkClasses}>
         &larr; back to projects
       </Link>
 
-      <h1 className="font-display text-display-sm fgColor-primary">
-        {project.title}
-      </h1>
+      <h1 className={titleClasses}>{project.title}</h1>
 
-      <ul className="flex flex-wrap gap-2">
+      <ul className={tagListClasses}>
         {project.tags.map((tag) => (
-          <li
-            key={tag}
-            className="rounded-full bgColor-secondary px-3 py-1 text-body-sm fgColor-secondary"
-          >
-            {tag}
+          <li key={tag}>
+            <Badge>{tag}</Badge>
           </li>
         ))}
       </ul>
@@ -48,19 +49,12 @@ export default async function ProjectPage({
         alt=""
         width={1082}
         height={572}
-        className="w-full rounded-xl bgColor-secondary object-cover"
+        className={heroImageClasses}
       />
 
-      <div className="flex flex-col gap-4 whitespace-pre-line text-body-lg fgColor-secondary">
-        {project.body}
-      </div>
+      <div className={bodyClasses}>{project.body}</div>
 
-      <footer className="text-body-sm fgColor-secondary">
-        Designed in Figma and coded with Next.js by me.{" "}
-        <Link href="/" className="underline decoration-dotted underline-offset-4">
-          back home
-        </Link>
-      </footer>
+      <Footer linkHref="/" linkLabel="back home" />
     </div>
   );
 }

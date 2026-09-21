@@ -1,3 +1,9 @@
+const rowClasses =
+  "flex items-center justify-between gap-4 border-b border-[var(--color-fg-secondary)]/15 py-4 text-body-md";
+const orgClasses = "fgColor-primary font-medium";
+const roleClasses = "flex-1 text-center fgColor-secondary";
+const datesClasses = "fgColor-secondary";
+
 type LineItemProps = {
   org: string;
   role: string;
@@ -6,10 +12,10 @@ type LineItemProps = {
 
 export function LineItem({ org, role, dates }: LineItemProps) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-[var(--color-fg-secondary)]/15 py-4 text-body-md">
-      <span className="fgColor-primary font-medium">{org}</span>
-      <span className="flex-1 text-center fgColor-secondary">{role}</span>
-      <span className="fgColor-secondary">{dates}</span>
+    <div className={rowClasses}>
+      <span className={orgClasses}>{org}</span>
+      <span className={roleClasses}>{role}</span>
+      <span className={datesClasses}>{dates}</span>
     </div>
   );
 }

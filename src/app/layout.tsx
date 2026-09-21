@@ -23,6 +23,12 @@ const navLinks = [
   { href: "/#about", label: "about" },
 ];
 
+const headerClasses = "flex items-center justify-between px-10 py-6";
+const logoClasses = "font-heading text-body-md fgColor-primary";
+const navClasses = "flex items-center gap-1 text-body-sm";
+const navLinkClasses =
+  "rounded-full px-3 py-1.5 fgColor-secondary transition hover:bgColor-secondary hover:fgColor-primary";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -36,20 +42,13 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="flex min-h-full flex-col">
-        <header className="flex items-center justify-between px-10 py-6">
-          <Link
-            href="/"
-            className="font-heading text-body-md fgColor-primary"
-          >
+        <header className={headerClasses}>
+          <Link href="/" className={logoClasses}>
             Aly Gates
           </Link>
-          <nav className="flex items-center gap-1 text-body-sm">
+          <nav className={navClasses}>
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-full px-3 py-1.5 fgColor-secondary transition hover:bgColor-secondary hover:fgColor-primary"
-              >
+              <Link key={link.href} href={link.href} className={navLinkClasses}>
                 {link.label}
               </Link>
             ))}

@@ -1,5 +1,8 @@
 "use client";
 
+const toggleClasses =
+  "rounded-full px-3 py-1.5 text-body-sm fgColor-primary transition hover:bgColor-secondary";
+
 export function ThemeToggle() {
   function toggle() {
     const next =
@@ -13,7 +16,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle color theme"
-      className="rounded-full px-3 py-1.5 text-body-sm fgColor-primary transition hover:bgColor-secondary"
+      className={toggleClasses}
     >
       theme
     </button>

@@ -1,21 +1,36 @@
 import { Button } from "@/components/ui/Button";
+import { Footer } from "@/components/ui/Footer";
 import { HoverReveal } from "@/components/ui/HoverReveal";
 import { LineItem } from "@/components/ui/LineItem";
+import { LinkList } from "@/components/ui/LinkList";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { experience } from "@/data/experience";
 import { projects } from "@/data/projects";
+import { socialLinks } from "@/data/social";
+
+const pageClasses = "mx-auto flex w-full max-w-2xl flex-col gap-24 px-6 pb-24 pt-12";
+const sectionClasses = "flex flex-col gap-6";
+const sectionHeadingClasses = "font-heading text-heading-sm fgColor-primary";
+const eyebrowClasses = "text-body-md fgColor-secondary";
+const nameClasses =
+  "flex flex-wrap items-center gap-3 font-display text-display-sm fgColor-primary sm:text-display-md";
+const introClasses = "text-body-lg fgColor-secondary";
+const bioClasses = "text-body-lg fgColor-secondary";
+const ivyLinkClasses = "fgColor-accent underline decoration-dotted underline-offset-4";
+const projectListClasses = "flex flex-col gap-4";
+const experienceListClasses = "flex flex-col";
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-24 px-6 pb-24 pt-12">
-      <section className="flex flex-col gap-6">
-        <p className="text-body-md fgColor-secondary">hi there, it&apos;s me!</p>
-        <h1 className="flex flex-wrap items-center gap-3 font-display text-display-sm fgColor-primary sm:text-display-md">
+    <div className={pageClasses}>
+      <section className={sectionClasses}>
+        <p className={eyebrowClasses}>hi there, it&apos;s me!</p>
+        <h1 className={nameClasses}>
           <HoverReveal image="/placeholders/aly.svg" alt="A photo of Aly">
             Aly Gates
           </HoverReveal>
         </h1>
-        <p className="text-body-lg fgColor-secondary">
+        <p className={introClasses}>
           I&apos;m a design-minded frontend engineer interested in scalable
           component systems and the interfaces that extend them. I&apos;ve
           spent the last 10 years on product teams designing and building
@@ -28,11 +43,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="work" className="flex flex-col gap-6">
-        <h2 className="font-heading text-heading-sm fgColor-primary">
-          projects I&apos;m proud of
-        </h2>
-        <div className="flex flex-col gap-4">
+      <section id="work" className={sectionClasses}>
+        <h2 className={sectionHeadingClasses}>projects I&apos;m proud of</h2>
+        <div className={projectListClasses}>
           {projects.map((project) => (
             <ProjectCard
               key={project.slug}
@@ -46,11 +59,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="experience" className="flex flex-col gap-6">
-        <h2 className="font-heading text-heading-sm fgColor-primary">
-          resume
-        </h2>
-        <div className="flex flex-col">
+      <section id="experience" className={sectionClasses}>
+        <h2 className={sectionHeadingClasses}>resume</h2>
+        <div className={experienceListClasses}>
           {experience.map((item, i) => (
             <LineItem
               key={`${item.org}-${i}`}
@@ -62,11 +73,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="flex flex-col gap-6">
-        <h2 className="font-heading text-heading-sm fgColor-primary">
-          a little about me
-        </h2>
-        <p className="text-body-lg fgColor-secondary">
+      <section id="about" className={sectionClasses}>
+        <h2 className={sectionHeadingClasses}>a little about me</h2>
+        <p className={bioClasses}>
           I have a formal background in design and found engineering by way
           of deep curiosity for how things work. I&apos;m currently
           tinkering away as a Design Engineer at White House Custom Colour.
@@ -76,34 +85,16 @@ export default function Home() {
           <HoverReveal
             image="/placeholders/ivy.svg"
             alt="A photo of Ivy the greyhound"
-            className="fgColor-accent underline decoration-dotted underline-offset-4"
+            className={ivyLinkClasses}
           >
             greyhound Ivy
           </HoverReveal>
           .
         </p>
-        <ul className="flex flex-wrap gap-4 text-body-md fgColor-secondary">
-          {["github", "email", "contact", "ravelry", "goodreads"].map(
-            (label) => (
-              <li key={label}>
-                <a
-                  href="#"
-                  className="underline decoration-dotted underline-offset-4 transition hover:fgColor-accent"
-                >
-                  {label}
-                </a>
-              </li>
-            ),
-          )}
-        </ul>
+        <LinkList links={socialLinks} />
       </section>
 
-      <footer className="text-body-sm fgColor-secondary">
-        Designed in Figma and coded with Next.js by me.{" "}
-        <a href="#" className="underline decoration-dotted underline-offset-4">
-          more things about how i built my site here
-        </a>
-      </footer>
+      <Footer linkHref="#" linkLabel="more things about how i built my site here" />
     </div>
   );
 }
