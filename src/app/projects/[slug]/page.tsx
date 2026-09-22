@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/Badge";
 import { Footer } from "@/components/Footer";
 import { getAllProjects } from "@/lib/projects";
 
-const pageClasses = "mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12";
-const backLinkClasses = "text-body-md fgColor-secondary transition hover:fgColor-accent";
+const pageClasses =
+  "mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12";
+const backLinkClasses =
+  "text-body-md fgColor-secondary transition hover:fgColor-accent";
 const titleClasses = "font-display text-display-sm fgColor-primary";
 const tagListClasses = "flex flex-wrap gap-2";
 const heroImageClasses = "w-full rounded-xl bgColor-secondary object-cover";

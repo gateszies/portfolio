@@ -34,14 +34,22 @@ export default function RootLayout({
       className={`${fontDisplay.variable} ${fontHeading.variable} ${fontBody.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+        >
           <header className={headerClasses}>
             <Link href="/" className={logoClasses}>
               Aly Gates
             </Link>
             <nav className={navClasses}>
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} className={navLinkClasses}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={navLinkClasses}
+                >
                   {link.label}
                 </Link>
               ))}

@@ -82,5 +82,7 @@ body {
 }
 
 .star-cursor {
-  cursor: url("/star-cursor.svg") 12 12, auto;
+  cursor:
+    url("/star-cursor.svg") 12 12,
+    auto;
 }

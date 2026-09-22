@@ -6,6 +6,7 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 # Design system
 
 ## Design tokens (Tailwind v4)
+
 - Tailwind v4 is configured in CSS, not tailwind.config.js. All tokens live in the global CSS file.
 - Two different registration mechanisms are used, deliberately, for two different kinds of tokens:
   - Colors: raw CSS variables (`--color-bg-primary`, `--color-bg-secondary`, `--color-fg-primary`, `--color-fg-secondary`, `--color-accent`) defined once in `:root` / `:root[data-theme="dark"]`, exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming.
@@ -13,15 +14,17 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 - Use `bgColor-*`/`fgColor-*` classes for color, never `bg-primary`/`text-primary` or a hex value.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against the global CSS file rather than assuming.
-- Components never use raw palette classes (bg-blue-600) or hex values. No arbitrary values (p-[13px], text-[#333]) when a token or scale value exists — the one standing exception is compositing an inverted pair straight from the CSS variables (e.g. `bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]` for a solid inverted button), since there's no bgColor-*/fgColor-* utility for "the other token's color used as this property." Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
-- For translucent colors, use the color opacity modifier (bg-accent/50) instead of opacity-*, which creates a stacking context. Use opacity-* only when deliberately fading an element and its children together.
+- Components never use raw palette classes (bg-blue-600) or hex values. No arbitrary values (p-[13px], text-[#333]) when a token or scale value exists — the one standing exception is compositing an inverted pair straight from the CSS variables (e.g. `bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]` for a solid inverted button), since there's no bgColor-_/fgColor-_ utility for "the other token's color used as this property." Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
+- For translucent colors, use the color opacity modifier (bg-accent/50) instead of opacity-_, which creates a stacking context. Use opacity-_ only when deliberately fading an element and its children together.
 - Dark mode is set with a data-theme attribute on <html>, managed by next-themes (which uses data-theme by default) with suppressHydrationWarning on <html>. This project does not use Tailwind's `dark:` variant at all, and `@custom-variant dark` is deliberately not registered — every light/dark difference is a color, and color is already fully handled by the token swap above, so a `dark:` class would compile to nothing being used. Do not add `dark:` utilities or register the variant; if a real need for one arises (a structural difference that isn't a color swap — inverting a logo, dropping a shadow, a theme-only border), raise it first rather than adding it unilaterally.
 
 ## Typography
+
 - Define the type scale as named tokens in @theme using the --text-* namespace with paired line-height (and weight or letter-spacing where the style needs it), so one class like text-heading-lg applies the whole style.
-- Components use those scale classes instead of combining text-*, leading-*, and font-* by hand. Adding a weight (e.g. font-semibold) alongside a body size is fine.
+- Components use those scale classes instead of combining text-_, leading-_, and font-* by hand. Adding a weight (e.g. font-semibold) alongside a body size is fine.
 
 ## Styling and variants
+
 - Use `cva` (class-variance-authority) to define variants, combined with a `cn` helper (clsx + tailwind-merge). Think of it as BEM-style modifiers (.Button / .Button--primary), but typed and expressed as Tailwind utilities.
 - Only define the variants and sizes the site actually uses (e.g. primary/outline, md/lg). No unused variants copied from shadcn.
 - Set defaults only in `defaultVariants`. Don't repeat them as default values in the prop destructuring.
@@ -35,6 +38,7 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 - Animate only transform and opacity where possible.
 
 ## No unnecessary CSS
+
 - Don't add utilities Preflight already covers: box-border, m-0, p-0, and list-none on ul/ol/menu.
 - No justify-* on a shrink-wrapped flex container; there is no free space to distribute.
 - No min-h-0 on a flex item that already can't shrink.
@@ -43,11 +47,13 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 - Check the box math. For example, size-6 border p-1 leaves 14px, which can't hold a size-4 (16px) icon. Centering usually replaces the padding.
 
 ## Primitives vs feature components
+
 - Primitives (Button, Card, Badge) are generic, extend native element props, and use cva.
 - Feature components (ProjectCard, ContactForm) take narrow, domain-specific props (e.g. `project: Project`), optionally `className` for layout, and compose the primitives internally.
 - Apply the pattern consistently across a few primitives so it reads as a system, not a one-off.
 
 ## Accessibility
+
 - Semantic HTML first: <button> for actions, <a>/<Link> for navigation, landmarks (header, nav, main, footer), one h1 per page, headings in order.
 - Every interactive element has a visible focus style using the ring token via focus-visible:. Never remove outlines without a replacement.
 - Style state from semantic attributes with Tailwind's aria-* modifiers (aria-pressed:, aria-[current=page]:).
@@ -84,7 +90,8 @@ export const buttonVariants = cva(
   },
 );
 
-type ButtonProps = ComponentProps<"button"> & VariantProps<typeof buttonVariants>;
+type ButtonProps = ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants>;
 
 export function Button({ variant, size, className, ...props }: ButtonProps) {
   return (

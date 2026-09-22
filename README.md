@@ -14,8 +14,10 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 - **Color tokens** (`src/app/globals.css`): `--color-bg-primary/secondary`, `--color-fg-primary/secondary`, `--color-accent`, each with a light value in `:root` and a dark override under `:root[data-theme="dark"]`. Exposed as utility classes `bgColor-primary`, `fgColor-primary`, etc. **The hex values are placeholders — swap them for the real brand palette in one place.**
 - **Fonts** (`src/app/fonts.ts`): `--font-display` / `--font-heading` / `--font-body`, currently wired to free Google Font stand-ins (Fraunces / Archivo / Inter) for GT Super / Acumin Pro Wide / Acumin Pro. Swap to `next/font/local` with the licensed font files once available — every component already reads the `--font-*` variables, so this is the only file to change.
 - **Type scale**: `text-display-sm/md/lg`, `text-heading-sm/md/lg`, `text-body-sm/md/lg` utilities, defined in the `@theme` block in `globals.css`.
-- **Theme switching**: an inline script in `src/app/layout.tsx` sets `data-theme` on `<html>` before hydration (localStorage choice, else system preference). `ThemeToggle` flips and persists it.
-- **Components** (`src/components/ui/`): `Button`, `ProjectCard`, `LineItem`, `Badge`, `Footer`, `LinkList`, `HoverReveal` (the star-cursor hover interaction), `ThemeToggle`.
+- **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="data-theme"`, matching the CSS above) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
+- **Primitives** (`src/components/ui/`, generic, `cva`-based): `Button`, `Badge`.
+- **Feature components** (`src/components/`, domain-specific): `ProjectCard`, `LineItem`, `Footer`, `LinkList`, `HoverReveal` (the star-cursor hover interaction), `ThemeToggle`.
+- Conventions for all of the above are written down in `AGENTS.md` and `.agents/skills/design-system/SKILL.md`.
 
 ## Adding or editing a project
 
@@ -59,7 +61,14 @@ absolute path:
 ## Development
 
 ```bash
-npm run dev     # local dev server
-npm run lint    # eslint
-npm run build   # production build (what Vercel runs)
+npm run dev            # local dev server
+npm run lint            # eslint
+npm run lint:fix         # eslint --fix
+npm run format           # prettier --write .
+npm run format:check     # prettier --check .
+npm run typecheck        # tsc --noEmit
+npm test                 # vitest run
+npm run build            # production build (what Vercel runs)
 ```
+
+Linting and formatting run automatically on every commit via a Husky pre-commit hook (`lint-staged` runs `eslint --fix` + `prettier --write` on staged files) — no need to run them by hand first. `npm test` and `npm run typecheck` are separate, on-demand commands; they don't block commits, so commits stay fast.
