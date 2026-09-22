@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, type CSSProperties, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 const IMAGE_SIZE = 160;
 const CURSOR_OFFSET = 20;
@@ -21,18 +22,17 @@ function positionStyle({ x, y }: Position): CSSProperties {
   return { left: x + CURSOR_OFFSET, top: y + CURSOR_OFFSET };
 }
 
-/** Wraps a trigger element with a star cursor and a photo that follows the pointer while hovering. */
 export function HoverReveal({
   image,
   alt,
   children,
-  className = "",
+  className,
 }: HoverRevealProps) {
   const [pos, setPos] = useState<Position | null>(null);
 
   return (
     <span
-      className={`star-cursor ${className}`}
+      className={cn("star-cursor", className)}
       onPointerMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
       onPointerLeave={() => setPos(null)}
     >

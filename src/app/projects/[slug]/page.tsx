@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
-import { Footer } from "@/components/ui/Footer";
+import { Footer } from "@/components/Footer";
 import { getAllProjects } from "@/lib/projects";
 
 const pageClasses = "mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12";

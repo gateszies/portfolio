@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "./Badge";
+import { Badge } from "@/components/ui/Badge";
 
 const cardClasses =
   "group -m-2 flex gap-6 rounded-xl p-2 transition hover:bgColor-secondary";

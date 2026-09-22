@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
 const badgeClasses =
   "rounded-full bgColor-secondary px-3 py-1 text-body-sm fgColor-secondary";
 
-export function Badge({ children }: { children: ReactNode }) {
-  return <span className={badgeClasses}>{children}</span>;
+export function Badge({ className, ...props }: ComponentProps<"span">) {
+  return <span className={cn(badgeClasses, className)} {...props} />;
 }

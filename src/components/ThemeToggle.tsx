@@ -1,14 +1,15 @@
 "use client";
 
+import { useTheme } from "next-themes";
+
 const toggleClasses =
   "rounded-full px-3 py-1.5 text-body-sm fgColor-primary transition hover:bgColor-secondary";
 
 export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+
   function toggle() {
-    const next =
-      document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("theme", next);
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }
 
   return (

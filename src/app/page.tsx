@@ -1,9 +1,10 @@
-import { Button } from "@/components/ui/Button";
-import { Footer } from "@/components/ui/Footer";
-import { HoverReveal } from "@/components/ui/HoverReveal";
-import { LineItem } from "@/components/ui/LineItem";
-import { LinkList } from "@/components/ui/LinkList";
-import { ProjectCard } from "@/components/ui/ProjectCard";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/Button";
+import { Footer } from "@/components/Footer";
+import { HoverReveal } from "@/components/HoverReveal";
+import { LineItem } from "@/components/LineItem";
+import { LinkList } from "@/components/LinkList";
+import { ProjectCard } from "@/components/ProjectCard";
 import { experience } from "@/data/experience";
 import { socialLinks } from "@/data/social";
 import { getAllProjects } from "@/lib/projects";
@@ -39,9 +40,9 @@ export default function Home() {
           marketing sites, web apps, and goofy little side projects.
         </p>
         <div>
-          <Button href="/resume.pdf" variant="primary">
+          <Link href="/resume.pdf" className={buttonVariants({ variant: "primary" })}>
             view my resume
-          </Button>
+          </Link>
         </div>
       </section>
 
