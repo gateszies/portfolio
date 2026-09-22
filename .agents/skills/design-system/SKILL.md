@@ -7,13 +7,15 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Design tokens (Tailwind v4)
 - Tailwind v4 is configured in CSS, not tailwind.config.js. All tokens live in the global CSS file.
-- Define raw token values as CSS variables in :root (light) and :root[data-theme="dark"] (dark), then map them to utilities with @theme inline (e.g. --color-primary: var(--primary)).
-- Use semantic token names in foreground/background pairs: background/foreground, primary/primary-foreground, muted/muted-foreground, card/card-foreground, plus border and ring.
+- Two different registration mechanisms are used, deliberately, for two different kinds of tokens:
+  - Colors: raw CSS variables (`--color-bg-primary`, `--color-bg-secondary`, `--color-fg-primary`, `--color-fg-secondary`, `--color-accent`) defined once in `:root` / `:root[data-theme="dark"]`, exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming.
+  - Fonts and the type scale: registered under `@theme inline` / `@theme` (e.g. `--font-display: var(--font-display)`, `--text-heading-lg: 1.75rem`), producing Tailwind's native `font-display`, `text-heading-lg` utilities.
+- Use `bgColor-*`/`fgColor-*` classes for color, never `bg-primary`/`text-primary` or a hex value.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against the global CSS file rather than assuming.
-- Components never use raw palette classes (bg-blue-600) or hex values. No arbitrary values (p-[13px], text-[#333]) when a token or scale value exists. Stick to the spacing and type scales. Opacity values and structural zeros are not violations.
-- For translucent colors, use the color opacity modifier (bg-primary/50) instead of opacity-*, which creates a stacking context. Use opacity-* only when deliberately fading an element and its children together.
-- Dark mode is set with a data-theme attribute on <html>, managed by next-themes (which uses data-theme by default) with suppressHydrationWarning on <html>. Register the variant with @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)). Because tokens swap values, components should almost never need dark: classes; needing them signals a missing token.
+- Components never use raw palette classes (bg-blue-600) or hex values. No arbitrary values (p-[13px], text-[#333]) when a token or scale value exists — the one standing exception is compositing an inverted pair straight from the CSS variables (e.g. `bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]` for a solid inverted button), since there's no bgColor-*/fgColor-* utility for "the other token's color used as this property." Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
+- For translucent colors, use the color opacity modifier (bg-accent/50) instead of opacity-*, which creates a stacking context. Use opacity-* only when deliberately fading an element and its children together.
+- Dark mode is set with a data-theme attribute on <html>, managed by next-themes (which uses data-theme by default) with suppressHydrationWarning on <html>. This project does not use Tailwind's `dark:` variant at all, and `@custom-variant dark` is deliberately not registered — every light/dark difference is a color, and color is already fully handled by the token swap above, so a `dark:` class would compile to nothing being used. Do not add `dark:` utilities or register the variant; if a real need for one arises (a structural difference that isn't a color swap — inverting a logo, dropping a shadow, a theme-only border), raise it first rather than adding it unilaterally.
 
 ## Typography
 - Define the type scale as named tokens in @theme using the --text-* namespace with paired line-height (and weight or letter-spacing where the style needs it), so one class like text-heading-lg applies the whole style.
@@ -57,25 +59,42 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Example of the expected shape
 
+This is `src/components/ui/Button.tsx` verbatim — the reference for how every primitive in this repo should be shaped:
+
 ```tsx
-type ButtonProps = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>;
+import { cva, type VariantProps } from "class-variance-authority";
+import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full font-heading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        outline: "border border-border hover:bg-muted",
+        primary: "bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]",
+        secondary: "bgColor-secondary fgColor-primary",
+        accent: "bgColor-accent text-[var(--color-bg-primary)]",
       },
-      size: { md: "h-10 px-5", lg: "h-12 px-7 text-lg" },
+      size: {
+        sm: "text-body-sm px-4 py-1.5",
+        md: "text-body-md px-5 py-2.5",
+      },
     },
     defaultVariants: { variant: "primary", size: "md" },
   },
 );
 
+type ButtonProps = ComponentProps<"button"> & VariantProps<typeof buttonVariants>;
+
 export function Button({ variant, size, className, ...props }: ButtonProps) {
-  return <button className={cn(buttonVariants({ variant, size }), className)} {...props} />;
+  return (
+    <button
+      type="button"
+      className={cn(buttonVariants({ variant, size }), className)}
+      {...props}
+    />
+  );
 }
 ```
+
+Note this primitive doesn't yet have an explicit `focus-visible:` ring style (it currently relies on the browser's native focus outline, which the Accessibility section below says to never remove without a replacement — that's satisfied, just not customized). Add one with a real ring token, not an arbitrary value, if that's ever wanted.
