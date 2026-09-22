@@ -5,6 +5,7 @@
 - Prefer the simplest solution that fully solves the problem. Optimize for readability and maintainability over cleverness.
 - Use what already exists before creating something new: an existing component, token, variant, utility, or platform feature (HTML, CSS, Tailwind, Next.js) comes before any new abstraction.
 - Don't apply bandaid fixes that mask a real need. If something can't be done cleanly with what exists (a missing token, a variant that doesn't fit, a primitive that needs a new capability, an arbitrary value, a dark: override), stop and raise it with the reason instead of working around it, so we can decide on a scalable solution together.
+- Never assume — check. Before stating how something behaves, what a package/tool/API does, what a file contains, or whether two things are compatible, verify it directly (read the file, run the command, check installed versions, look it up) instead of answering from memory or pattern-matching. This is the default, not a fallback for after you're pressed on it. If something genuinely can't be verified in the moment, say so explicitly rather than presenting a guess as fact.
 
 ## UI work
 
