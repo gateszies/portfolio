@@ -3,13 +3,13 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full font-heading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full border font-subheading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]",
-        secondary: "bgColor-secondary fgColor-primary",
-        accent: "bgColor-accent text-[var(--color-bg-primary)]",
+        primary:
+          "bgColor-brand borderColor-brand text-[var(--color-bg-primary)]",
+        secondary: "borderColor-brand fgColor-brand",
       },
       size: {
         sm: "text-body-sm px-4 py-1.5",

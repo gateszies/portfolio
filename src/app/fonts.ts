@@ -1,8 +1,9 @@
-import { Archivo, Fraunces, Inter } from "next/font/google";
+import { Fraunces, Google_Sans_Code, Nunito } from "next/font/google";
 
-// Placeholders for the licensed brand fonts (GT Super / Acumin Pro Wide / Acumin Pro).
-// Swap the imports above for `next/font/local` once the real font files are available —
-// every consumer references the `--font-*` variables below, so that's the only file to touch.
+// Display is a placeholder for display-font Regular — a licensed
+// font, not on Google Fonts. Swap this import for `next/font/local` once
+// the real font files arrive; every consumer reads `--font-display`, so
+// this is the only file to touch.
 
 export const fontDisplay = Fraunces({
   variable: "--font-display",
@@ -10,12 +11,13 @@ export const fontDisplay = Fraunces({
   style: ["normal", "italic"],
 });
 
-export const fontHeading = Archivo({
-  variable: "--font-heading",
+export const fontSubheading = Google_Sans_Code({
+  variable: "--font-subheading",
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
-export const fontBody = Inter({
+export const fontBody = Nunito({
   variable: "--font-body",
   subsets: ["latin"],
 });

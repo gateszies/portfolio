@@ -3,27 +3,30 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Footer } from "@/components/Footer";
+import { LinkList } from "@/components/LinkList";
+import { socialLinks } from "@/data/social";
 import { getAllProjects } from "@/lib/projects";
 
 const pageClasses =
-  "mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pb-24 pt-12";
+  "mx-auto flex w-full max-w-2xl flex-col gap-6 px-6 pb-12 pt-12";
 const backLinkClasses =
-  "text-body-md fgColor-secondary transition hover:fgColor-accent";
-const titleClasses = "font-display text-display-sm fgColor-primary";
-const tagListClasses = "flex flex-wrap gap-2";
-const heroImageClasses = "w-full rounded-xl bgColor-secondary object-cover";
+  "font-subheading text-subheading-sm fgColor-primary underline decoration-dotted decoration-transparent underline-offset-4 transition hover:decoration-current";
+const titleClasses = "font-display text-display-md fgColor-primary";
+const tagListClasses = "flex flex-wrap gap-2.5";
+const heroImageClasses = "w-full rounded-lg border borderColor-strong";
 const bodyClasses = [
-  "flex flex-col gap-4 text-body-lg fgColor-secondary",
+  "flex flex-col gap-4 pt-4 text-body-lg fgColor-primary",
   // links
-  "[&_a]:fgColor-accent [&_a]:underline",
+  "[&_a]:fgColor-poppy [&_a]:font-bold [&_a]:underline",
   // inline `code`
-  "[&_:not(pre)>code]:bgColor-secondary [&_:not(pre)>code]:rounded [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5",
+  "[&_:not(pre)>code]:rounded [&_:not(pre)>code]:border [&_:not(pre)>code]:borderColor-subtle [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5",
   // ```fenced code blocks```
-  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bgColor-secondary [&_pre]:p-4",
+  "[&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:borderColor-subtle [&_pre]:p-4",
   "[&_code]:font-mono [&_code]:text-body-sm",
   // ![inline images](in the write-up)
-  "[&_img]:w-full [&_img]:rounded-xl [&_img]:bgColor-secondary",
+  "[&_img]:w-full [&_img]:rounded-lg [&_img]:border [&_img]:borderColor-strong",
 ].join(" ");
+const footerRowClasses = "flex items-center justify-between gap-6 pt-14";
 
 export function generateStaticParams() {
   return getAllProjects().map((project) => ({ slug: project.slug }));
@@ -70,7 +73,10 @@ export default async function ProjectPage({
         dangerouslySetInnerHTML={{ __html: project.bodyHtml }}
       />
 
-      <Footer linkHref="/" linkLabel="back home" />
+      <footer className={footerRowClasses}>
+        <Footer />
+        <LinkList links={socialLinks} />
+      </footer>
     </div>
   );
 }

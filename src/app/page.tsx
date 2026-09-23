@@ -10,18 +10,19 @@ import { socialLinks } from "@/data/social";
 import { getAllProjects } from "@/lib/projects";
 
 const pageClasses =
-  "mx-auto flex w-full max-w-2xl flex-col gap-24 px-6 pb-24 pt-12";
+  "mx-auto flex w-full max-w-2xl flex-col gap-20 px-6 pb-12 pt-12";
 const sectionClasses = "flex flex-col gap-6";
-const sectionHeadingClasses = "font-heading text-heading-sm fgColor-primary";
-const eyebrowClasses = "text-body-md fgColor-secondary";
+const sectionHeadingClasses =
+  "font-subheading text-subheading-md fgColor-primary";
+const eyebrowClasses = "font-subheading text-subheading-lg fgColor-primary";
 const nameClasses =
-  "flex flex-wrap items-center gap-3 font-display text-display-sm fgColor-primary sm:text-display-md";
-const introClasses = "text-body-lg fgColor-secondary";
-const bioClasses = "text-body-lg fgColor-secondary";
-const ivyLinkClasses =
-  "fgColor-accent underline decoration-dotted underline-offset-4";
-const projectListClasses = "flex flex-col gap-4";
+  "font-display text-display-sm fgColor-primary sm:text-display-md lg:text-display-lg";
+const introClasses = "font-body text-body-lg fgColor-primary";
+const bioClasses = "font-body text-body-lg fgColor-primary";
+const accentLinkClasses = "font-bold underline";
+const projectListClasses = "flex flex-col gap-8";
 const experienceListClasses = "flex flex-col";
+const footerRowClasses = "flex items-center justify-between gap-6";
 
 export default function Home() {
   const projects = getAllProjects();
@@ -29,7 +30,7 @@ export default function Home() {
   return (
     <div className={pageClasses}>
       <section className={sectionClasses}>
-        <p className={eyebrowClasses}>hi there, it&apos;s me!</p>
+        <p className={eyebrowClasses}>hi there, it&apos;s me...</p>
         <h1 className={nameClasses}>
           <HoverReveal image="/placeholders/aly.svg" alt="A photo of Aly">
             Aly Gates
@@ -38,8 +39,17 @@ export default function Home() {
         <p className={introClasses}>
           I&apos;m a design-minded frontend engineer interested in scalable
           component systems and the interfaces that extend them. I&apos;ve spent
-          the last 10 years on product teams designing and building marketing
-          sites, web apps, and goofy little side projects.
+          the last 10 years on product teams designing and building{" "}
+          <span className={`fgColor-poppy ${accentLinkClasses}`}>
+            marketing sites
+          </span>
+          ,{" "}
+          <span className={`fgColor-ochre ${accentLinkClasses}`}>web apps</span>
+          , and{" "}
+          <span className={`fgColor-sky ${accentLinkClasses}`}>
+            goofy little side projects
+          </span>
+          .
         </p>
         <div>
           <Link
@@ -68,7 +78,7 @@ export default function Home() {
       </section>
 
       <section id="experience" className={sectionClasses}>
-        <h2 className={sectionHeadingClasses}>resume</h2>
+        <h2 className={sectionHeadingClasses}>places I&apos;ve worked</h2>
         <div className={experienceListClasses}>
           {experience.map((item, i) => (
             <LineItem
@@ -84,27 +94,41 @@ export default function Home() {
       <section id="about" className={sectionClasses}>
         <h2 className={sectionHeadingClasses}>a little about me</h2>
         <p className={bioClasses}>
-          I have a formal background in design and found engineering by way of
-          deep curiosity for how things work. I&apos;m currently tinkering away
-          as a Design Engineer at White House Custom Colour. In my free time, I
-          am an avid reader and lifelong crafter forever in search of my next
-          hobby. I live in St Paul, MN, with my husband and our{" "}
+          I have a{" "}
+          <span className={`fgColor-poppy ${accentLinkClasses}`}>
+            formal background in design
+          </span>{" "}
+          and found engineering by way of deep curiosity for how things work.
+          I&apos;m currently tinkering away as a Design Engineer at White House
+          Custom Colour.
+        </p>
+        <p className={bioClasses}>
+          In my free time, I am an{" "}
+          <span className={`fgColor-sky ${accentLinkClasses}`}>
+            avid reader
+          </span>{" "}
+          and{" "}
+          <span className={`fgColor-ochre ${accentLinkClasses}`}>
+            lifelong crafter
+          </span>{" "}
+          forever in search of my next hobby. I live in St Paul, MN, with my
+          husband and our{" "}
           <HoverReveal
             image="/placeholders/ivy.svg"
             alt="A photo of Ivy the greyhound"
-            className={ivyLinkClasses}
           >
-            greyhound Ivy
+            <span className={`fgColor-poppy ${accentLinkClasses}`}>
+              greyhound Ivy
+            </span>
           </HoverReveal>
           .
         </p>
-        <LinkList links={socialLinks} />
       </section>
 
-      <Footer
-        linkHref="#"
-        linkLabel="more things about how i built my site here"
-      />
+      <footer className={footerRowClasses}>
+        <Footer />
+        <LinkList links={socialLinks} />
+      </footer>
     </div>
   );
 }

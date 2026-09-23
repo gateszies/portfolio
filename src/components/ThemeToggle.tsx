@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 
 const toggleClasses =
-  "rounded-full px-3 py-1.5 text-body-sm fgColor-primary transition hover:bgColor-secondary";
+  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition hover:decoration-current";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();

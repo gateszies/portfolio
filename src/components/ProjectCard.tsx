@@ -3,14 +3,19 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 
 const cardClasses =
-  "group -m-2 flex gap-6 rounded-xl p-2 transition hover:bgColor-secondary";
+  "group flex w-full gap-6 rounded-lg border borderColor-strong p-8 transition hover:borderColor-subtle";
 const thumbnailClasses =
-  "h-[152px] w-[152px] shrink-0 rounded-lg bgColor-secondary object-cover";
-const bodyClasses = "flex flex-col gap-2 py-1";
-const titleClasses =
-  "text-heading-sm font-heading fgColor-primary group-hover:fgColor-accent";
-const descriptionClasses = "text-body-md fgColor-secondary";
-const tagListClasses = "mt-2 flex flex-wrap gap-2";
+  "size-15 shrink-0 rounded-lg border borderColor-strong";
+const bodyClasses = "flex flex-1 flex-col justify-center gap-2.5";
+const titleClasses = "font-body text-body-xl fgColor-primary";
+const descriptionClasses = "text-body-sm fgColor-primary";
+const tagListClasses = "flex flex-wrap gap-2.5";
+
+const hoverAccentClasses = [
+  "group-hover:borderColor-poppy group-hover:fgColor-poppy",
+  "group-hover:borderColor-sky group-hover:fgColor-sky",
+  "group-hover:borderColor-ochre group-hover:fgColor-ochre",
+];
 
 type ProjectCardProps = {
   slug: string;
@@ -32,17 +37,21 @@ export function ProjectCard({
       <Image
         src={image}
         alt=""
-        width={152}
-        height={152}
+        width={60}
+        height={60}
         className={thumbnailClasses}
       />
       <div className={bodyClasses}>
         <h3 className={titleClasses}>{title}</h3>
         <p className={descriptionClasses}>{description}</p>
         <ul className={tagListClasses}>
-          {tags.map((tag) => (
+          {tags.map((tag, i) => (
             <li key={tag}>
-              <Badge>{tag}</Badge>
+              <Badge
+                className={hoverAccentClasses[i % hoverAccentClasses.length]}
+              >
+                {tag}
+              </Badge>
             </li>
           ))}
         </ul>

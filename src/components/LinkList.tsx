@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-const listClasses = "flex flex-wrap gap-4 text-body-md fgColor-secondary";
+const listClasses =
+  "flex flex-wrap gap-8 font-subheading text-subheading-sm fgColor-primary";
 const linkClasses =
-  "underline decoration-dotted underline-offset-4 transition hover:fgColor-accent";
+  "underline decoration-dotted decoration-transparent underline-offset-4 transition hover:decoration-current";
 
 type LinkListProps = {
   links: { label: string; href: string }[];

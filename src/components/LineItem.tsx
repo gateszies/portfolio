@@ -1,8 +1,8 @@
 const rowClasses =
-  "flex items-center justify-between gap-4 border-b border-[var(--color-fg-secondary)]/15 py-4 text-body-md";
-const orgClasses = "fgColor-primary font-medium";
-const roleClasses = "flex-1 text-center fgColor-secondary";
-const datesClasses = "fgColor-secondary";
+  "flex items-center justify-between gap-6 border-b borderColor-strong py-4 text-body-md fgColor-primary";
+const orgClasses = "min-w-[160px] underline";
+const roleClasses = "flex-1 text-center";
+const datesClasses = "w-[110px] text-right";
 
 type LineItemProps = {
   org: string;
