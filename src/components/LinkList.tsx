@@ -1,20 +1,22 @@
 import Link from "next/link";
+import { Icon, type IconName } from "@/components/ui/Icon";
 
 const listClasses =
   "flex flex-wrap gap-8 font-subheading text-subheading-sm fgColor-primary";
 const linkClasses =
-  "underline decoration-dotted decoration-transparent underline-offset-4 transition-colors hover:decoration-current";
+  "flex items-center gap-2 underline decoration-dotted decoration-transparent underline-offset-4 transition-colors hover:decoration-current";
 
 type LinkListProps = {
-  links: { label: string; href: string }[];
+  links: { label: string; href: string; icon: IconName }[];
 };
 
 export function LinkList({ links }: LinkListProps) {
   return (
     <ul className={listClasses}>
-      {links.map(({ label, href }) => (
+      {links.map(({ label, href, icon }) => (
         <li key={label}>
           <Link href={href} className={linkClasses}>
+            <Icon name={icon} size="sm" />
             {label}
           </Link>
         </li>

@@ -1,13 +1,13 @@
+import type { IconName } from "@/components/ui/Icon";
+
 export type SocialLink = {
   label: string;
   href: string;
+  icon: IconName;
 };
 
 // Placeholder hrefs — wire up to real profiles.
 export const socialLinks: SocialLink[] = [
-  { label: "github", href: "#" },
-  { label: "email", href: "#" },
-  { label: "contact", href: "#" },
-  { label: "ravelry", href: "#" },
-  { label: "goodreads", href: "#" },
+  { label: "github", href: "#", icon: "code" },
+  { label: "email", href: "#", icon: "mail" },
 ];

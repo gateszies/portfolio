@@ -1,15 +1,16 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { Icon } from "@/components/ui/Icon";
 
-const toggleClasses =
-  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition-colors hover:decoration-current";
+const toggleClasses = "fgColor-primary transition-colors hover:fgColor-brand";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   function toggle() {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    setTheme(isDark ? "light" : "dark");
   }
 
   return (
@@ -19,7 +20,7 @@ export function ThemeToggle() {
       aria-label="Toggle color theme"
       className={toggleClasses}
     >
-      theme
+      <Icon name={isDark ? "sun" : "moon"} size="sm" />
     </button>
   );
 }

@@ -1,10 +1,7 @@
-import { Footer } from "@/components/Footer";
 import { HoverReveal } from "@/components/HoverReveal";
 import { LineItem } from "@/components/LineItem";
-import { LinkList } from "@/components/LinkList";
 import { ProjectCard } from "@/components/ProjectCard";
 import { experience } from "@/data/experience";
-import { socialLinks } from "@/data/social";
 import { getAllProjects } from "@/lib/projects";
 
 const pageClasses =
@@ -20,7 +17,6 @@ const bioClasses = "font-body text-body-lg fgColor-primary";
 const accentLinkClasses = "font-bold underline";
 const projectListClasses = "flex flex-col gap-8";
 const experienceListClasses = "flex flex-col";
-const footerRowClasses = "flex items-center justify-between gap-6";
 
 export default function Home() {
   const projects = getAllProjects();
@@ -114,11 +110,6 @@ export default function Home() {
           .
         </p>
       </section>
-
-      <footer className={footerRowClasses}>
-        <Footer />
-        <LinkList links={socialLinks} />
-      </footer>
     </div>
   );
 }

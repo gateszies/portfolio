@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ThemeProvider } from "next-themes";
 import { fontBody, fontDisplay, fontSubheading } from "./fonts";
+import { Footer } from "@/components/Footer";
+import { LinkList } from "@/components/LinkList";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { socialLinks } from "@/data/social";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +24,10 @@ const navLinks = [
 const headerClasses =
   "sticky top-0 z-40 flex items-center justify-between bgColor-primary px-12 py-6";
 const logoClasses = "font-subheading text-subheading-sm fgColor-primary";
-const navClasses = "flex items-center gap-8 text-subheading-sm";
+const navClasses = "flex items-center gap-8 font-subheading text-subheading-sm";
 const navLinkClasses =
   "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition-colors hover:decoration-current";
+const footerClasses = "flex items-center justify-between gap-6 px-12 py-8";
 
 export default function RootLayout({
   children,
@@ -60,6 +64,10 @@ export default function RootLayout({
             </nav>
           </header>
           <main className="flex flex-1 flex-col">{children}</main>
+          <footer className={footerClasses}>
+            <Footer />
+            <LinkList links={socialLinks} />
+          </footer>
         </ThemeProvider>
       </body>
     </html>

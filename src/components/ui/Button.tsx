@@ -7,8 +7,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          "bgColor-brand borderColor-brand text-[var(--color-bg-primary)]",
+        primary: "bgColor-brand borderColor-inverse fgColor-inverse",
         secondary: "borderColor-brand fgColor-brand",
       },
       size: {

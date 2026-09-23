@@ -13,7 +13,7 @@ export const badgeVariants = cva(
         ochre: "",
       },
       appearance: {
-        solid: "text-[var(--color-bg-primary)]",
+        solid: "fgColor-inverse",
         outline: "",
       },
       size: {

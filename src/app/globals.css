@@ -8,12 +8,26 @@
  * as bold link text) — poppy/sky/ochre below are darkened to the minimum
  * that clears 4.5:1 against bg-primary for light mode only; dark mode keeps
  * the vivid values as designed, since those already passed.
+ *
+ * fg-inverse/border-inverse (for text/borders on top of a solid brand or
+ * accent fill, e.g. a filled button or badge) are cream in both themes —
+ * correct for brand, which stays dark in both themes, and for the
+ * light-mode accent fills, which were darkened for exactly this purpose.
+ * They are NOT verified correct for a *solid, accent-colored* fill in dark
+ * mode: the vivid dark-mode accents (poppy/sky/ochre) are bright enough
+ * that cream text on them fails contrast (2.24–3.12:1) — that combination
+ * would need dark text instead, which would in turn fail on the brand
+ * fill (1.75:1). Nothing on the site currently renders a solid accent
+ * fill (only brand, and only outline for accents), so this is flagged
+ * rather than solved — revisit if a solid accent variant is ever used.
  */
 :root {
   --color-bg-primary: #fff6ee;
   --color-fg-primary: #673c33;
+  --color-fg-inverse: #fff6ee;
   --color-border-strong: #673c33;
   --color-border-subtle: #99807a;
+  --color-border-inverse: #fff6ee;
   --color-brand: #673c33;
   --color-poppy: #cf3f00;
   --color-sky: #3671c6;
@@ -73,11 +87,17 @@
 @utility fgColor-primary {
   color: var(--color-fg-primary);
 }
+@utility fgColor-inverse {
+  color: var(--color-fg-inverse);
+}
 @utility borderColor-strong {
   border-color: var(--color-border-strong);
 }
 @utility borderColor-subtle {
   border-color: var(--color-border-subtle);
+}
+@utility borderColor-inverse {
+  border-color: var(--color-border-inverse);
 }
 @utility bgColor-brand {
   background-color: var(--color-brand);
