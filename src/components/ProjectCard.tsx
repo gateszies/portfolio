@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 
 const cardClasses =
-  "group flex w-full gap-6 rounded-lg border borderColor-strong p-8 transition hover:borderColor-subtle";
+  "group flex w-full gap-6 rounded-lg border borderColor-strong p-8 transition-colors hover:borderColor-subtle";
 const thumbnailClasses =
   "size-15 shrink-0 rounded-lg border borderColor-strong";
 const bodyClasses = "flex flex-1 flex-col justify-center gap-2.5";
@@ -48,6 +48,7 @@ export function ProjectCard({
           {tags.map((tag, i) => (
             <li key={tag}>
               <Badge
+                size="sm"
                 className={hoverAccentClasses[i % hoverAccentClasses.length]}
               >
                 {tag}

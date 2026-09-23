@@ -9,7 +9,7 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 - Tailwind v4 is configured in CSS, not tailwind.config.js. All tokens live in the global CSS file.
 - Two different registration mechanisms are used, deliberately, for two different kinds of tokens:
-  - Colors: raw CSS variables (`--color-bg-primary`, `--color-bg-secondary`, `--color-fg-primary`, `--color-fg-secondary`, `--color-accent`) defined once in `:root` / `:root[data-theme="dark"]`, exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming.
+  - Colors: raw CSS variables (`--color-bg-primary`, `--color-fg-primary`, `--color-border-strong`, `--color-border-subtle`, `--color-brand`, `--color-poppy`, `--color-sky`, `--color-ochre`) defined once in `:root` / `:root[data-theme="dark"]`, exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming. Color values are contrast-checked (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before being tokenized; a color that fails may need a separate light/dark value even when the design shows one hex for both, since dark and light backgrounds don't demand the same contrast fix.
   - Fonts and the type scale: registered under `@theme inline` / `@theme` (e.g. `--font-display: var(--font-display)`, `--text-heading-lg: 1.75rem`), producing Tailwind's native `font-display`, `text-heading-lg` utilities.
 - Use `bgColor-*`/`fgColor-*` classes for color, never `bg-primary`/`text-primary` or a hex value.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
@@ -73,13 +73,13 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full font-heading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full border font-subheading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-[var(--color-fg-primary)] text-[var(--color-bg-primary)]",
-        secondary: "bgColor-secondary fgColor-primary",
-        accent: "bgColor-accent text-[var(--color-bg-primary)]",
+        primary:
+          "bgColor-brand borderColor-brand text-[var(--color-bg-primary)]",
+        secondary: "borderColor-brand fgColor-brand",
       },
       size: {
         sm: "text-body-sm px-4 py-1.5",

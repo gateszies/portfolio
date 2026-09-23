@@ -23,7 +23,7 @@ const headerClasses =
 const logoClasses = "font-subheading text-subheading-sm fgColor-primary";
 const navClasses = "flex items-center gap-8 text-subheading-sm";
 const navLinkClasses =
-  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition hover:decoration-current";
+  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition-colors hover:decoration-current";
 
 export default function RootLayout({
   children,

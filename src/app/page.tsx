@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/Button";
 import { Footer } from "@/components/Footer";
 import { HoverReveal } from "@/components/HoverReveal";
 import { LineItem } from "@/components/LineItem";
@@ -51,14 +49,6 @@ export default function Home() {
           </span>
           .
         </p>
-        <div>
-          <Link
-            href="/resume.pdf"
-            className={buttonVariants({ variant: "primary" })}
-          >
-            view my resume
-          </Link>
-        </div>
       </section>
 
       <section id="work" className={sectionClasses}>

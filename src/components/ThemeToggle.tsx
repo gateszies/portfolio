@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 
 const toggleClasses =
-  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition hover:decoration-current";
+  "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition-colors hover:decoration-current";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
