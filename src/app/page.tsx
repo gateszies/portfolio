@@ -18,8 +18,8 @@ const accentLinkClasses = "font-bold underline";
 const projectListClasses = "flex flex-col gap-8";
 const experienceListClasses = "flex flex-col";
 
-export default function Home() {
-  const projects = getAllProjects();
+export default async function Home() {
+  const projects = await getAllProjects();
 
   return (
     <div className={pageClasses}>

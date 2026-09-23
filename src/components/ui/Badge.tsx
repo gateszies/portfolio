@@ -26,7 +26,7 @@ export const badgeVariants = cva(
       {
         color: "brand",
         appearance: "outline",
-        class: "borderColor-brand fgColor-brand",
+        class: "borderColor-strong fgColor-primary",
       },
       { color: "poppy", appearance: "solid", class: "bgColor-poppy" },
       {

@@ -1,13 +1,31 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
 import { Icon } from "@/components/ui/Icon";
 
 const toggleClasses = "fgColor-primary transition-colors hover:fgColor-brand";
 
+function subscribe() {
+  return () => {};
+}
+
+function getSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const mounted = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
+  const isDark = mounted && resolvedTheme === "dark";
 
   function toggle() {
     setTheme(isDark ? "light" : "dark");
