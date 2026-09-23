@@ -1,0 +1,241 @@
+---
+title: Transactional Email Platform
+description: Founded a React Email-based platform with a shared component library, token system, and generated backend contract, replacing per-brand, per-template duplication across two brands.
+tags: [React, TypeScript, TailwindCSS]
+thumbnail: /placeholders/project-thumb.svg
+hero: /placeholders/project-hero.svg
+---
+
+_Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
+
+---
+
+### Context
+
+WHCC and ProDPI both depend on transactional emails to communicate timely, order-critical information: receipts, shipping updates, delivery confirmations, account creation, pickup notices. These have the highest open rates of anything either brand sends. When they work well, the customer gets exactly the information they need at the right time and we never hear from them, which is a good thing. When they don't, the CS team gets a confused or frustrated customer on the line.
+
+I founded this repo on [React Email](https://react.email), a React-based framework for building emails with real components instead of raw HTML tables, paired with Tailwind for styling and TypeScript for type safety. I built the component library, token system, and release infrastructure from scratch.
+
+---
+
+### Problem
+
+**No design system for email**
+
+Each email template was designed as its own standalone artifact. There were no shared components across templates: every header, footer, button, and content block was recreated from scratch per email, per brand. Nothing was reusable, so a visual update to something as simple as the footer meant updating every template individually. The brand had evolved significantly over ten years, but the emails never kept up because updating them all was too costly to justify.
+
+This problem compounded once multi-brand was introduced. On the web, you'd solve brand theming with CSS custom properties, but email clients don't support them. The only option was forking the entire file per brand: same structure, same layout, different hardcoded values throughout.
+
+**No safe way to iterate**
+
+HTML email doesn't render like a website. There's no flexbox, no grid, limited CSS support, and every client has its own rendering engine (Outlook uses the same one as Microsoft Word). The only layout tool that works reliably everywhere is nested tables with inline styles:
+
+```html
+<table cellpadding="0" cellspacing="0" border="0" align="center">
+  <tr>
+    <td>
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td
+            style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 22px; color: #333333;"
+          >
+            Your order has shipped, #{{order_number}}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+```
+
+Every style is inline because external stylesheets are stripped by many clients. Every layout is a table because that's what renders consistently. Without a component system abstracting this away, making even a small change meant editing raw table markup by hand and testing across a dozen rendering engines, with no guarantee it wouldn't break somewhere you didn't check.
+
+**Per-brand duplication instead of theming**
+
+That same markup existed as two entirely separate files, one per brand, each several hundred lines. Identical structure, different font family. A layout fix or a copy change meant hand editing both, and nothing caught it if you only remembered one.
+
+**No contract with the backend**
+
+The notifications service that triggers these emails had no way to know what data a template actually needed. Template variables like `{{order_number}}` were just strings with no validation. The backend could send values the template never used, with no way to know they were dead weight, and the template could expect values the backend never sent, which showed up as a broken email in a customer's inbox instead of a caught error in development or CI. The contract between the two systems was implicit, maintained by whoever last remembered to check both sides.
+
+---
+
+### Approach
+
+**Design the system first, then build it**
+
+The first step was getting the emails to actually look like the brands they represent today. I worked within the existing design system tokens (typography, color, spacing) to bring the email templates in line with the current brand identity for both WHCC and ProDPI, rather than inventing a separate visual language just for email.
+
+From there, I worked with leadership and Customer Service to determine what information belongs in each email, where it sits in the layout, and what the hierarchy should be. CS had direct insight into what customers actually ask about after placing an order (tracking numbers, expected delivery, how to cancel), which informed what got prominence and what got tucked into secondary placement. Each template went through layout exploration, stakeholder review, and iteration before any code was written.
+
+The result was a full component library in Figma: `Hero` with variants for brand and item count, `Header` with desktop and mobile screen-size variants, `Footer` with brand variants, `Body Content` with three item-count layouts (single item, 2 to 5, and 5+), plus reusable components for line items, pricing tables, and order details. Each Figma component maps directly to its React counterpart in both naming and variant structure, so comparing design to code is straightforward.
+
+**Build real components**
+
+React Email provides a set of base components (`Section`, `Row`, `Column`, `Button`, `Img`, etc.) already tested against the major email client renderers. We build on top of those, extending them with our own brand-aware components rather than writing raw table markup and debugging Outlook quirks from scratch. An order receipt is just a composition of real, named components:
+
+```tsx
+// emails/OrderReceipt.tsx
+export function OrderReceipt({
+  brand,
+  orderNumber,
+  items,
+  trackingUrl,
+}: OrderReceiptProps) {
+  return (
+    <Layout brand={brand}>
+      <Hero orderNumber={orderNumber} />
+      <Heading>Your order is confirmed</Heading>
+      <ItemTable items={items} />
+      <Button url={trackingUrl} label="Track Your Order" />
+    </Layout>
+  );
+}
+```
+
+`Hero`, `Heading`, `ItemTable`, and `Button` are our components, but internally they compose React Email's base primitives (`Section`, `Row`, `Column`) that already handle the rendering constraints per client. The nested tables, the inline styles, the client-specific workarounds are abstracted within the primitives. I never have to write or even look at a `<table>` element. The components I'm building don't know they're rendering as tables, and neither do I.
+
+**Brand as a parameter, not a fork**
+
+Every email is wrapped in a provider that sets a brand context. A layout component picks the right Tailwind config for that brand. Individual components read brand context directly. A `Button` applies brand-specific spacing and casing without the template needing to know which brand it's rendering for:
+
+```tsx
+// components/Layout.tsx
+export function Layout({ brand, children }: LayoutProps) {
+  return (
+    <BrandProvider brand={brand}>
+      <EmailTheme config={themeConfig[brand]}>
+        <Html>
+          <Header />
+          {children}
+          <Footer />
+        </Html>
+      </EmailTheme>
+    </BrandProvider>
+  );
+}
+```
+
+```tsx
+// components/Button.tsx
+export function Button({ url, label, variant }: ButtonProps) {
+  const brand = useContext(BrandContext);
+  const classes = cx(baseClasses, variantClasses[variant], brandStyles[brand]);
+  return (
+    <EmailButton href={url} className={classes}>
+      {label}
+    </EmailButton>
+  );
+}
+```
+
+Brand-specific values live in per-brand config files. Each brand config defines its own fonts, colors, spacing, and border radii as a Tailwind theme. The second brand's config extends the first and overrides only what's different:
+
+```ts
+// brands/brandA/config.ts
+export const config = {
+  theme: {
+    fontFamily: {
+      display: ["Serif-Font", "serif"],
+      body: ["Sans-Font", "sans-serif"],
+    },
+    backgroundColor: {
+      "brand-strong": "#0E5FD3",
+      "neutral-secondary": "#F5F6F6",
+    },
+    borderRadius: {
+      button: "4px",
+    },
+  },
+};
+
+// brands/brandB/config.ts
+import { merge } from "lodash";
+import { config as brandAConfig } from "@/brands/brandA/config";
+
+const overrides = {
+  theme: {
+    fontFamily: {
+      display: ["Different-Serif", "serif"],
+      body: ["Different-Sans", "sans-serif"],
+    },
+    backgroundColor: {
+      "brand-strong": "#09272F",
+      "neutral-secondary": "#F9F5F0",
+    },
+    borderRadius: {
+      button: "0px",
+    },
+  },
+};
+
+export const config = merge({}, brandAConfig, overrides);
+```
+
+One component tree, two brands, zero duplicated templates. Adding a third brand means writing a config file, not forking the system.
+
+**A generated contract with the backend**
+
+All template prop types live in one shared types file:
+
+```ts
+// types.ts
+type BaseOrderProps = BaseProps & {
+  orderNumber: string;
+  orderProductType: string;
+  shippingCarrier: string;
+  shippingToName?: string;
+  shippingToAddress?: string;
+};
+
+type OrderShippedProps = BaseOrderProps & {
+  trackingNumbers: string[];
+  trackingUrl: string;
+  invoiceUrl?: string;
+};
+```
+
+A build step reads those types and generates a JSON schema per template, listing which props are required and which are optional:
+
+```json
+{
+  "OrderShipped": {
+    "required": [
+      "brand",
+      "email",
+      "orderNumber",
+      "orderProductType",
+      "shippingCarrier",
+      "trackingNumbers",
+      "trackingUrl"
+    ],
+    "optional": ["invoiceUrl", "shippingToName", "shippingToAddress"]
+  }
+}
+```
+
+The backend notifications service imports that schema to validate props before rendering. Because the schema is generated from the TypeScript types instead of being hand-maintained, it can't drift out of sync with the actual templates. A prop mismatch is now a build-time or CI failure instead of a broken email landing in someone's inbox.
+
+---
+
+### Key Decisions
+
+**Use React Context for brand, not prop drilling**
+
+Passing a `brand` prop through every single component would have worked, but it would have made every component's API brand-aware whether it needed to be or not. Context lets most components stay brand-agnostic. Only the ones that actually need theming (`Button`, `Header`, hero images) read from it.
+
+**Generate the backend contract, don't hand-maintain it**
+
+I could have written the backend-side validation schema by hand and kept it "in sync" through discipline. I didn't trust that to hold up under real-world drift, so the schema generates straight from the TypeScript source of truth instead.
+
+**Keep components dumb about brands**
+
+A `Button` doesn't decide its own brand styling. It reads from context, maps that to a set of classes, and renders. The brand config is the single source of truth. The component is just a consumer of it.
+
+---
+
+### Impact
+
+This system runs in production at roughly 3,000 transactional emails a day, around 90,000 a month, across both brands. It covers the full order lifecycle (receipt, shipped, out for delivery, delivered, pickup ready) plus account and NPS emails.
+
+Beyond building it, I documented usage patterns and trained others to ship new transactional emails on their own. What used to be a high-risk maintenance burden is now a platform other people can extend safely, and a third brand is a config file away instead of a rebuild.

@@ -1,0 +1,106 @@
+---
+title: Section Gallery Live Preview
+description: Designed and built a real-time preview tool that lets content editors browse, adjust, and safely experiment with every page-builder section without touching the live entry.
+tags: [PHP, TypeScript, CraftCMS, SCSS]
+thumbnail: /placeholders/project-thumb.svg
+hero: /placeholders/project-hero.svg
+---
+
+_Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
+
+---
+
+### Context
+
+WHCC's marketing site is built on a Craft CMS page builder. Content editors assemble pages from Matrix "sections" (media banners, card grids, editorial blocks, and so on), each with its own set of configurable fields.
+
+I ran a builder-feedback exercise with the design team to document specific pain points in the CMS editing experience. That audit surfaced one problem clearly: editors had no way to see what a section actually looked like with their own settings applied, without saving it live. Adjusting a setting meant guess, save, refresh, and hope.
+
+I designed and built the Section Gallery from scratch to solve this: a real-time preview environment for browsing and editing every section type without touching the live entry. I then ported the same system to ProDPI's site the following week.
+
+---
+
+### Problem
+
+**No feedback loop for content editors**
+
+Changing a setting on a section meant saving a draft, opening the live page, and reloading to see the result. The editing loop was measured in page reloads, not seconds. For editors trying to fine-tune spacing, theme, or media crop across a dozen sections, this added up fast.
+
+**No safe way to experiment**
+
+Anything an editor previewed this way was either already live or a saved draft on the real entry. There was no clean way to try a setting change and discard it without leaving a trace. Experimentation carried real risk: a draft saved for preview purposes could accidentally get published, or overwrite someone else's in-progress work on the same entry.
+
+**No systematic way to browse what exists**
+
+With dozens of section types across the site, there was no single place to see what "every section type, as currently configured" looked like at a glance. Editors had to remember which sections existed by name and navigate to a page that used each one to see what it actually rendered.
+
+---
+
+### Approach
+
+**Design the tool around how editors actually work**
+
+I designed the full interface in Figma: the gallery grid showing every section type as a live thumbnail, the editor view with its resizable iframe and settings toolbar, the device-width presets, and the save/discard flow. I iterated on the design with marketing and product, focusing on two questions: what does an editor need to see at a glance (the gallery view), and what do they need to control when they're actually editing (the toolbar).
+
+**Render production templates, not approximations**
+
+The preview and editor both call the exact same template used in production. There's no separate "preview version" of a section that could drift out of sync with the real thing:
+
+```php
+// controllers/SectionGalleryController.php
+$html = $view->renderTemplate($templatePath, ['section' => $entry]);
+$visibility = $this->computeFieldVisibility($entry);
+return $this->asJson(['html' => $html, 'visibility' => $visibility]);
+```
+
+Any settings change POSTs the current values to a render endpoint, gets back fresh HTML from the real template, and swaps it into the iframe along with a field-visibility map computed from the CMS's own conditional-field rules. What you see in the gallery is exactly what would ship.
+
+The gallery's card-level thumbnails need to render without requiring a login (so they load fast), but they can't be an open door to arbitrary content. Each preview URL carries a signed token, and the controller validates it with a constant-time comparison before rendering anything:
+
+```php
+$validatedId = $security->validateData($previewToken);
+$isValid = is_string($validatedId) && hash_equals($sectionId, $validatedId);
+```
+
+Only the preview action is allowed anonymously. Every mutating action requires an authenticated session and CSRF validation.
+
+**Isolate drafts per user**
+
+When an editor wants to keep changes, the controller reuses that editor's own gallery draft if one exists, or creates a new one scoped to that user:
+
+```php
+$draft = $entryQuery
+  ->draftOf($entry)
+  ->draftCreator($userId)
+  ->first(fn($d) => $d->draftName === 'Section Gallery');
+
+if (!$draft) {
+    $draft = $draftsService->createDraft($entry, $userId, 'Section Gallery');
+}
+```
+
+Two editors experimenting with the same section never stomp on each other's changes, and nothing touches the live entry until someone explicitly ships it.
+
+---
+
+### Key Decisions
+
+**Start with the editing experience, not the architecture**
+
+The builder-feedback audit came first, before any code or even any Figma. The problems editors described (no preview, no safe experimentation, no way to browse) defined the scope of the tool. The architecture followed from those requirements, not the other way around.
+
+**Reuse production templates instead of building a preview renderer**
+
+It would have been easier to build a simplified preview that approximated each section's output. Using the actual production template is more work to wire up (signed tokens, CSRF handling, field-visibility computation), but it guarantees accuracy by construction. There's no second template to maintain or keep in sync.
+
+**Scope drafts per user rather than sharing one**
+
+It would have been simpler to keep one shared draft per section for previewing. Scoping by user costs a bit of extra query complexity, but concurrent editors never silently overwrite each other's in-progress changes.
+
+---
+
+### Impact
+
+I built the entire system (backend controller, templates, TypeScript editor/toolbar/header components, SCSS) in about a week, then ported the same architecture to ProDPI's site solo the following week: same security model, same draft isolation, same live re-render loop, adapted to that codebase's conventions.
+
+Content editors can now browse every section type in one place, adjust settings, and see production-accurate results in real time, without ever risking the live entry. The tool came directly out of the problems editors told me about in the feedback audit, and solving those problems is exactly what it does.

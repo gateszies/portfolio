@@ -14,7 +14,7 @@ describe("getAllProjects", () => {
 
     expect(project).toBeDefined();
     expect(project?.title).toBe("ProDPI Site Migration");
-    expect(project?.tags).toContain("Typescript");
+    expect(project?.tags).toContain("TypeScript");
     expect(project?.bodyHtml).toContain("<p>");
   });
 });
