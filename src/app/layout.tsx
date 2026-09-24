@@ -13,17 +13,17 @@ const fontDisplay = localFont({
   src: "./fonts/display-font/display-font",
   weight: "400",
   style: "normal",
-  variable: "--font-family-display",
+  variable: "--fontFamily-display",
 });
 
 const fontHeading = Google_Sans_Code({
-  variable: "--font-family-heading",
+  variable: "--fontFamily-heading",
   weight: ["400", "500"],
   subsets: ["latin"],
 });
 
 const fontBody = Nunito({
-  variable: "--font-family-body",
+  variable: "--fontFamily-body",
   subsets: ["latin"],
 });
 

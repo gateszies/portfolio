@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/*
- * Primitive color palette — raw named hex values, no semantic meaning.
- * Nothing outside this file references these directly; components consume
- * the semantic tier below.
- */
 :root {
   --cream: #fff6ee;
   --wine: #33191e;
@@ -20,231 +15,230 @@
 }
 
 /*
- * Semantic color tokens, sourced from the Figma "round 2" pass (node
- * 91:1777) and contrast-checked against WCAG 2.1 (4.5:1 for text, 3:1 for
- * large/bold text and non-text UI like borders). Dark mode passed as
- * designed. Light mode's three accents did not (2.24–3.12:1 as badge text/
- * fills, 2.24–2.37:1 as bold link text) — poppy/blue/olive below are
- * darkened to the minimum that clears 4.5:1 against bg-primary for light
- * mode only; dark mode keeps the vivid primitives as designed, since those
- * already passed.
+ * Light mode's three accents did not pass WCAG 2.1 against bg-primary as
+ * designed in Figma (2.24–3.12:1 as badge text/fills, 2.24–2.37:1 as bold
+ * link text), so poppy/blue/olive are darkened to the minimum that clears
+ * 4.5:1; the -bright primitives are the original Figma values, which only
+ * pass on the dark background. Don't "correct" either set back to a single
+ * shared value.
  *
- * fg-inverse/border-inverse (for text/borders on top of a solid brand or
- * accent fill, e.g. a filled button or badge) are cream in both themes —
- * correct for brand, which stays dark in both themes, and for the
- * light-mode accent fills, which were darkened for exactly this purpose.
- * They are NOT verified correct for a *solid, accent-colored* fill in dark
- * mode: the vivid dark-mode accents (poppy/sky/ochre) are bright enough
- * that cream text on them fails contrast (2.24–3.12:1) — that combination
- * would need dark text instead, which would in turn fail on the brand
- * fill (1.75:1). Nothing on the site currently renders a solid accent
- * fill (only brand, and only outline for accents), so this is flagged
- * rather than solved — revisit if a solid accent variant is ever used.
+ * fgColor-inverse/borderColor-inverse are cream in both themes — correct
+ * for brand, which stays dark in both, and for the darkened light-mode
+ * accent fills. They are NOT verified for a *solid, accent-colored* fill in
+ * dark mode: cream on the bright accents fails (2.24–3.12:1), and the dark
+ * text that would fix it fails on the brand fill (1.75:1). Nothing renders a
+ * solid accent fill today (only brand, and only outline for accents), so
+ * this is flagged rather than solved.
  */
 :root {
-  --color-bg-primary: var(--cream);
-  --color-fg-primary: var(--brown);
-  --color-fg-inverse: var(--cream);
-  --color-border-strong: var(--brown);
-  --color-border-subtle: var(--taupe);
-  --color-border-inverse: var(--cream);
-  --color-brand: var(--brown);
-  --color-poppy: var(--poppy);
-  --color-sky: var(--blue);
-  --color-ochre: var(--olive);
+  --bgColor-primary: var(--cream);
+  --fgColor-primary: var(--brown);
+  --fgColor-inverse: var(--cream);
+  --borderColor-strong: var(--brown);
+  --borderColor-subtle: var(--taupe);
+  --borderColor-inverse: var(--cream);
+
+  --bgColor-brand: var(--brown);
+  --fgColor-brand: var(--brown);
+  --borderColor-brand: var(--brown);
+
+  --bgColor-poppy: var(--poppy);
+  --fgColor-poppy: var(--poppy);
+  --borderColor-poppy: var(--poppy);
+
+  --bgColor-sky: var(--blue);
+  --fgColor-sky: var(--blue);
+  --borderColor-sky: var(--blue);
+
+  --bgColor-ochre: var(--olive);
+  --fgColor-ochre: var(--olive);
+  --borderColor-ochre: var(--olive);
 }
 
 :root[data-theme="dark"] {
-  --color-bg-primary: var(--wine);
-  --color-fg-primary: var(--sand);
-  --color-border-strong: var(--sand);
-  --color-poppy: var(--poppy-bright);
-  --color-sky: var(--blue-bright);
-  --color-ochre: var(--olive-bright);
+  --bgColor-primary: var(--wine);
+  --fgColor-primary: var(--sand);
+  --borderColor-strong: var(--sand);
+
+  --bgColor-poppy: var(--poppy-bright);
+  --fgColor-poppy: var(--poppy-bright);
+  --borderColor-poppy: var(--poppy-bright);
+
+  --bgColor-sky: var(--blue-bright);
+  --fgColor-sky: var(--blue-bright);
+  --borderColor-sky: var(--blue-bright);
+
+  --bgColor-ochre: var(--olive-bright);
+  --fgColor-ochre: var(--olive-bright);
+  --borderColor-ochre: var(--olive-bright);
 }
 
-/*
- * Typography tokens, decomposed into one property per token (matching the
- * bgColor/fgColor/fontFamily pattern) instead of Tailwind's compound
- * --text-* text-style shorthand. Font sizes are expressed as a multiple of
- * Tailwind's --spacing base (the same primitive p-, gap-, etc. utilities
- * use), so the type scale stays on the same scale as the rest of the site.
- * Heading tracking is a consistent 10% of its font size, so it's a single
- * token rather than one per size.
- */
 :root {
-  --font-size-body-sm: calc(var(--spacing) * 3.5);
-  --font-size-body-md: calc(var(--spacing) * 4);
-  --font-size-body-lg: calc(var(--spacing) * 4.5);
-  --font-size-body-xl: calc(var(--spacing) * 5);
-  --font-size-heading-sm: calc(var(--spacing) * 3.5);
-  --font-size-heading-md: calc(var(--spacing) * 4);
-  --font-size-heading-lg: calc(var(--spacing) * 5.5);
-  --font-size-display-sm: calc(var(--spacing) * 9);
-  --font-size-display-md: calc(var(--spacing) * 16);
-  --font-size-display-lg: calc(var(--spacing) * 28.5);
+  --fontSize-body-sm: calc(var(--spacing) * 3.5);
+  --fontSize-body-md: calc(var(--spacing) * 4);
+  --fontSize-body-lg: calc(var(--spacing) * 4.5);
+  --fontSize-body-xl: calc(var(--spacing) * 5);
+  --fontSize-heading-sm: calc(var(--spacing) * 3.5);
+  --fontSize-heading-md: calc(var(--spacing) * 4);
+  --fontSize-heading-lg: calc(var(--spacing) * 5.5);
+  --fontSize-display-sm: calc(var(--spacing) * 9);
+  --fontSize-display-md: calc(var(--spacing) * 16);
+  --fontSize-display-lg: calc(var(--spacing) * 28.5);
 
-  --line-height-body-sm: 1.5;
-  --line-height-body-md: 1.6;
-  --line-height-body-lg: 1.6;
-  --line-height-body-xl: 1.4;
-  --line-height-heading-sm: 1.3;
-  --line-height-heading-md: 1.3;
-  --line-height-heading-lg: 1.2;
-  --line-height-display-sm: 1.05;
-  --line-height-display-md: 1;
-  --line-height-display-lg: 0.95;
+  --lineHeight-body-sm: 1.5;
+  --lineHeight-body-md: 1.6;
+  --lineHeight-body-lg: 1.6;
+  --lineHeight-body-xl: 1.4;
+  --lineHeight-heading-sm: 1.3;
+  --lineHeight-heading-md: 1.3;
+  --lineHeight-heading-lg: 1.2;
+  --lineHeight-display-sm: 1.05;
+  --lineHeight-display-md: 1;
+  --lineHeight-display-lg: 0.95;
 
-  --font-weight-body-xl: 700;
+  --fontWeight-body-xl: 700;
 
-  --letter-spacing-heading: 0.1em;
+  --letterSpacing-heading: 0.1em;
 }
 
-/* Font family utilities, wired to next/font variables set on <html> in layout.tsx. */
 @utility fontFamily-display {
-  font-family: var(--font-family-display);
+  font-family: var(--fontFamily-display);
 }
 @utility fontFamily-heading {
-  font-family: var(--font-family-heading);
+  font-family: var(--fontFamily-heading);
 }
 @utility fontFamily-body {
-  font-family: var(--font-family-body);
+  font-family: var(--fontFamily-body);
 }
 
-/* Font size utilities. */
 @utility fontSize-body-sm {
-  font-size: var(--font-size-body-sm);
+  font-size: var(--fontSize-body-sm);
 }
 @utility fontSize-body-md {
-  font-size: var(--font-size-body-md);
+  font-size: var(--fontSize-body-md);
 }
 @utility fontSize-body-lg {
-  font-size: var(--font-size-body-lg);
+  font-size: var(--fontSize-body-lg);
 }
 @utility fontSize-body-xl {
-  font-size: var(--font-size-body-xl);
+  font-size: var(--fontSize-body-xl);
 }
 @utility fontSize-heading-sm {
-  font-size: var(--font-size-heading-sm);
+  font-size: var(--fontSize-heading-sm);
 }
 @utility fontSize-heading-md {
-  font-size: var(--font-size-heading-md);
+  font-size: var(--fontSize-heading-md);
 }
 @utility fontSize-heading-lg {
-  font-size: var(--font-size-heading-lg);
+  font-size: var(--fontSize-heading-lg);
 }
 @utility fontSize-display-sm {
-  font-size: var(--font-size-display-sm);
+  font-size: var(--fontSize-display-sm);
 }
 @utility fontSize-display-md {
-  font-size: var(--font-size-display-md);
+  font-size: var(--fontSize-display-md);
 }
 @utility fontSize-display-lg {
-  font-size: var(--font-size-display-lg);
+  font-size: var(--fontSize-display-lg);
 }
 
-/* Line height utilities. */
 @utility lineHeight-body-sm {
-  line-height: var(--line-height-body-sm);
+  line-height: var(--lineHeight-body-sm);
 }
 @utility lineHeight-body-md {
-  line-height: var(--line-height-body-md);
+  line-height: var(--lineHeight-body-md);
 }
 @utility lineHeight-body-lg {
-  line-height: var(--line-height-body-lg);
+  line-height: var(--lineHeight-body-lg);
 }
 @utility lineHeight-body-xl {
-  line-height: var(--line-height-body-xl);
+  line-height: var(--lineHeight-body-xl);
 }
 @utility lineHeight-heading-sm {
-  line-height: var(--line-height-heading-sm);
+  line-height: var(--lineHeight-heading-sm);
 }
 @utility lineHeight-heading-md {
-  line-height: var(--line-height-heading-md);
+  line-height: var(--lineHeight-heading-md);
 }
 @utility lineHeight-heading-lg {
-  line-height: var(--line-height-heading-lg);
+  line-height: var(--lineHeight-heading-lg);
 }
 @utility lineHeight-display-sm {
-  line-height: var(--line-height-display-sm);
+  line-height: var(--lineHeight-display-sm);
 }
 @utility lineHeight-display-md {
-  line-height: var(--line-height-display-md);
+  line-height: var(--lineHeight-display-md);
 }
 @utility lineHeight-display-lg {
-  line-height: var(--line-height-display-lg);
+  line-height: var(--lineHeight-display-lg);
 }
 
-/* Font weight and letter spacing utilities. */
 @utility fontWeight-body-xl {
-  font-weight: var(--font-weight-body-xl);
+  font-weight: var(--fontWeight-body-xl);
 }
 @utility letterSpacing-heading {
-  letter-spacing: var(--letter-spacing-heading);
+  letter-spacing: var(--letterSpacing-heading);
 }
 
-/* Color utilities, named to match the design system's bgColor/fgColor/borderColor vocabulary. */
 @utility bgColor-primary {
-  background-color: var(--color-bg-primary);
+  background-color: var(--bgColor-primary);
 }
 @utility fgColor-primary {
-  color: var(--color-fg-primary);
+  color: var(--fgColor-primary);
 }
 @utility fgColor-inverse {
-  color: var(--color-fg-inverse);
+  color: var(--fgColor-inverse);
 }
 @utility borderColor-strong {
-  border-color: var(--color-border-strong);
+  border-color: var(--borderColor-strong);
 }
 @utility borderColor-subtle {
-  border-color: var(--color-border-subtle);
+  border-color: var(--borderColor-subtle);
 }
 @utility borderColor-inverse {
-  border-color: var(--color-border-inverse);
+  border-color: var(--borderColor-inverse);
 }
 @utility bgColor-brand {
-  background-color: var(--color-brand);
+  background-color: var(--bgColor-brand);
 }
 @utility fgColor-brand {
-  color: var(--color-brand);
+  color: var(--fgColor-brand);
 }
 @utility borderColor-brand {
-  border-color: var(--color-brand);
+  border-color: var(--borderColor-brand);
 }
 @utility bgColor-poppy {
-  background-color: var(--color-poppy);
+  background-color: var(--bgColor-poppy);
 }
 @utility fgColor-poppy {
-  color: var(--color-poppy);
+  color: var(--fgColor-poppy);
 }
 @utility borderColor-poppy {
-  border-color: var(--color-poppy);
+  border-color: var(--borderColor-poppy);
 }
 @utility bgColor-sky {
-  background-color: var(--color-sky);
+  background-color: var(--bgColor-sky);
 }
 @utility fgColor-sky {
-  color: var(--color-sky);
+  color: var(--fgColor-sky);
 }
 @utility borderColor-sky {
-  border-color: var(--color-sky);
+  border-color: var(--borderColor-sky);
 }
 @utility bgColor-ochre {
-  background-color: var(--color-ochre);
+  background-color: var(--bgColor-ochre);
 }
 @utility fgColor-ochre {
-  color: var(--color-ochre);
+  color: var(--fgColor-ochre);
 }
 @utility borderColor-ochre {
-  border-color: var(--color-ochre);
+  border-color: var(--borderColor-ochre);
 }
 
 /*
- * Shiki renders code blocks with both a light and dark palette baked into
- * inline `--shiki-light`/`--shiki-dark` CSS variables (see src/lib/projects.ts).
- * This is Shiki's documented pattern for consumers with their own dark-mode
- * trigger instead of its default `prefers-color-scheme` media query — it
- * matches our next-themes `data-theme` attribute instead.
+ * Shiki emits both palettes as inline --shiki-light/--shiki-dark variables
+ * (see src/lib/projects.ts) and switches on prefers-color-scheme by default.
+ * This is its documented override for consumers driving dark mode themselves.
  */
 .shiki,
 .shiki span {
@@ -264,9 +258,9 @@
 }
 
 body {
-  background-color: var(--color-bg-primary);
-  color: var(--color-fg-primary);
-  font-family: var(--font-family-body);
+  background-color: var(--bgColor-primary);
+  color: var(--fgColor-primary);
+  font-family: var(--fontFamily-body);
   transition:
     background-color 0.2s ease,
     color 0.2s ease;

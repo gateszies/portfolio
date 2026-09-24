@@ -11,9 +11,9 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 
 ## Design system
 
-- **Color tokens** (`src/app/globals.css`): `--color-bg-primary/secondary`, `--color-fg-primary/secondary`, `--color-accent`, each with a light value in `:root` and a dark override under `:root[data-theme="dark"]`. Exposed as utility classes `bgColor-primary`, `fgColor-primary`, etc. **The hex values are placeholders — swap them for the real brand palette in one place.**
-- **Fonts** (`src/app/layout.tsx`): `--font-family-display` (display-font, self-hosted via `next/font/local`), `--font-family-heading` (Google Sans Code), `--font-family-body` (Nunito) — each exposed as a `fontFamily-*` utility in `globals.css`.
-- **Type scale**: `text-display-sm/md/lg`, `text-heading-sm/md/lg`, `text-body-sm/md/lg` utilities, defined in the `@theme` block in `globals.css`.
+- **Color tokens** (`src/app/globals.css`): a primitive tier of raw named hexes (`--cream`, `--brown`, `--poppy`, `--blue`, …) that a semantic tier (`--bgColor-primary`, `--fgColor-primary`, `--borderColor-strong`, plus `bgColor`/`fgColor`/`borderColor` trios for `brand`, `poppy`, `sky`, `ochre`) points at, re-pointed per theme under `:root[data-theme="dark"]`. Each semantic token is exposed as the utility class of the same name.
+- **Fonts** (`src/app/layout.tsx`): `--fontFamily-display` (display-font, self-hosted via `next/font/local`), `--fontFamily-heading` (Google Sans Code), `--fontFamily-body` (Nunito) — each exposed as a `fontFamily-*` utility in `globals.css`.
+- **Type scale**: `fontSize-*`, `lineHeight-*`, `fontWeight-*`, and `letterSpacing-*` utilities across `body`, `heading`, and `display` roles, one CSS property each, defined in `globals.css`. Font sizes are multiples of Tailwind's `--spacing` base.
 - **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="data-theme"`, matching the CSS above) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
 - **Components** (`src/components/`, flat): generic `cva`-based primitives (`Button`, `Badge`, `Icon`) alongside domain-specific ones (`ProjectCard`, `LineItem`, `Footer`, `LinkList`, `Breadcrumb`, `MarkdownBody`, `HoverReveal` — the star-cursor hover interaction, `ThemeToggle`).
 - Conventions for all of the above are written down in `AGENTS.md` and `.agents/skills/design-system/SKILL.md`.
