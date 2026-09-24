@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
-import { Icon } from "@/components/ui/Icon";
+import { Icon } from "@/components/Icon";
 
 const toggleClasses = "fgColor-primary transition-colors hover:fgColor-brand";
 

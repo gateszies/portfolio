@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { Icon, type IconName } from "@/components/Icon";
 
 const listClasses =
   "flex flex-wrap gap-8 font-subheading text-subheading-sm fgColor-primary";

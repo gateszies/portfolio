@@ -2,7 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { MarkdownBody } from "@/components/MarkdownBody";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/Badge";
 import { getAllProjects } from "@/lib/projects";
 
 const pageClasses =

@@ -65,7 +65,7 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Example of the expected shape
 
-This is `src/components/ui/Button.tsx` verbatim — the reference for how every primitive in this repo should be shaped:
+This is `src/components/Button.tsx` verbatim — the reference for how every primitive in this repo should be shaped:
 
 ```tsx
 import { cva, type VariantProps } from "class-variance-authority";

@@ -41,8 +41,8 @@
 
 ## File structure and hygiene
 
-- Primitives live in components/ui/, one per file. Feature components live outside ui/. The cn helper lives in lib/utils.ts.
-- File names are kebab-case (button.tsx, project-card.tsx); component names are PascalCase.
+- All components live flat in components/, one per file. The cn helper lives in lib/utils.ts.
+- File names and component names are both PascalCase (Button.tsx, ProjectCard.tsx).
 - No unused variants, props, exports, or dead code. No console.log left in.
 
 ## Before finishing

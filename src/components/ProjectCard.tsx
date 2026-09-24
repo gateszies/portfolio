@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/Badge";
 
 const cardClasses =
   "group flex w-full gap-6 rounded-lg border borderColor-strong p-8 transition-colors hover:borderColor-subtle";

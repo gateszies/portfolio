@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Icon } from "@/components/ui/Icon";
+import { Icon } from "@/components/Icon";
 
 const linkClasses =
   "flex items-center gap-1.5 font-subheading text-subheading-sm fgColor-primary underline decoration-dotted decoration-transparent underline-offset-4 transition-colors hover:decoration-current";
