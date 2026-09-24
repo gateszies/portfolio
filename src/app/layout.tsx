@@ -13,17 +13,17 @@ const fontDisplay = localFont({
   src: "./fonts/display-font/display-font",
   weight: "400",
   style: "normal",
-  variable: "--font-display",
+  variable: "--font-family-display",
 });
 
-const fontSubheading = Google_Sans_Code({
-  variable: "--font-subheading",
+const fontHeading = Google_Sans_Code({
+  variable: "--font-family-heading",
   weight: ["400", "500"],
   subsets: ["latin"],
 });
 
 const fontBody = Nunito({
-  variable: "--font-body",
+  variable: "--font-family-body",
   subsets: ["latin"],
 });
 
@@ -42,8 +42,10 @@ const navLinks = [
 
 const headerClasses =
   "sticky top-0 z-40 flex items-center justify-between bgColor-primary px-12 py-6";
-const logoClasses = "font-subheading text-subheading-sm fgColor-primary";
-const navClasses = "flex items-center gap-8 font-subheading text-subheading-sm";
+const logoClasses =
+  "fontFamily-heading fontSize-heading-sm lineHeight-heading-sm letterSpacing-heading fgColor-primary";
+const navClasses =
+  "flex items-center gap-8 fontFamily-heading fontSize-heading-sm lineHeight-heading-sm letterSpacing-heading";
 const navLinkClasses =
   "fgColor-primary underline decoration-dotted underline-offset-4 decoration-transparent transition-colors hover:decoration-current";
 const footerClasses = "flex items-center justify-between gap-6 px-12 py-8";
@@ -55,7 +57,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontDisplay.variable} ${fontSubheading.variable} ${fontBody.variable} h-full`}
+      className={`${fontDisplay.variable} ${fontHeading.variable} ${fontBody.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
         <ThemeProvider

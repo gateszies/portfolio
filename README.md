@@ -12,7 +12,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 ## Design system
 
 - **Color tokens** (`src/app/globals.css`): `--color-bg-primary/secondary`, `--color-fg-primary/secondary`, `--color-accent`, each with a light value in `:root` and a dark override under `:root[data-theme="dark"]`. Exposed as utility classes `bgColor-primary`, `fgColor-primary`, etc. **The hex values are placeholders — swap them for the real brand palette in one place.**
-- **Fonts** (`src/app/layout.tsx`): `--font-display` (display-font, self-hosted via `next/font/local`), `--font-subheading` (Google Sans Code), `--font-body` (Nunito) — each exposed as a CSS variable and mapped in `globals.css`.
+- **Fonts** (`src/app/layout.tsx`): `--font-family-display` (display-font, self-hosted via `next/font/local`), `--font-family-heading` (Google Sans Code), `--font-family-body` (Nunito) — each exposed as a `fontFamily-*` utility in `globals.css`.
 - **Type scale**: `text-display-sm/md/lg`, `text-heading-sm/md/lg`, `text-body-sm/md/lg` utilities, defined in the `@theme` block in `globals.css`.
 - **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="data-theme"`, matching the CSS above) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
 - **Components** (`src/components/`, flat): generic `cva`-based primitives (`Button`, `Badge`, `Icon`) alongside domain-specific ones (`ProjectCard`, `LineItem`, `Footer`, `LinkList`, `Breadcrumb`, `MarkdownBody`, `HoverReveal` — the star-cursor hover interaction, `ThemeToggle`).

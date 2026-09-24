@@ -1,4 +1,5 @@
-const footerClasses = "font-subheading text-subheading-sm fgColor-primary";
+const footerClasses =
+  "fontFamily-heading fontSize-heading-sm lineHeight-heading-sm letterSpacing-heading fgColor-primary";
 
 export function Footer() {
   return (

@@ -7,8 +7,10 @@ const cardClasses =
 const thumbnailClasses =
   "size-15 shrink-0 rounded-lg border borderColor-strong";
 const bodyClasses = "flex flex-1 flex-col justify-center gap-2.5";
-const titleClasses = "font-body text-body-xl fgColor-primary";
-const descriptionClasses = "text-body-sm fgColor-primary";
+const titleClasses =
+  "fontFamily-body fontSize-body-xl lineHeight-body-xl fontWeight-body-xl fgColor-primary";
+const descriptionClasses =
+  "fontSize-body-sm lineHeight-body-sm fgColor-primary";
 const tagListClasses = "flex flex-wrap gap-2.5";
 
 const hoverAccentClasses = [

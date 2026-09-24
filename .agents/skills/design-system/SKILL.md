@@ -8,9 +8,10 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 ## Design tokens (Tailwind v4)
 
 - Tailwind v4 is configured in CSS, not tailwind.config.js. All tokens live in the global CSS file.
-- Two different registration mechanisms are used, deliberately, for two different kinds of tokens:
-  - Colors: raw CSS variables (`--color-bg-primary`, `--color-fg-primary`, `--color-fg-inverse`, `--color-border-strong`, `--color-border-subtle`, `--color-border-inverse`, `--color-brand`, `--color-poppy`, `--color-sky`, `--color-ochre`) defined once in `:root` / `:root[data-theme="dark"]`, exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming. Color values are contrast-checked (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before being tokenized; a color that fails may need a separate light/dark value even when the design shows one hex for both, since dark and light backgrounds don't demand the same contrast fix. `fg-inverse`/`border-inverse` are for text/borders sitting on top of a solid brand or accent fill (a filled button or badge) — verified correct for `brand`, not yet verified for a solid accent fill in dark mode; see the comment above the tokens in globals.css.
-  - Fonts and the type scale: registered under `@theme inline` / `@theme` (e.g. `--font-display: var(--font-display)`, `--text-heading-lg: 1.75rem`), producing Tailwind's native `font-display`, `text-heading-lg` utilities.
+- Colors and typography both use the same two- (or three-) tier structure, deliberately, instead of Tailwind's native `@theme` namespaces:
+  - **Color primitives**: raw named hex values (`--cream`, `--wine`, `--brown`, `--sand`, `--taupe`, `--poppy`, `--poppy-bright`, `--blue`, `--blue-bright`, `--olive`, `--olive-bright`) defined once in `:root`, named after the color itself with no semantic meaning. Nothing outside globals.css references these directly.
+  - **Semantic color tokens**: `--color-bg-primary`, `--color-fg-primary`, `--color-fg-inverse`, `--color-border-strong`, `--color-border-subtle`, `--color-border-inverse`, `--color-brand`, `--color-poppy`, `--color-sky`, `--color-ochre`, each set to `var(--<primitive>)`, defined once in `:root` and re-pointed at a different primitive under `:root[data-theme="dark"]`. Exposed as utilities via `@utility bgColor-primary { background-color: var(--color-bg-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming. Color values are contrast-checked (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before being tokenized; a color that fails may need a separate light/dark primitive even when the design shows one hex for both, since dark and light backgrounds don't demand the same contrast fix. `fg-inverse`/`border-inverse` are for text/borders sitting on top of a solid brand or accent fill (a filled button or badge) — verified correct for `brand`, not yet verified for a solid accent fill in dark mode; see the comment above the tokens in globals.css.
+  - **Typography**: font family, size, line height, weight, and letter spacing are each their own token category (`fontFamily-*`, `fontSize-*`, `lineHeight-*`, `fontWeight-*`, `letterSpacing-*`), one property per utility, named `<category>-<role>-<size>` (e.g. `fontSize-heading-lg`) — the same explicit-utility pattern as colors, not Tailwind's native `font-*`/`text-*` compound-style namespace. Font sizes are expressed as `calc(var(--spacing) * N)`, keeping them on Tailwind's own spacing scale rather than arbitrary rem values. Applying a text style means stacking every relevant category at a call site (e.g. `fontFamily-heading fontSize-heading-lg lineHeight-heading-lg letterSpacing-heading`) rather than one compound class.
 - Use `bgColor-*`/`fgColor-*` classes for color, never `bg-primary`/`text-primary` or a hex value.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against the global CSS file rather than assuming.
@@ -20,8 +21,8 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Typography
 
-- Define the type scale as named tokens in @theme using the --text-* namespace with paired line-height (and weight or letter-spacing where the style needs it), so one class like text-heading-lg applies the whole style.
-- Components use those scale classes instead of combining text-_, leading-_, and font-* by hand. Adding a weight (e.g. font-semibold) alongside a body size is fine.
+- Define each type-scale role/size pairing across the fontSize-_/lineHeight-_/fontWeight-_/letterSpacing-_ utilities described above; a size that shares a value across every role (e.g. heading's tracking) gets one token, not one per size.
+- Components stack those category utilities instead of combining text-_, leading-_, and font-* by hand. Adding a weight (e.g. font-semibold) that isn't part of the scale is still fine.
 
 ## Styling and variants
 
@@ -73,17 +74,16 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full border font-subheading transition hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full border fontFamily-heading transition-opacity hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary:
-          "bgColor-brand borderColor-brand text-[var(--color-bg-primary)]",
+        primary: "bgColor-brand borderColor-inverse fgColor-inverse",
         secondary: "borderColor-brand fgColor-brand",
       },
       size: {
-        sm: "text-body-sm px-4 py-1.5",
-        md: "text-body-md px-5 py-2.5",
+        sm: "fontSize-body-sm lineHeight-body-sm px-4 py-1.5",
+        md: "fontSize-body-md lineHeight-body-md px-5 py-2.5",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

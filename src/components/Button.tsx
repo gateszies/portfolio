@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full border font-subheading transition-opacity hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full border fontFamily-heading transition-opacity hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -11,8 +11,8 @@ export const buttonVariants = cva(
         secondary: "borderColor-brand fgColor-brand",
       },
       size: {
-        sm: "text-body-sm px-4 py-1.5",
-        md: "text-body-md px-5 py-2.5",
+        sm: "fontSize-body-sm lineHeight-body-sm px-4 py-1.5",
+        md: "fontSize-body-md lineHeight-body-md px-5 py-2.5",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

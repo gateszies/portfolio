@@ -1,13 +1,33 @@
 @import "tailwindcss";
 
 /*
- * Color tokens, sourced from the Figma "round 2" pass (node 91:1777) and
- * contrast-checked against WCAG 2.1 (4.5:1 for text, 3:1 for large/bold
- * text and non-text UI like borders). Dark mode passed as designed. Light
- * mode's three accents did not (2.24–3.12:1 as badge text/fills, 2.24–2.37:1
- * as bold link text) — poppy/sky/ochre below are darkened to the minimum
- * that clears 4.5:1 against bg-primary for light mode only; dark mode keeps
- * the vivid values as designed, since those already passed.
+ * Primitive color palette — raw named hex values, no semantic meaning.
+ * Nothing outside this file references these directly; components consume
+ * the semantic tier below.
+ */
+:root {
+  --cream: #fff6ee;
+  --wine: #33191e;
+  --brown: #673c33;
+  --sand: #e6d0ba;
+  --taupe: #99807a;
+  --poppy: #cf3f00;
+  --poppy-bright: #ff4d00;
+  --blue: #3671c6;
+  --blue-bright: #7ea5dc;
+  --olive: #7a741e;
+  --olive-bright: #b3ab2c;
+}
+
+/*
+ * Semantic color tokens, sourced from the Figma "round 2" pass (node
+ * 91:1777) and contrast-checked against WCAG 2.1 (4.5:1 for text, 3:1 for
+ * large/bold text and non-text UI like borders). Dark mode passed as
+ * designed. Light mode's three accents did not (2.24–3.12:1 as badge text/
+ * fills, 2.24–2.37:1 as bold link text) — poppy/blue/olive below are
+ * darkened to the minimum that clears 4.5:1 against bg-primary for light
+ * mode only; dark mode keeps the vivid primitives as designed, since those
+ * already passed.
  *
  * fg-inverse/border-inverse (for text/borders on top of a solid brand or
  * accent fill, e.g. a filled button or badge) are cream in both themes —
@@ -22,62 +42,145 @@
  * rather than solved — revisit if a solid accent variant is ever used.
  */
 :root {
-  --color-bg-primary: #fff6ee;
-  --color-fg-primary: #673c33;
-  --color-fg-inverse: #fff6ee;
-  --color-border-strong: #673c33;
-  --color-border-subtle: #99807a;
-  --color-border-inverse: #fff6ee;
-  --color-brand: #673c33;
-  --color-poppy: #cf3f00;
-  --color-sky: #3671c6;
-  --color-ochre: #7a741e;
+  --color-bg-primary: var(--cream);
+  --color-fg-primary: var(--brown);
+  --color-fg-inverse: var(--cream);
+  --color-border-strong: var(--brown);
+  --color-border-subtle: var(--taupe);
+  --color-border-inverse: var(--cream);
+  --color-brand: var(--brown);
+  --color-poppy: var(--poppy);
+  --color-sky: var(--blue);
+  --color-ochre: var(--olive);
 }
 
 :root[data-theme="dark"] {
-  --color-bg-primary: #33191e;
-  --color-fg-primary: #e6d0ba;
-  --color-border-strong: #e6d0ba;
-  --color-poppy: #ff4d00;
-  --color-sky: #7ea5dc;
-  --color-ochre: #b3ab2c;
+  --color-bg-primary: var(--wine);
+  --color-fg-primary: var(--sand);
+  --color-border-strong: var(--sand);
+  --color-poppy: var(--poppy-bright);
+  --color-sky: var(--blue-bright);
+  --color-ochre: var(--olive-bright);
 }
 
-/* Font family tokens, wired to next/font variables set on <html> in layout.tsx. */
-@theme inline {
-  --font-display: var(--font-display);
-  --font-subheading: var(--font-subheading);
-  --font-body: var(--font-body);
+/*
+ * Typography tokens, decomposed into one property per token (matching the
+ * bgColor/fgColor/fontFamily pattern) instead of Tailwind's compound
+ * --text-* text-style shorthand. Font sizes are expressed as a multiple of
+ * Tailwind's --spacing base (the same primitive p-, gap-, etc. utilities
+ * use), so the type scale stays on the same scale as the rest of the site.
+ * Heading tracking is a consistent 10% of its font size, so it's a single
+ * token rather than one per size.
+ */
+:root {
+  --font-size-body-sm: calc(var(--spacing) * 3.5);
+  --font-size-body-md: calc(var(--spacing) * 4);
+  --font-size-body-lg: calc(var(--spacing) * 4.5);
+  --font-size-body-xl: calc(var(--spacing) * 5);
+  --font-size-heading-sm: calc(var(--spacing) * 3.5);
+  --font-size-heading-md: calc(var(--spacing) * 4);
+  --font-size-heading-lg: calc(var(--spacing) * 5.5);
+  --font-size-display-sm: calc(var(--spacing) * 9);
+  --font-size-display-md: calc(var(--spacing) * 16);
+  --font-size-display-lg: calc(var(--spacing) * 28.5);
+
+  --line-height-body-sm: 1.5;
+  --line-height-body-md: 1.6;
+  --line-height-body-lg: 1.6;
+  --line-height-body-xl: 1.4;
+  --line-height-heading-sm: 1.3;
+  --line-height-heading-md: 1.3;
+  --line-height-heading-lg: 1.2;
+  --line-height-display-sm: 1.05;
+  --line-height-display-md: 1;
+  --line-height-display-lg: 0.95;
+
+  --font-weight-body-xl: 700;
+
+  --letter-spacing-heading: 0.1em;
 }
 
-/* Type scale tokens. Subheading tracking is a consistent 10% of its font size. */
-@theme {
-  --text-body-sm: 0.875rem;
-  --text-body-sm--line-height: 1.5;
-  --text-body-md: 1rem;
-  --text-body-md--line-height: 1.6;
-  --text-body-lg: 1.125rem;
-  --text-body-lg--line-height: 1.6;
-  --text-body-xl: 1.25rem;
-  --text-body-xl--line-height: 1.4;
-  --text-body-xl--font-weight: 700;
+/* Font family utilities, wired to next/font variables set on <html> in layout.tsx. */
+@utility fontFamily-display {
+  font-family: var(--font-family-display);
+}
+@utility fontFamily-heading {
+  font-family: var(--font-family-heading);
+}
+@utility fontFamily-body {
+  font-family: var(--font-family-body);
+}
 
-  --text-subheading-sm: 0.875rem;
-  --text-subheading-sm--line-height: 1.3;
-  --text-subheading-sm--letter-spacing: 0.1em;
-  --text-subheading-md: 1rem;
-  --text-subheading-md--line-height: 1.3;
-  --text-subheading-md--letter-spacing: 0.1em;
-  --text-subheading-lg: 1.375rem;
-  --text-subheading-lg--line-height: 1.2;
-  --text-subheading-lg--letter-spacing: 0.1em;
+/* Font size utilities. */
+@utility fontSize-body-sm {
+  font-size: var(--font-size-body-sm);
+}
+@utility fontSize-body-md {
+  font-size: var(--font-size-body-md);
+}
+@utility fontSize-body-lg {
+  font-size: var(--font-size-body-lg);
+}
+@utility fontSize-body-xl {
+  font-size: var(--font-size-body-xl);
+}
+@utility fontSize-heading-sm {
+  font-size: var(--font-size-heading-sm);
+}
+@utility fontSize-heading-md {
+  font-size: var(--font-size-heading-md);
+}
+@utility fontSize-heading-lg {
+  font-size: var(--font-size-heading-lg);
+}
+@utility fontSize-display-sm {
+  font-size: var(--font-size-display-sm);
+}
+@utility fontSize-display-md {
+  font-size: var(--font-size-display-md);
+}
+@utility fontSize-display-lg {
+  font-size: var(--font-size-display-lg);
+}
 
-  --text-display-sm: 2.25rem;
-  --text-display-sm--line-height: 1.05;
-  --text-display-md: 4rem;
-  --text-display-md--line-height: 1;
-  --text-display-lg: 7.125rem;
-  --text-display-lg--line-height: 0.95;
+/* Line height utilities. */
+@utility lineHeight-body-sm {
+  line-height: var(--line-height-body-sm);
+}
+@utility lineHeight-body-md {
+  line-height: var(--line-height-body-md);
+}
+@utility lineHeight-body-lg {
+  line-height: var(--line-height-body-lg);
+}
+@utility lineHeight-body-xl {
+  line-height: var(--line-height-body-xl);
+}
+@utility lineHeight-heading-sm {
+  line-height: var(--line-height-heading-sm);
+}
+@utility lineHeight-heading-md {
+  line-height: var(--line-height-heading-md);
+}
+@utility lineHeight-heading-lg {
+  line-height: var(--line-height-heading-lg);
+}
+@utility lineHeight-display-sm {
+  line-height: var(--line-height-display-sm);
+}
+@utility lineHeight-display-md {
+  line-height: var(--line-height-display-md);
+}
+@utility lineHeight-display-lg {
+  line-height: var(--line-height-display-lg);
+}
+
+/* Font weight and letter spacing utilities. */
+@utility fontWeight-body-xl {
+  font-weight: var(--font-weight-body-xl);
+}
+@utility letterSpacing-heading {
+  letter-spacing: var(--letter-spacing-heading);
 }
 
 /* Color utilities, named to match the design system's bgColor/fgColor/borderColor vocabulary. */
@@ -163,7 +266,7 @@
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-fg-primary);
-  font-family: var(--font-body);
+  font-family: var(--font-family-body);
   transition:
     background-color 0.2s ease,
     color 0.2s ease;

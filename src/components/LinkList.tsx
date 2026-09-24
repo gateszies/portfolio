@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon, type IconName } from "@/components/Icon";
 
 const listClasses =
-  "flex flex-wrap gap-8 font-subheading text-subheading-sm fgColor-primary";
+  "flex flex-wrap gap-8 fontFamily-heading fontSize-heading-sm lineHeight-heading-sm letterSpacing-heading fgColor-primary";
 const linkClasses =
   "flex items-center gap-2 underline decoration-dotted decoration-transparent underline-offset-4 transition-colors hover:decoration-current";
 

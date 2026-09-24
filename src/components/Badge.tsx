@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-lg border border-transparent font-subheading font-medium",
+  "inline-flex items-center justify-center rounded-lg border border-transparent fontFamily-heading font-medium",
   {
     variants: {
       color: {

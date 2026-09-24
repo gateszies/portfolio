@@ -8,12 +8,15 @@ const pageClasses =
   "mx-auto flex w-full max-w-2xl flex-col gap-20 px-6 pb-12 pt-12";
 const sectionClasses = "flex flex-col gap-6";
 const sectionHeadingClasses =
-  "font-subheading text-subheading-md fgColor-primary";
-const eyebrowClasses = "font-subheading text-subheading-lg fgColor-primary";
+  "fontFamily-heading fontSize-heading-md lineHeight-heading-md letterSpacing-heading fgColor-primary";
+const eyebrowClasses =
+  "fontFamily-heading fontSize-heading-lg lineHeight-heading-lg letterSpacing-heading fgColor-primary";
 const nameClasses =
-  "font-display text-display-sm fgColor-primary sm:text-display-md lg:text-display-lg";
-const introClasses = "font-body text-body-lg fgColor-primary";
-const bioClasses = "font-body text-body-lg fgColor-primary";
+  "fontFamily-display fontSize-display-sm lineHeight-display-sm fgColor-primary sm:fontSize-display-md sm:lineHeight-display-md lg:fontSize-display-lg lg:lineHeight-display-lg";
+const introClasses =
+  "fontFamily-body fontSize-body-lg lineHeight-body-lg fgColor-primary";
+const bioClasses =
+  "fontFamily-body fontSize-body-lg lineHeight-body-lg fgColor-primary";
 const accentLinkClasses = "font-bold underline";
 const projectListClasses = "flex flex-col gap-8";
 const experienceListClasses = "flex flex-col";
