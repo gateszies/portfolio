@@ -1,12 +1,31 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
+import { Google_Sans_Code, Nunito } from "next/font/google";
 import Link from "next/link";
 import { ThemeProvider } from "next-themes";
-import { fontBody, fontDisplay, fontSubheading } from "./fonts";
 import { Footer } from "@/components/Footer";
 import { LinkList } from "@/components/LinkList";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { socialLinks } from "@/data/social";
 import "./globals.css";
+
+const fontDisplay = localFont({
+  src: "./fonts/display-font/display-font",
+  weight: "400",
+  style: "normal",
+  variable: "--font-display",
+});
+
+const fontSubheading = Google_Sans_Code({
+  variable: "--font-subheading",
+  weight: ["400", "500"],
+  subsets: ["latin"],
+});
+
+const fontBody = Nunito({
+  variable: "--font-body",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://about-gateszies.vercel.app"),
