@@ -7,23 +7,27 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Design tokens (Tailwind v4)
 
-- Tailwind v4 is configured in CSS, not tailwind.config.js. All tokens live in the global CSS file.
-- Colors and typography both use the same two- (or three-) tier structure, deliberately, instead of Tailwind's native `@theme` namespaces:
-  - **Color primitives**: raw named hex values (`--cream`, `--wine`, `--brown`, `--sand`, `--taupe`, `--poppy`, `--poppy-bright`, `--blue`, `--blue-bright`, `--olive`, `--olive-bright`) defined once in `:root`, named after the color itself with no semantic meaning. Nothing outside globals.css references these directly.
-  - **Semantic color tokens**: `--bgColor-primary`, `--fgColor-primary`, `--fgColor-inverse`, `--borderColor-strong`, `--borderColor-subtle`, `--borderColor-inverse`, plus a `--bgColor-`/`--fgColor-`/`--borderColor-` trio each for `brand`, `poppy`, `sky` and `ochre`. Each is set to `var(--<primitive>)`, defined once in `:root` and re-pointed at a different primitive under `:root[data-theme="dark"]`. Exposed as utilities via `@utility bgColor-primary { background-color: var(--bgColor-primary); }` (and so on) — not registered under Tailwind's `@theme` color namespace, and not Tailwind's native `bg-primary`/`text-primary-foreground` naming. Color values are contrast-checked (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before being tokenized; a color that fails may need a separate light/dark primitive even when the design shows one hex for both, since dark and light backgrounds don't demand the same contrast fix. `fgColor-inverse`/`borderColor-inverse` are for text/borders sitting on top of a solid brand or accent fill (a filled button or badge) — verified correct for `brand`, not yet verified for a solid accent fill in dark mode; see the comment above the tokens in globals.css.
-  - **Typography**: font family, size, line height, weight, and letter spacing are each their own token category (`--fontFamily-*`, `--fontSize-*`, `--lineHeight-*`, `--fontWeight-*`, `--letterSpacing-*`), one property per utility, named `<category>-<role>-<size>` (e.g. `fontSize-heading-lg`) — the same explicit-utility pattern as colors, not Tailwind's native `font-*`/`text-*` compound-style namespace. Font sizes are expressed as `calc(var(--spacing) * N)`, keeping them on Tailwind's own spacing scale rather than arbitrary rem values. Applying a text style means stacking every relevant category at a call site (e.g. `fontFamily-heading fontSize-heading-lg lineHeight-heading-lg letterSpacing-heading`) rather than one compound class.
-- A token's CSS variable is named exactly like the utility that reads it (`--fgColor-primary` → `fgColor-primary`), so there is one vocabulary end to end. Only the primitive tier, which no utility reads directly, is named differently.
-- Use `bgColor-*`/`fgColor-*` classes for color, never `bg-primary`/`text-primary` or a hex value.
+- Tailwind v4 is configured in CSS (`src/app/globals.css`), not `tailwind.config.js`. Color primitives live on `:root`; semantic color tokens live in `@theme`; fonts live in `@theme inline`; dark overrides redeclare the same semantic `--*` names inside `@layer theme` under `:root[data-theme="dark"]` (same cascade layer as `@theme` — not bare `:root` outside the layer).
+- Two color tiers:
+  - **Primitives** (`:root`): `--cream`, `--wine`, `--brown`, `--sand`, `--taupe`, `--poppy`, `--poppy-bright`, `--blue`, `--blue-bright`, `--olive`, `--olive-bright`. Named after the color; hex lives only here. Nothing outside `globals.css` references them — no `bg-cream`, no `var(--brown)` at call sites.
+  - **Semantic** (`@theme`): maps primitives into Tailwind namespaces so utilities exist — `--color-background` / `--color-foreground` → `bg-background` / `text-foreground`; `--color-primary` / `--color-primary-foreground` → `bg-primary` / `text-primary-foreground`; `--border-color-strong` / `--border-color-subtle` → `border-strong` / `border-subtle` (kept instead of shadcn's `muted`); `--color-accent-one` / `--color-accent-two` / `--color-accent-three` → `bg-*` / `text-*` / `border-*` for each. Not `inline` — utilities must reference the semantic vars so dark mode can reassign them.
+- Accents are semantic slots (`accent-one` / `accent-two` / `accent-three`), not color names.
+- Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `primary-foreground` is for text/borders on a solid primary fill — verified for primary, not yet for a solid accent fill in dark mode.
+- **Typography**: next/font sets `--font-family-*` (with fallbacks) in `src/app/fonts.ts`. `@theme inline` maps them to role utilities:
+  - `font-display` — display-font; large page titles only
+  - `font-label` — Google Sans Code (500 only); small UI chrome / section labels (nav, eyebrows, buttons, badges, footer). Always pair with `font-medium` and usually `tracking-widest`.
+  - `font-body` — Nunito (400/500/700); body copy and rich-text headings
+    Use Tailwind's default `text-*` scale for size.
+- Use native utilities (`bg-background`, `text-foreground`, `bg-primary`, `border-strong`, `text-accent-one`, …) — never hex values, primitive names, palette class names, or arbitrary-value color classes that reach into another token's CSS variable. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
-- Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against the global CSS file rather than assuming.
-- Components never use raw palette classes (bg-blue-600), hex values, or arbitrary-value color classes that reach into another token's raw CSS variable (Tailwind's square-bracket syntax around a `var(...)` value). A color that needs pairing with another token's value for a specific purpose (e.g. text on top of a solid fill) gets its own named token (`fgColor-inverse`, `borderColor-inverse`) instead of reaching for the other token via an arbitrary value. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
-- For translucent colors, use the color opacity modifier (bg-accent/50) instead of opacity-_, which creates a stacking context. Use opacity-_ only when deliberately fading an element and its children together.
-- Dark mode is set with a data-theme attribute on <html>, managed by next-themes (which uses data-theme by default) with suppressHydrationWarning on <html>. This project does not use Tailwind's `dark:` variant at all, and `@custom-variant dark` is deliberately not registered — every light/dark difference is a color, and color is already fully handled by the token swap above, so a `dark:` class would compile to nothing being used. Do not add `dark:` utilities or register the variant; if a real need for one arises (a structural difference that isn't a color swap — inverting a logo, dropping a shadow, a theme-only border), raise it first rather than adding it unilaterally.
+- Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against `globals.css`.
+- For translucent colors, prefer a dedicated token. Use `opacity-_` only when deliberately fading an element and its children together.
+- Dark mode is a `data-theme` attribute on `<html>`, managed by `next-themes`, with `suppressHydrationWarning` on `<html>`. Do not use Tailwind's `dark:` variant or register `@custom-variant dark` — light/dark differences are color token swaps. Raise first if a structural (non-color) theme difference appears.
 
 ## Typography
 
-- Define each type-scale role/size pairing across the fontSize-_/lineHeight-_/fontWeight-_/letterSpacing-_ utilities described above; a size that shares a value across every role (e.g. heading's tracking) gets one token, not one per size.
-- Components stack those category utilities instead of combining text-_, leading-_, and font-* by hand. Adding a weight (e.g. font-semibold) that isn't part of the scale is still fine.
+- Use Tailwind's default `text-*` scale. Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label.
+- Uncontrolled HTML (project markdown) uses `@tailwindcss/typography` for rhythm/sizing (`prose prose-lg`) plus a custom color theme utility `prose-brand` (docs: “Adding custom color themes”). `prose-brand` sets text `--tw-prose-*` to `inherit` (follows `body` / `text-foreground`) and links/borders to semantic tokens (`--color-accent-one`, border tokens) — not a wall of `prose-*:…` modifiers. Dark mode follows via token swaps under `data-theme`. Custom chrome outside prose's model (`.code-block`, copy button) lives under `.markdown-body`. Shiki keeps `--shiki-light` / `--shiki-dark` for syntax colors only; block chrome still uses design tokens. Prose headings stay on `font-body` via inheritance from `body` — do not switch them to `font-display` / `font-label`.
 
 ## Styling and variants
 
@@ -75,16 +79,16 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full border fontFamily-heading transition-opacity hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-full border font-label font-medium transition-opacity hover:opacity-85 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bgColor-brand borderColor-inverse fgColor-inverse",
-        secondary: "borderColor-brand fgColor-brand",
+        primary: "bg-primary border-primary-foreground text-primary-foreground",
+        secondary: "border-primary text-primary",
       },
       size: {
-        sm: "fontSize-body-sm lineHeight-body-sm px-4 py-1.5",
-        md: "fontSize-body-md lineHeight-body-md px-5 py-2.5",
+        sm: "px-4 py-1.5 text-sm",
+        md: "px-5 py-2.5 text-base",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

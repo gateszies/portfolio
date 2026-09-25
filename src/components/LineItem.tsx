@@ -1,5 +1,5 @@
 const rowClasses =
-  "flex items-center gap-6 border-b borderColor-strong py-4 fontSize-body-md lineHeight-body-md fgColor-primary";
+  "flex items-center gap-6 border-b border-strong py-4 text-base text-foreground";
 const orgClasses = "min-w-[160px] shrink-0 underline";
 const detailsClasses = "flex flex-1 items-center justify-between";
 const datesClasses = "text-right";

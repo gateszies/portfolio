@@ -1,13 +1,9 @@
 ---
-title: "Studio Projects: Component System Foundations"
-description: Built the foundational component library and design-token system for a multi-brand Symfony app from scratch, replacing invented tags and one-off styling with a real component model.
-tags: [Twig, Symfony, SCSS, Stimulus, Storybook]
+title: "Foundational Component System"
+description: Built the foundational component library and design-token system for a multi-brand Symfony app from, replacing invented tags and one-off styling with a real component model.
+tags: [Symfony, Stimulus, Storybook]
 thumbnail: /placeholders/project-thumb.svg
 hero: /placeholders/project-hero.svg
----
-
-_Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
-
 ---
 
 ### Context

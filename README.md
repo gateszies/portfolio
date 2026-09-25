@@ -6,16 +6,16 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 
 - **Next.js (App Router) + React + TypeScript** — Server Components for the static pages, a few client islands (`ThemeToggle`, `HoverReveal`) for interactivity.
 - **Tailwind CSS v4** — design tokens are plain CSS custom properties defined in `src/app/globals.css` via `@theme`, not a JS config file.
-- **No CMS** — project case studies are Markdown files (`content/projects/`); everything else (resume, social links) is typed data under `src/data/`.
+- **No CMS** — project case studies are Markdown files (`content/projects/`); experience and social links live next to the components that render them.
 - **Vercel** — connect this repo in the Vercel dashboard for automatic deploys on push; the free Hobby plan covers a personal portfolio.
 
 ## Design system
 
-- **Color tokens** (`src/app/globals.css`): a primitive tier of raw named hexes (`--cream`, `--brown`, `--poppy`, `--blue`, …) that a semantic tier (`--bgColor-primary`, `--fgColor-primary`, `--borderColor-strong`, plus `bgColor`/`fgColor`/`borderColor` trios for `brand`, `poppy`, `sky`, `ochre`) points at, re-pointed per theme under `:root[data-theme="dark"]`. Each semantic token is exposed as the utility class of the same name.
-- **Fonts** (`src/app/layout.tsx`): `--fontFamily-display` (display-font, self-hosted via `next/font/local`), `--fontFamily-heading` (Google Sans Code), `--fontFamily-body` (Nunito) — each exposed as a `fontFamily-*` utility in `globals.css`.
-- **Type scale**: `fontSize-*`, `lineHeight-*`, `fontWeight-*`, and `letterSpacing-*` utilities across `body`, `heading`, and `display` roles, one CSS property each, defined in `globals.css`. Font sizes are multiples of Tailwind's `--spacing` base.
+- **Color tokens** (`src/app/globals.css`): named primitives on `:root` (`--cream`, `--brown`, …); semantic aliases in `@theme` (`--color-background`, `--color-foreground`, `--color-primary` / `--color-primary-foreground`, `--border-color-strong` / `--border-color-subtle`, `--color-accent-one`…). Call sites use native utilities (`bg-background`, `text-foreground`, `bg-primary`, `border-strong`, `text-accent-one`). Dark mode reassigns the semantic variables under `:root[data-theme="dark"]`.
+- **Fonts** (`src/app/fonts.ts`): next/font sets `--font-family-*`; `@theme inline` maps them to `font-display` (large titles), `font-label` (UI / section labels), `font-body` (copy + rich-text headings).
+- **Type scale**: Tailwind's default `text-*` utilities.
 - **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="data-theme"`, matching the CSS above) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
-- **Components** (`src/components/`, flat): generic `cva`-based primitives (`Button`, `Badge`, `Icon`) alongside domain-specific ones (`ProjectCard`, `LineItem`, `Footer`, `LinkList`, `Breadcrumb`, `MarkdownBody`, `HoverReveal` — the star-cursor hover interaction, `ThemeToggle`).
+- **Components** (`src/components/`, flat): generic `cva`-based primitives (`Button`, `Badge`, `Icon`) alongside domain-specific ones (`Section`, `ProjectCard`, `ProjectList`, `ExperienceList`, `LineItem`, `Footer`, `LinkList`, `Breadcrumb`, `MarkdownBody`, `HoverReveal` — the star-cursor hover interaction, `ThemeToggle`).
 - Conventions for all of the above are written down in `AGENTS.md` and `.agents/skills/design-system/SKILL.md`.
 
 ## Adding or editing a project
@@ -54,7 +54,7 @@ absolute path:
 
 - `public/placeholders/*.svg` — swap for real photos (Aly, Ivy) and project images.
 - `public/star-cursor.svg` — the custom cursor graphic.
-- `content/projects/*.md` / `src/data/experience.ts` — real copy and dates (Figma itself only had lorem ipsum / "2020 - Now" placeholders for these).
+- `content/projects/*.md` / experience rows in `ExperienceList` — real copy and dates (Figma itself only had lorem ipsum / "2020 - Now" placeholders for these).
 - Color palette and fonts, as above.
 
 ## Development

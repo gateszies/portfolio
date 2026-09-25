@@ -1,15 +1,14 @@
 "use client";
 
 import type { MouseEvent } from "react";
-
-const CHECK_ICON =
-  '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+import { iconHtml } from "@/components/Icon";
+import { cn } from "@/lib/utils";
 
 const RESET_DELAY_MS = 1500;
 
 type MarkdownBodyProps = {
   html: string;
-  className: string;
+  className?: string;
 };
 
 export function MarkdownBody({ html, className }: MarkdownBodyProps) {
@@ -24,7 +23,7 @@ export function MarkdownBody({ html, className }: MarkdownBodyProps) {
     await navigator.clipboard.writeText(code);
 
     const originalIcon = button.innerHTML;
-    button.innerHTML = CHECK_ICON;
+    button.innerHTML = iconHtml.check;
     button.disabled = true;
     setTimeout(() => {
       button.innerHTML = originalIcon;
@@ -34,7 +33,10 @@ export function MarkdownBody({ html, className }: MarkdownBodyProps) {
 
   return (
     <div
-      className={className}
+      className={cn(
+        "prose prose-brand prose-lg markdown-body max-w-none pt-4",
+        className,
+      )}
       onClick={handleClick}
       dangerouslySetInnerHTML={{ __html: html }}
     />

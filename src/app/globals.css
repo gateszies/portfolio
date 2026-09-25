@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --cream: #fff6ee;
@@ -14,260 +15,75 @@
   --olive-bright: #b3ab2c;
 }
 
-/*
- * Light mode's three accents did not pass WCAG 2.1 against bg-primary as
- * designed in Figma (2.24–3.12:1 as badge text/fills, 2.24–2.37:1 as bold
- * link text), so poppy/blue/olive are darkened to the minimum that clears
- * 4.5:1; the -bright primitives are the original Figma values, which only
- * pass on the dark background. Don't "correct" either set back to a single
- * shared value.
- *
- * fgColor-inverse/borderColor-inverse are cream in both themes — correct
- * for brand, which stays dark in both, and for the darkened light-mode
- * accent fills. They are NOT verified for a *solid, accent-colored* fill in
- * dark mode: cream on the bright accents fails (2.24–3.12:1), and the dark
- * text that would fix it fails on the brand fill (1.75:1). Nothing renders a
- * solid accent fill today (only brand, and only outline for accents), so
- * this is flagged rather than solved.
- */
-:root {
-  --bgColor-primary: var(--cream);
-  --fgColor-primary: var(--brown);
-  --fgColor-inverse: var(--cream);
-  --borderColor-strong: var(--brown);
-  --borderColor-subtle: var(--taupe);
-  --borderColor-inverse: var(--cream);
-
-  --bgColor-brand: var(--brown);
-  --fgColor-brand: var(--brown);
-  --borderColor-brand: var(--brown);
-
-  --bgColor-poppy: var(--poppy);
-  --fgColor-poppy: var(--poppy);
-  --borderColor-poppy: var(--poppy);
-
-  --bgColor-sky: var(--blue);
-  --fgColor-sky: var(--blue);
-  --borderColor-sky: var(--blue);
-
-  --bgColor-ochre: var(--olive);
-  --fgColor-ochre: var(--olive);
-  --borderColor-ochre: var(--olive);
+@theme {
+  --color-background: var(--cream);
+  --color-foreground: var(--brown);
+  --color-primary: var(--brown);
+  --color-primary-foreground: var(--cream);
+  --border-color-strong: var(--brown);
+  --border-color-subtle: var(--taupe);
+  --color-accent-one: var(--poppy);
+  --color-accent-two: var(--blue);
+  --color-accent-three: var(--olive);
 }
 
-:root[data-theme="dark"] {
-  --bgColor-primary: var(--wine);
-  --fgColor-primary: var(--sand);
-  --borderColor-strong: var(--sand);
-
-  --bgColor-poppy: var(--poppy-bright);
-  --fgColor-poppy: var(--poppy-bright);
-  --borderColor-poppy: var(--poppy-bright);
-
-  --bgColor-sky: var(--blue-bright);
-  --fgColor-sky: var(--blue-bright);
-  --borderColor-sky: var(--blue-bright);
-
-  --bgColor-ochre: var(--olive-bright);
-  --fgColor-ochre: var(--olive-bright);
-  --borderColor-ochre: var(--olive-bright);
+@theme inline {
+  --font-display: var(--font-family-display);
+  --font-label: var(--font-family-label);
+  --font-body: var(--font-family-body);
 }
 
-:root {
-  --fontSize-body-sm: calc(var(--spacing) * 3.5);
-  --fontSize-body-md: calc(var(--spacing) * 4);
-  --fontSize-body-lg: calc(var(--spacing) * 4.5);
-  --fontSize-body-xl: calc(var(--spacing) * 5);
-  --fontSize-heading-sm: calc(var(--spacing) * 3.5);
-  --fontSize-heading-md: calc(var(--spacing) * 4);
-  --fontSize-heading-lg: calc(var(--spacing) * 5.5);
-  --fontSize-display-sm: calc(var(--spacing) * 9);
-  --fontSize-display-md: calc(var(--spacing) * 16);
-  --fontSize-display-lg: calc(var(--spacing) * 28.5);
-
-  --lineHeight-body-sm: 1.5;
-  --lineHeight-body-md: 1.6;
-  --lineHeight-body-lg: 1.6;
-  --lineHeight-body-xl: 1.4;
-  --lineHeight-heading-sm: 1.3;
-  --lineHeight-heading-md: 1.3;
-  --lineHeight-heading-lg: 1.2;
-  --lineHeight-display-sm: 1.05;
-  --lineHeight-display-md: 1;
-  --lineHeight-display-lg: 0.95;
-
-  --fontWeight-body-xl: 700;
-
-  --letterSpacing-heading: 0.1em;
-}
-
-@utility fontFamily-display {
-  font-family: var(--fontFamily-display);
-}
-@utility fontFamily-heading {
-  font-family: var(--fontFamily-heading);
-}
-@utility fontFamily-body {
-  font-family: var(--fontFamily-body);
-}
-
-@utility fontSize-body-sm {
-  font-size: var(--fontSize-body-sm);
-}
-@utility fontSize-body-md {
-  font-size: var(--fontSize-body-md);
-}
-@utility fontSize-body-lg {
-  font-size: var(--fontSize-body-lg);
-}
-@utility fontSize-body-xl {
-  font-size: var(--fontSize-body-xl);
-}
-@utility fontSize-heading-sm {
-  font-size: var(--fontSize-heading-sm);
-}
-@utility fontSize-heading-md {
-  font-size: var(--fontSize-heading-md);
-}
-@utility fontSize-heading-lg {
-  font-size: var(--fontSize-heading-lg);
-}
-@utility fontSize-display-sm {
-  font-size: var(--fontSize-display-sm);
-}
-@utility fontSize-display-md {
-  font-size: var(--fontSize-display-md);
-}
-@utility fontSize-display-lg {
-  font-size: var(--fontSize-display-lg);
-}
-
-@utility lineHeight-body-sm {
-  line-height: var(--lineHeight-body-sm);
-}
-@utility lineHeight-body-md {
-  line-height: var(--lineHeight-body-md);
-}
-@utility lineHeight-body-lg {
-  line-height: var(--lineHeight-body-lg);
-}
-@utility lineHeight-body-xl {
-  line-height: var(--lineHeight-body-xl);
-}
-@utility lineHeight-heading-sm {
-  line-height: var(--lineHeight-heading-sm);
-}
-@utility lineHeight-heading-md {
-  line-height: var(--lineHeight-heading-md);
-}
-@utility lineHeight-heading-lg {
-  line-height: var(--lineHeight-heading-lg);
-}
-@utility lineHeight-display-sm {
-  line-height: var(--lineHeight-display-sm);
-}
-@utility lineHeight-display-md {
-  line-height: var(--lineHeight-display-md);
-}
-@utility lineHeight-display-lg {
-  line-height: var(--lineHeight-display-lg);
-}
-
-@utility fontWeight-body-xl {
-  font-weight: var(--fontWeight-body-xl);
-}
-@utility letterSpacing-heading {
-  letter-spacing: var(--letterSpacing-heading);
-}
-
-@utility bgColor-primary {
-  background-color: var(--bgColor-primary);
-}
-@utility fgColor-primary {
-  color: var(--fgColor-primary);
-}
-@utility fgColor-inverse {
-  color: var(--fgColor-inverse);
-}
-@utility borderColor-strong {
-  border-color: var(--borderColor-strong);
-}
-@utility borderColor-subtle {
-  border-color: var(--borderColor-subtle);
-}
-@utility borderColor-inverse {
-  border-color: var(--borderColor-inverse);
-}
-@utility bgColor-brand {
-  background-color: var(--bgColor-brand);
-}
-@utility fgColor-brand {
-  color: var(--fgColor-brand);
-}
-@utility borderColor-brand {
-  border-color: var(--borderColor-brand);
-}
-@utility bgColor-poppy {
-  background-color: var(--bgColor-poppy);
-}
-@utility fgColor-poppy {
-  color: var(--fgColor-poppy);
-}
-@utility borderColor-poppy {
-  border-color: var(--borderColor-poppy);
-}
-@utility bgColor-sky {
-  background-color: var(--bgColor-sky);
-}
-@utility fgColor-sky {
-  color: var(--fgColor-sky);
-}
-@utility borderColor-sky {
-  border-color: var(--borderColor-sky);
-}
-@utility bgColor-ochre {
-  background-color: var(--bgColor-ochre);
-}
-@utility fgColor-ochre {
-  color: var(--fgColor-ochre);
-}
-@utility borderColor-ochre {
-  border-color: var(--borderColor-ochre);
-}
-
-/*
- * Shiki emits both palettes as inline --shiki-light/--shiki-dark variables
- * (see src/lib/projects.ts) and switches on prefers-color-scheme by default.
- * This is its documented override for consumers driving dark mode themselves.
- */
-.shiki,
-.shiki span {
-  color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
-  font-style: var(--shiki-light-font-style);
-  font-weight: var(--shiki-light-font-weight);
-  text-decoration: var(--shiki-light-text-decoration);
-}
-:root[data-theme="dark"] .shiki,
-:root[data-theme="dark"] .shiki span {
-  color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg);
-  font-style: var(--shiki-dark-font-style);
-  font-weight: var(--shiki-dark-font-weight);
-  text-decoration: var(--shiki-dark-text-decoration);
-}
-
-body {
-  background-color: var(--bgColor-primary);
-  color: var(--fgColor-primary);
-  font-family: var(--fontFamily-body);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+@layer theme {
+  :root[data-theme="dark"] {
+    --color-background: var(--wine);
+    --color-foreground: var(--sand);
+    --border-color-strong: var(--sand);
+    --color-accent-one: var(--poppy-bright);
+    --color-accent-two: var(--blue-bright);
+    --color-accent-three: var(--olive-bright);
+  }
 }
 
 .star-cursor {
   cursor:
     url("/star-cursor.svg") 12 12,
     auto;
+}
+
+@utility prose-brand {
+  --tw-prose-body: inherit;
+  --tw-prose-headings: inherit;
+  --tw-prose-lead: inherit;
+  --tw-prose-links: var(--color-accent-one);
+  --tw-prose-bold: inherit;
+  --tw-prose-counters: inherit;
+  --tw-prose-bullets: var(--border-color-subtle);
+  --tw-prose-hr: var(--border-color-subtle);
+  --tw-prose-quotes: inherit;
+  --tw-prose-quote-borders: var(--border-color-strong);
+  --tw-prose-captions: inherit;
+  --tw-prose-code: inherit;
+  --tw-prose-pre-code: inherit;
+  --tw-prose-pre-bg: transparent;
+  --tw-prose-th-borders: var(--border-color-subtle);
+  --tw-prose-td-borders: var(--border-color-subtle);
+  --tw-prose-kbd: inherit;
+}
+
+.markdown-body {
+  .code-block {
+    @apply border-subtle overflow-hidden rounded-lg border;
+  }
+
+  .code-block-header {
+    @apply border-subtle flex items-center justify-between border-b px-3 py-2;
+  }
+
+  .code-block-filename {
+    @apply text-foreground font-mono text-sm;
+  }
+
+  .js-copy-code {
+    @apply text-foreground hover:text-primary transition-colors disabled:opacity-50;
+  }
 }

@@ -1,13 +1,10 @@
 ---
-title: Section Gallery Live Preview
+title: Content Editor Sandbox
+
 description: Designed and built a real-time preview tool that lets content editors browse, adjust, and safely experiment with every page-builder section without touching the live entry.
-tags: [PHP, TypeScript, CraftCMS, SCSS]
+tags: [PHP, TypeScript, SCSS]
 thumbnail: /placeholders/project-thumb.svg
 hero: /placeholders/project-hero.svg
----
-
-_Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
-
 ---
 
 ### Context

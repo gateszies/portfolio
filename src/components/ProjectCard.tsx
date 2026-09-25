@@ -3,20 +3,17 @@ import Link from "next/link";
 import { Badge } from "@/components/Badge";
 
 const cardClasses =
-  "group flex w-full gap-6 rounded-lg border borderColor-strong p-8 transition-colors hover:borderColor-subtle";
-const thumbnailClasses =
-  "size-15 shrink-0 rounded-lg border borderColor-strong";
+  "group flex w-full gap-6 rounded-lg border border-strong p-8 transition-colors hover:border-subtle";
+const thumbnailClasses = "size-15 shrink-0 rounded-lg border border-strong";
 const bodyClasses = "flex flex-1 flex-col justify-center gap-2.5";
-const titleClasses =
-  "fontFamily-body fontSize-body-xl lineHeight-body-xl fontWeight-body-xl fgColor-primary";
-const descriptionClasses =
-  "fontSize-body-sm lineHeight-body-sm fgColor-primary";
+const titleClasses = "font-body text-xl font-bold text-foreground";
+const descriptionClasses = "text-sm text-foreground";
 const tagListClasses = "flex flex-wrap gap-2.5";
 
 const hoverAccentClasses = [
-  "group-hover:borderColor-poppy group-hover:fgColor-poppy",
-  "group-hover:borderColor-sky group-hover:fgColor-sky",
-  "group-hover:borderColor-ochre group-hover:fgColor-ochre",
+  "group-hover:border-accent-one group-hover:text-accent-one",
+  "group-hover:border-accent-two group-hover:text-accent-two",
+  "group-hover:border-accent-three group-hover:text-accent-three",
 ];
 
 type ProjectCardProps = {

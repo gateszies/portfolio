@@ -3,17 +3,17 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-lg border border-transparent fontFamily-heading font-medium",
+  "inline-flex items-center justify-center rounded-lg border border-transparent font-label font-medium",
   {
     variants: {
       color: {
-        brand: "",
-        poppy: "",
-        sky: "",
-        ochre: "",
+        primary: "",
+        accentOne: "",
+        accentTwo: "",
+        accentThree: "",
       },
       appearance: {
-        solid: "fgColor-inverse",
+        solid: "text-primary-foreground",
         outline: "",
       },
       size: {
@@ -22,32 +22,36 @@ export const badgeVariants = cva(
       },
     },
     compoundVariants: [
-      { color: "brand", appearance: "solid", class: "bgColor-brand" },
+      { color: "primary", appearance: "solid", class: "bg-primary" },
       {
-        color: "brand",
+        color: "primary",
         appearance: "outline",
-        class: "borderColor-strong fgColor-primary",
+        class: "border-strong text-foreground",
       },
-      { color: "poppy", appearance: "solid", class: "bgColor-poppy" },
+      { color: "accentOne", appearance: "solid", class: "bg-accent-one" },
       {
-        color: "poppy",
+        color: "accentOne",
         appearance: "outline",
-        class: "borderColor-poppy fgColor-poppy",
+        class: "border-accent-one text-accent-one",
       },
-      { color: "sky", appearance: "solid", class: "bgColor-sky" },
+      { color: "accentTwo", appearance: "solid", class: "bg-accent-two" },
       {
-        color: "sky",
+        color: "accentTwo",
         appearance: "outline",
-        class: "borderColor-sky fgColor-sky",
+        class: "border-accent-two text-accent-two",
       },
-      { color: "ochre", appearance: "solid", class: "bgColor-ochre" },
       {
-        color: "ochre",
+        color: "accentThree",
+        appearance: "solid",
+        class: "bg-accent-three",
+      },
+      {
+        color: "accentThree",
         appearance: "outline",
-        class: "borderColor-ochre fgColor-ochre",
+        class: "border-accent-three text-accent-three",
       },
     ],
-    defaultVariants: { color: "brand", appearance: "outline", size: "md" },
+    defaultVariants: { color: "primary", appearance: "outline", size: "md" },
   },
 );
 

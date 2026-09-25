@@ -1,13 +1,9 @@
 ---
 title: Transactional Email Platform
-description: Founded a React Email-based platform with a shared component library, token system, and generated backend contract, replacing per-brand, per-template duplication across two brands.
-tags: [React, TypeScript, TailwindCSS]
+description: Created a React Email-based platform with a shared component library, token system, and generated backend contract, replacing per-brand, per-template duplication across two brands.
+tags: [React, TypeScript, Tailwind]
 thumbnail: /placeholders/project-thumb.svg
 hero: /placeholders/project-hero.svg
----
-
-_Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
-
 ---
 
 ### Context

@@ -1,5 +1,5 @@
 ---
-title: ProDPI Site Migration
+title: Legacy Codebase Migration
 description: Led a full rebuild of a direct-to-consumer print lab's marketing site on Craft 5, replacing one-off templates with a flexible section-based page builder marketing can build with on their own.
 tags: [TypeScript, Twig, CraftCMS, SCSS]
 thumbnail: /placeholders/project-thumb.svg

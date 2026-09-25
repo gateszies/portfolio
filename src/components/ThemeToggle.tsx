@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
 import { Icon } from "@/components/Icon";
 
-const toggleClasses = "fgColor-primary transition-colors hover:fgColor-brand";
+const toggleClasses = "text-foreground transition-colors hover:text-primary";
 
 function subscribe() {
   return () => {};
