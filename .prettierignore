@@ -1,3 +1,7 @@
 .next
 node_modules
 package-lock.json
+
+# Multi-line inline JSX must keep the opening tag on the same line as
+# surrounding text; Prettier breaks that and MDX treats the tag as a block.
+content/home/about.mdx

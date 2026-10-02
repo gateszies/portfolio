@@ -1,10 +1,11 @@
----
-title: "Foundational Component System"
-description: Built the foundational component library and design-token system for a multi-brand Symfony app from, replacing invented tags and one-off styling with a real component model.
-tags: [Symfony, Stimulus, Storybook]
-thumbnail: /placeholders/project-thumb.svg
-hero: /placeholders/project-hero.svg
----
+export const project = {
+  title: "Foundational Component System",
+  description:
+    "Built the foundational component library and design-token system for a multi-brand Symfony app from, replacing invented tags and one-off styling with a real component model.",
+  tags: ["Symfony", "Stimulus", "Storybook"],
+  thumbnail: "/placeholders/site-mockup.jpg",
+  hero: "/placeholders/project-hero.svg",
+};
 
 ### Context
 
@@ -20,8 +21,7 @@ I joined the engineering team to build a component library for Studio Projects o
 
 The legacy templates used invented tag names directly in the markup and styled them the same way you'd style a `div`:
 
-```twig
-// templates/settingsPanel.html.twig
+```twig title="settingsPanel.html.twig"
 <panel accountSettings>
   <panelTitle largeHeader>Project Settings</panelTitle>
   <setting name=title>
@@ -31,8 +31,7 @@ The legacy templates used invented tag names directly in the markup and styled t
 </panel>
 ```
 
-```scss
-// styles/_settingsPanel.scss
+```scss title="_settingsPanel.scss"
 [accountSettings] {
   panelTitle {
     border-bottom: 1px solid $lineColor1;
@@ -55,8 +54,7 @@ This approach created real accessibility gaps and ongoing maintenance costs:
 
 Styles were one-offs, disconnected from the design system used elsewhere in the product. No source of truth meant that elements were frequently repeated with slightly different values in different files.
 
-```scss
-// styles/_settingsPanel.scss
+```scss title="_settingsPanel.scss"
 [accountSettings] {
   panelTitle {
     color: #1a1a1a;
@@ -81,20 +79,21 @@ Design debt slowly accumulated with small mismatches in styling and Figma protot
 
 The product runs the same interface across several brands, including a generic "unbranded" brand. The legacy approach meant maintaining near-identical copies of each page, one per brand, instead of one component with brand-level configuration:
 
-```twig
-// templates/brandA/accountDetails.html.twig
+```twig title="accountDetails.html.twig"
 <panel tab=details accountSettings>
   <panelTitle largeHeader>Account Details</panelTitle>
   <setting name=name>...</setting>
 </panel>
 
 // templates/brandB/accountDetails.html.twig
+
 <panel tab=details accountSettings>
   <panelTitle largeHeader>Account Details</panelTitle>
   <setting name=name>...</setting>
 </panel>
 
 // templates/brandC/accountDetails.html.twig
+
 <panel tab=details accountSettings>
   <panelTitle largeHeader>Account Details</panelTitle>
   <setting name=name>...</setting>
@@ -117,8 +116,7 @@ Props got a consistent naming convention (`color`, `variant`, boolean variables 
 
 Class names were stored in a filtered array at the top, kept separate from the markup itself. The template's job is to render, not to work out which classes apply, so that logic lives in one place above the markup instead of being tangled into conditionals inside the markup.
 
-```twig
-// components/Button.html.twig
+```twig title="Button.html.twig"
 {% props
     text = '',
     color = 'brand',
@@ -149,8 +147,7 @@ Tokens were organized in three tiers:
 
 This meant a square purple button, a slightly rounded green one, and a fully rounded button would come out of the same `<twig:Core:Button>` call. Adding `BrandZ` means writing a third token file, not touching the component at all.
 
-```scss
-// tokens/brandA/_brandA.scss
+```scss title="_brandA.scss"
 [data-brand="brandA"] {
   --bgColor-brand-primary: var(--color-purple-8);
   --borderRadius: 0;
@@ -187,8 +184,7 @@ Everything up to this point was props and markup. `Dropdown` was the first compo
 
 `data-controller` attaches the controller and `data-*-target` gives the controller a direct reference to a child element so it doesn't have to search the DOM for it. `data-action` registers an event listener, declared as an attribute right in the markup.
 
-```twig
-// components/_Dropdown.html.twig
+```twig title="_Dropdown.html.twig"
 {% props
   controller = 'core-dropdown',
   actions = {},

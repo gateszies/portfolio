@@ -1,26 +1,60 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/Icon";
+import { cn } from "@/lib/utils";
 
-const listClasses =
-  "flex flex-wrap gap-8 font-label text-sm font-medium tracking-widest text-foreground";
-const linkClasses =
-  "flex items-center gap-2 underline decoration-dotted decoration-transparent underline-offset-4 transition-colors hover:decoration-current";
+export const linkListVariants = cva(
+  "font-label flex flex-wrap font-medium tracking-widest",
+  {
+    variants: {
+      size: {
+        xs: "gap-2 text-xs",
+        sm: "gap-4 text-sm",
+      },
+      orientation: {
+        horizontal: "flex-row",
+        vertical: "flex-col",
+      },
+    },
+    defaultVariants: { size: "sm", orientation: "horizontal" },
+  },
+);
 
 type LinkListProps = {
-  links: { label: string; href: string; icon: IconName }[];
-};
+  links: { label: string; href: string; icon?: IconName }[];
+  linkClassName?: string;
+  className?: string;
+} & VariantProps<typeof linkListVariants>;
 
-export function LinkList({ links }: LinkListProps) {
+export function LinkList({
+  links,
+  size,
+  orientation,
+  linkClassName,
+  className,
+}: LinkListProps) {
   return (
-    <ul className={listClasses}>
-      {links.map(({ label, href, icon }) => (
-        <li key={label}>
-          <Link href={href} className={linkClasses}>
-            <Icon name={icon} size="sm" />
-            {label}
-          </Link>
-        </li>
-      ))}
+    <ul className={cn(linkListVariants({ size, orientation }), className)}>
+      {links.map(({ label, href, icon }) => {
+        const hasIcon = Boolean(icon);
+
+        return (
+          <li key={label}>
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                linkClassName,
+                hasIcon && "inline-flex items-center gap-2",
+              )}
+            >
+              {icon ? <Icon name={icon} size="sm" /> : null}
+              {label}
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

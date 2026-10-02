@@ -1,11 +1,12 @@
----
-title: Content Editor Sandbox
-
-description: Designed and built a real-time preview tool that lets content editors browse, adjust, and safely experiment with every page-builder section without touching the live entry.
-tags: [PHP, TypeScript, SCSS]
-thumbnail: /placeholders/project-thumb.svg
-hero: /placeholders/project-hero.svg
----
+export const project = {
+  title: "Content Editor Sandbox",
+  description:
+    "Designed and built a real-time preview tool that lets content editors browse, adjust, and safely experiment with every page-builder section without touching the live entry.",
+  tags: ["PHP", "TypeScript", "SCSS"],
+  thumbnail: "/placeholders/site-mockup.jpg",
+  hero: "/placeholders/project-hero.svg",
+  draft: true,
+};
 
 ### Context
 
@@ -43,8 +44,7 @@ I designed the full interface in Figma: the gallery grid showing every section t
 
 The preview and editor both call the exact same template used in production. There's no separate "preview version" of a section that could drift out of sync with the real thing:
 
-```php
-// controllers/SectionGalleryController.php
+```php title="SectionGalleryController.php"
 $html = $view->renderTemplate($templatePath, ['section' => $entry]);
 $visibility = $this->computeFieldVisibility($entry);
 return $this->asJson(['html' => $html, 'visibility' => $visibility]);

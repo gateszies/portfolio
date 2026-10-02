@@ -1,19 +1,27 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { getAllProjects } from "./projects";
 
-describe("getAllProjects", () => {
-  it("reads every markdown file in content/projects", async () => {
-    const projects = await getAllProjects();
-    expect(projects.length).toBeGreaterThan(0);
+const PROJECTS_DIR = path.join(process.cwd(), "content/projects");
+
+describe("project MDX content", () => {
+  const files = fs
+    .readdirSync(PROJECTS_DIR)
+    .filter((file) => file.endsWith(".mdx"));
+
+  it("has at least one case study", () => {
+    expect(files.length).toBeGreaterThan(0);
   });
 
-  it("parses frontmatter and renders the body to HTML", async () => {
-    const projects = await getAllProjects();
-    const project = projects.find((p) => p.slug === "prodpi-site-migration");
-
-    expect(project).toBeDefined();
-    expect(project?.title).toBe("ProDPI Site Migration");
-    expect(project?.tags).toContain("TypeScript");
-    expect(project?.bodyHtml).toContain("<p>");
+  it("exports metadata from every project file", () => {
+    for (const file of files) {
+      const raw = fs.readFileSync(path.join(PROJECTS_DIR, file), "utf8");
+      expect(raw, file).toMatch(/export const project = \{/);
+      expect(raw, file).toMatch(/\btitle:/);
+      expect(raw, file).toMatch(/\bdescription:/);
+      expect(raw, file).toMatch(/\btags:/);
+      expect(raw, file).toMatch(/\bthumbnail:/);
+      expect(raw, file).toMatch(/\bhero:/);
+    }
   });
 });

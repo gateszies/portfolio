@@ -9,7 +9,7 @@ const experience = [
 
 export function ExperienceList() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col sm:grid sm:grid-cols-[minmax(10rem,auto)_1fr_auto]">
       {experience.map((item, i) => (
         <LineItem
           key={`${item.org}-${i}`}

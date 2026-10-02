@@ -4,8 +4,6 @@ import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
 import { Icon } from "@/components/Icon";
 
-const toggleClasses = "text-foreground transition-colors hover:text-primary";
-
 function subscribe() {
   return () => {};
 }
@@ -36,9 +34,9 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle color theme"
-      className={toggleClasses}
+      className="hover:text-accent-one inline-flex items-center justify-center"
     >
-      <Icon name={isDark ? "sun" : "moon"} size="sm" />
+      <Icon name={isDark ? "moon" : "sun"} size="sm" aria-hidden />
     </button>
   );
 }

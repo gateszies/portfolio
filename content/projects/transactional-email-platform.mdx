@@ -1,10 +1,11 @@
----
-title: Transactional Email Platform
-description: Created a React Email-based platform with a shared component library, token system, and generated backend contract, replacing per-brand, per-template duplication across two brands.
-tags: [React, TypeScript, Tailwind]
-thumbnail: /placeholders/project-thumb.svg
-hero: /placeholders/project-hero.svg
----
+export const project = {
+  title: "Transactional Email Platform",
+  description:
+    "Created a React Email-based platform with a shared component library, token system, and generated backend contract, replacing per-brand, per-template duplication across two brands.",
+  tags: ["React", "TypeScript", "Tailwind"],
+  thumbnail: "/placeholders/site-mockup.jpg",
+  hero: "/placeholders/project-hero.svg",
+};
 
 ### Context
 
@@ -70,8 +71,7 @@ The result was a full component library in Figma: `Hero` with variants for brand
 
 React Email provides a set of base components (`Section`, `Row`, `Column`, `Button`, `Img`, etc.) already tested against the major email client renderers. We build on top of those, extending them with our own brand-aware components rather than writing raw table markup and debugging Outlook quirks from scratch. An order receipt is just a composition of real, named components:
 
-```tsx
-// emails/OrderReceipt.tsx
+```tsx title="OrderReceipt.tsx"
 export function OrderReceipt({
   brand,
   orderNumber,
@@ -95,8 +95,7 @@ export function OrderReceipt({
 
 Every email is wrapped in a provider that sets a brand context. A layout component picks the right Tailwind config for that brand. Individual components read brand context directly. A `Button` applies brand-specific spacing and casing without the template needing to know which brand it's rendering for:
 
-```tsx
-// components/Layout.tsx
+```tsx title="Layout.tsx"
 export function Layout({ brand, children }: LayoutProps) {
   return (
     <BrandProvider brand={brand}>
@@ -112,8 +111,7 @@ export function Layout({ brand, children }: LayoutProps) {
 }
 ```
 
-```tsx
-// components/Button.tsx
+```tsx title="Button.tsx"
 export function Button({ url, label, variant }: ButtonProps) {
   const brand = useContext(BrandContext);
   const classes = cx(baseClasses, variantClasses[variant], brandStyles[brand]);
@@ -127,8 +125,7 @@ export function Button({ url, label, variant }: ButtonProps) {
 
 Brand-specific values live in per-brand config files. Each brand config defines its own fonts, colors, spacing, and border radii as a Tailwind theme. The second brand's config extends the first and overrides only what's different:
 
-```ts
-// brands/brandA/config.ts
+```ts title="config.ts"
 export const config = {
   theme: {
     fontFamily: {
@@ -174,8 +171,7 @@ One component tree, two brands, zero duplicated templates. Adding a third brand 
 
 All template prop types live in one shared types file:
 
-```ts
-// types.ts
+```ts title="types.ts"
 type BaseOrderProps = BaseProps & {
   orderNumber: string;
   orderProductType: string;

@@ -28,7 +28,7 @@
 
 ## Inside components
 
-- Every condition becomes a named const above the JSX (isPrimary, showIcon, labelClass). No inline comparisons in the markup; the JSX should read as a sequence of named booleans.
+- Every condition becomes a named const above the JSX (isPrimary, showIcon). No inline comparisons in the markup; the JSX should read as a sequence of named booleans. Static `className` strings stay inline on the element — see `.agents/skills/design-system/SKILL.md`.
 - Derive values during render instead of syncing state with useEffect. Don't add useMemo/useCallback by default.
 
 ## Next.js

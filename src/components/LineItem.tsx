@@ -1,9 +1,3 @@
-const rowClasses =
-  "flex items-center gap-6 border-b border-strong py-4 text-base text-foreground";
-const orgClasses = "min-w-[160px] shrink-0 underline";
-const detailsClasses = "flex flex-1 items-center justify-between";
-const datesClasses = "text-right";
-
 type LineItemProps = {
   org: string;
   role: string;
@@ -12,12 +6,12 @@ type LineItemProps = {
 
 export function LineItem({ org, role, dates }: LineItemProps) {
   return (
-    <div className={rowClasses}>
-      <span className={orgClasses}>{org}</span>
-      <div className={detailsClasses}>
+    <div className="border-subtle hover:bg-chrome flex items-center justify-between gap-6 border-b py-4 text-base transition-colors sm:col-span-3 sm:grid sm:grid-cols-subgrid">
+      <div className="flex min-w-0 flex-col gap-1 sm:contents">
+        <span className="font-bold">{org}</span>
         <span>{role}</span>
-        <span className={datesClasses}>{dates}</span>
       </div>
+      <span className="shrink-0 text-right text-sm">{dates}</span>
     </div>
   );
 }

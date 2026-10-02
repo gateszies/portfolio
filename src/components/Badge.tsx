@@ -6,15 +6,15 @@ export const badgeVariants = cva(
   "inline-flex items-center justify-center rounded-lg border border-transparent font-label font-medium",
   {
     variants: {
+      variant: {
+        primary: "text-brand-foreground",
+        outline: "",
+      },
       color: {
         primary: "",
         accentOne: "",
         accentTwo: "",
         accentThree: "",
-      },
-      appearance: {
-        solid: "text-primary-foreground",
-        outline: "",
       },
       size: {
         sm: "px-2.5 py-1.5 text-xs",
@@ -22,51 +22,48 @@ export const badgeVariants = cva(
       },
     },
     compoundVariants: [
-      { color: "primary", appearance: "solid", class: "bg-primary" },
+      { variant: "primary", color: "primary", class: "bg-brand" },
+      { variant: "primary", color: "accentOne", class: "bg-accent-one" },
+      { variant: "primary", color: "accentTwo", class: "bg-accent-two" },
+      { variant: "primary", color: "accentThree", class: "bg-accent-three" },
+
       {
+        variant: "outline",
         color: "primary",
-        appearance: "outline",
         class: "border-strong text-foreground",
       },
-      { color: "accentOne", appearance: "solid", class: "bg-accent-one" },
       {
+        variant: "outline",
         color: "accentOne",
-        appearance: "outline",
         class: "border-accent-one text-accent-one",
       },
-      { color: "accentTwo", appearance: "solid", class: "bg-accent-two" },
       {
+        variant: "outline",
         color: "accentTwo",
-        appearance: "outline",
         class: "border-accent-two text-accent-two",
       },
       {
+        variant: "outline",
         color: "accentThree",
-        appearance: "solid",
-        class: "bg-accent-three",
-      },
-      {
-        color: "accentThree",
-        appearance: "outline",
         class: "border-accent-three text-accent-three",
       },
     ],
-    defaultVariants: { color: "primary", appearance: "outline", size: "md" },
+    defaultVariants: { variant: "outline", color: "primary", size: "md" },
   },
 );
 
 type BadgeProps = ComponentProps<"span"> & VariantProps<typeof badgeVariants>;
 
 export function Badge({
+  variant,
   color,
-  appearance,
   size,
   className,
   ...props
 }: BadgeProps) {
   return (
     <span
-      className={cn(badgeVariants({ color, appearance, size }), className)}
+      className={cn(badgeVariants({ variant, color, size }), className)}
       {...props}
     />
   );

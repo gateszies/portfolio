@@ -1,10 +1,11 @@
----
-title: Legacy Codebase Migration
-description: Led a full rebuild of a direct-to-consumer print lab's marketing site on Craft 5, replacing one-off templates with a flexible section-based page builder marketing can build with on their own.
-tags: [TypeScript, Twig, CraftCMS, SCSS]
-thumbnail: /placeholders/project-thumb.svg
-hero: /placeholders/project-hero.svg
----
+export const project = {
+  title: "Legacy Codebase Migration",
+  description:
+    "Led a full rebuild of a direct-to-consumer print lab's marketing site on Craft 5, replacing one-off templates with a flexible section-based page builder marketing can build with on their own.",
+  tags: ["TypeScript", "Twig", "CraftCMS", "SCSS"],
+  thumbnail: "/placeholders/site-mockup.jpg",
+  hero: "/placeholders/project-hero.svg",
+};
 
 _Note: code below is reconstructed to illustrate the pattern, not copied from the production codebase._
 
@@ -30,8 +31,7 @@ Every non-product page on the site was a one-off. The marketing manager couldn't
 
 The entire page builder was one `switch` statement in one file. Each section type (hero, split layout, editorial scroll, text callout) was its own inline case block with fully duplicated image-handling logic copy-pasted per image:
 
-```twig
-// builders/generalBuilder.twig
+```twig title="generalBuilder.twig"
 {% switch block.type.handle %}
   {% case "wideHero" %}
     {% set img1 = block.imageDesktop.one() %}
@@ -46,9 +46,9 @@ The entire page builder was one `switch` statement in one file. Each section typ
          srcset="{{ optimizedImages1.srcset() }}"
          sizes="100vw" class="cover">
 
-  {% case "halfSplitHero" %}
-    {% set img1 = block.backgroundImageOne.one() %}
-    {# ...the exact same focal point and srcset logic, repeated #}
+{% case "halfSplitHero" %}
+{% set img1 = block.backgroundImageOne.one() %}
+{# ...the exact same focal point and srcset logic, repeated #}
 {% endswitch %}
 ```
 
@@ -82,8 +82,7 @@ I designed each section type in Figma, both visually and functionally: how it lo
 
 Each section is its own file instead of a case block in a monolithic switch statement. Shared concerns (images, video, buttons, content blocks) live in reusable components that sections include rather than re-implementing:
 
-```twig
-// sections/mediaWithText.twig
+```twig title="mediaWithText.twig"
 {% set heading = section.heading %}
 {% set description = section.description %}
 {% set mediaOne = section.mediaOne.one() %}
@@ -109,6 +108,7 @@ Each section is its own file instead of a case block in a monolithic switch stat
       description,
       links,
     } only %}
+
   </div>
 </section>
 ```
@@ -117,8 +117,7 @@ Image handling now lives in a single `_components/image` component reused by eve
 
 Styling moved out of inline hex values and into a design token system with primitive and semantic layers:
 
-```scss
-// tokens/_theme.scss
+```scss title="_theme.scss"
 :root {
   --bgColor-neutral-primary: var(--brass-1);
   --bgColor-neutral-secondary: var(--brass-2);

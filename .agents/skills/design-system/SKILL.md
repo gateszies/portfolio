@@ -7,27 +7,40 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 
 ## Design tokens (Tailwind v4)
 
-- Tailwind v4 is configured in CSS (`src/app/globals.css`), not `tailwind.config.js`. Color primitives live on `:root`; semantic color tokens live in `@theme`; fonts live in `@theme inline`; dark overrides redeclare the same semantic `--*` names inside `@layer theme` under `:root[data-theme="dark"]` (same cascade layer as `@theme` — not bare `:root` outside the layer).
+- Tailwind v4 is configured in CSS (`src/app/globals.css`), not `tailwind.config.js`. Color primitives live on `:root`; semantic color tokens live in `@theme`; fonts live in `@theme inline`; dark overrides redeclare the same semantic `--*` names inside `@layer theme` under `:root.dark` (same cascade layer as `@theme` — not bare `:root` outside the layer).
 - Two color tiers:
-  - **Primitives** (`:root`): `--cream`, `--wine`, `--brown`, `--sand`, `--taupe`, `--poppy`, `--poppy-bright`, `--blue`, `--blue-bright`, `--olive`, `--olive-bright`. Named after the color; hex lives only here. Nothing outside `globals.css` references them — no `bg-cream`, no `var(--brown)` at call sites.
-  - **Semantic** (`@theme`): maps primitives into Tailwind namespaces so utilities exist — `--color-background` / `--color-foreground` → `bg-background` / `text-foreground`; `--color-primary` / `--color-primary-foreground` → `bg-primary` / `text-primary-foreground`; `--border-color-strong` / `--border-color-subtle` → `border-strong` / `border-subtle` (kept instead of shadcn's `muted`); `--color-accent-one` / `--color-accent-two` / `--color-accent-three` → `bg-*` / `text-*` / `border-*` for each. Not `inline` — utilities must reference the semantic vars so dark mode can reassign them.
-- Accents are semantic slots (`accent-one` / `accent-two` / `accent-three`), not color names.
-- Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `primary-foreground` is for text/borders on a solid primary fill — verified for primary, not yet for a solid accent fill in dark mode.
+  - **Primitives** (`:root`): `--cream`, `--cream-lift`, `--wine`, `--wine-lift`, `--brown`, `--sand`, `--taupe`, `--mauve`, `--poppy`, `--poppy-bright`, `--blue`, `--blue-bright`, `--olive`, `--olive-bright`. Named after the color; hex lives only here. Nothing outside `globals.css` references them — no `bg-cream`, no `var(--brown)` at call sites.
+  - **Semantic** (`@theme`): role tokens only — the locked set is:
+
+| Token                                             | Utilities                                          | Role                                                                                                 |
+| ------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `--color-background`                              | `bg-background`                                    | Page / shell fill                                                                                    |
+| `--color-foreground`                              | `text-foreground`                                  | Default text on background                                                                           |
+| `--color-chrome`                                  | `bg-chrome`                                        | Header / footer fill; translucent `--cream-lift` / `--wine-lift` so backdrop blur can read           |
+| `--color-brand`                                   | `bg-brand`, `text-brand`, `border-brand`           | Brand fill or brand-colored UI                                                                       |
+| `--color-brand-foreground`                        | `text-brand-foreground`, `border-brand-foreground` | Cream ink on solid brand (and solid accent) fills — same idea as Supabase `primary-solid-foreground` |
+| `--border-color-strong` / `--border-color-subtle` | `border-strong` / `border-subtle`                  | Edges / dividers                                                                                     |
+| `--color-accent-one` / `-two` / `-three`          | `bg-accent-*`, `text-accent-*`, `border-accent-*`  | Highlight slots (not color names)                                                                    |
+
+Not `inline` — utilities must reference the semantic vars so dark mode can reassign them. Vocabulary is Supabase-style (`background` / `foreground` / `brand` / `chrome` / `border-strong`); no `surface-100` ladder, no `foreground-muted`, no brand subtle/strong — add a role only when a real call site needs it.
+
+- Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `brand-foreground` is verified on brand; solid accent fills in dark mode are not fully verified yet.
+- Typical pairings: body `bg-background text-foreground`; chrome bands `bg-chrome`; primary button `bg-brand text-brand-foreground`; outline control `border-brand text-brand`.
 - **Typography**: next/font sets `--font-family-*` (with fallbacks) in `src/app/fonts.ts`. `@theme inline` maps them to role utilities:
   - `font-display` — display-font; large page titles only
   - `font-label` — Google Sans Code (500 only); small UI chrome / section labels (nav, eyebrows, buttons, badges, footer). Always pair with `font-medium` and usually `tracking-widest`.
   - `font-body` — Nunito (400/500/700); body copy and rich-text headings
-    Use Tailwind's default `text-*` scale for size.
-- Use native utilities (`bg-background`, `text-foreground`, `bg-primary`, `border-strong`, `text-accent-one`, …) — never hex values, primitive names, palette class names, or arbitrary-value color classes that reach into another token's CSS variable. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
+    Use Tailwind's default `text-*` scale for size, except page-title display: `text-display` (`clamp` from 6xl→8xl).
+- Use native utilities from the table above — never hex values, primitive names, palette class names, or arbitrary-value color classes that reach into another token's CSS variable. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against `globals.css`.
 - For translucent colors, prefer a dedicated token. Use `opacity-_` only when deliberately fading an element and its children together.
-- Dark mode is a `data-theme` attribute on `<html>`, managed by `next-themes`, with `suppressHydrationWarning` on `<html>`. Do not use Tailwind's `dark:` variant or register `@custom-variant dark` — light/dark differences are color token swaps. Raise first if a structural (non-color) theme difference appears.
+- Dark mode is a `.dark` class on `<html>`, managed by `next-themes` (`attribute="class"`), with `suppressHydrationWarning` on `<html>`. Site components still use color token swaps only (`background`, `foreground`, `chrome`, borders, accents; `brand` / `brand-foreground` stay put) — do not add `dark:` at call sites. Raise first if a structural (non-color) theme difference appears in site UI.
 
 ## Typography
 
-- Use Tailwind's default `text-*` scale. Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label.
-- Uncontrolled HTML (project markdown) uses `@tailwindcss/typography` for rhythm/sizing (`prose prose-lg`) plus a custom color theme utility `prose-brand` (docs: “Adding custom color themes”). `prose-brand` sets text `--tw-prose-*` to `inherit` (follows `body` / `text-foreground`) and links/borders to semantic tokens (`--color-accent-one`, border tokens) — not a wall of `prose-*:…` modifiers. Dark mode follows via token swaps under `data-theme`. Custom chrome outside prose's model (`.code-block`, copy button) lives under `.markdown-body`. Shiki keeps `--shiki-light` / `--shiki-dark` for syntax colors only; block chrome still uses design tokens. Prose headings stay on `font-body` via inheritance from `body` — do not switch them to `font-display` / `font-label`.
+- Use Tailwind's default `text-*` scale, plus `text-display` for the page-title size (`clamp` from 6xl→8xl). Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label.
+- Project / rich MDX bodies are wrapped in `RichText` at the call site (`src/components/RichText.tsx`). Pass typography via `className` — home uses `text-lg`; case studies use `@tailwindcss/typography` (`prose prose-lg`). Default `prose` colors are overridden in `globals.css` (text `--tw-prose-*` inherit / follow `body` / `text-foreground`; links/borders use semantic tokens) — not a wall of `prose-*:…` modifiers. Dark mode follows via token swaps under `.dark`. Inline `code` is styled in `globals.css` (`:not(pre) > code`); fenced blocks via Expressive Code (`src/lib/rehype-code.mjs`, wired from `next.config.ts`) — Shiki + editor frames; `themeCssSelector` follows the site `.dark` class. Filename: ` ```ts title="file.ts" ` (basename only; VS Code file icons via `@xt0rted/expressive-code-file-icons`). Themes in `src/lib/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`). Prose headings stay on `font-body` via inheritance from `body` — do not switch them to `font-display` / `font-label`.
 
 ## Styling and variants
 
@@ -40,6 +53,7 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 - Export the variant function so it can be reused, e.g. an <a> styled with buttonVariants().
 - An element's styles live on that element. When it changes based on a parent's state, put the variant on the element itself (group-data-[state=open]:rotate-180) rather than reaching in from the parent with descendant selectors ([&_svg]:rotate-180). Descendant selectors are only for children the component doesn't render itself, like icons passed in by the caller.
 - Class names are always complete strings. Never build them dynamically (`bg-${color}`), because Tailwind can't detect them; map values to full class strings instead.
+- Put static `className` strings inline on the element. Don't hoist one-off class strings into `*Classes` consts above the component. Extract only when the string is reused, looks up from a map (e.g. cycling accent classes), or belongs in `cva`.
 - No classes that do nothing: no group or peer without a matching group-* or peer-*, no leftover hook class names without styles.
 - Animate only transform and opacity where possible.
 
@@ -83,8 +97,8 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary border-primary-foreground text-primary-foreground",
-        secondary: "border-primary text-primary",
+        primary: "bg-brand border-brand-foreground text-brand-foreground",
+        secondary: "border-brand text-brand",
       },
       size: {
         sm: "px-4 py-1.5 text-sm",

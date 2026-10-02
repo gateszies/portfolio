@@ -1,43 +1,61 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import {
-  ArrowLeft,
-  Check,
-  Code01,
-  Copy01,
-  Mail01,
-  Moon01,
-  Sun,
+  Check as check,
+  Code01 as code,
+  Copy01 as copy,
+  Mail01 as mail,
+  Menu01 as menu,
+  Moon01 as moon,
+  Sun as sun,
+  XClose as close,
 } from "@untitledui/icons";
 import { cn } from "@/lib/utils";
 
+function glimmer({ className, ...props }: ComponentProps<"svg">) {
+  return (
+    <svg
+      viewBox="49.92 46.8 56.16 56.16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      {...props}
+    >
+      <path
+        d="M78 46.7998C77.9993 62.3047 65.4273 74.8721 49.9199 74.8721V74.8867C65.4274 74.8867 77.9995 87.455 78 102.96C78.0005 87.9391 89.8001 75.6721 104.637 74.9209L106.08 74.8867V74.8721C90.5727 74.8721 78.0007 62.3047 78 46.7998Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 const icons = {
-  sun: Sun,
-  moon: Moon01,
-  copy: Copy01,
-  check: Check,
-  mail: Mail01,
-  code: Code01,
-  "arrow-left": ArrowLeft,
+  sun,
+  moon,
+  copy,
+  check,
+  mail,
+  code,
+  menu,
+  close,
+  glimmer,
 };
 
 export type IconName = keyof typeof icons;
 
-export const iconHtml = {
-  check:
-    '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
-} as const satisfies Partial<Record<IconName, string>>;
-
-export const iconVariants = cva("shrink-0", {
-  variants: {
-    size: {
-      sm: "size-4",
-      md: "size-5",
-      lg: "size-6",
+export const iconVariants = cva(
+  "shrink-0 motion-safe:transition-colors motion-safe:duration-300",
+  {
+    variants: {
+      size: {
+        sm: "size-4",
+        md: "size-5",
+        lg: "size-6",
+      },
     },
+    defaultVariants: { size: "md" },
   },
-  defaultVariants: { size: "md" },
-});
+);
 
 type IconProps = Omit<ComponentProps<"svg">, "name"> &
   VariantProps<typeof iconVariants> & {

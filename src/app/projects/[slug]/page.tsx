@@ -1,38 +1,48 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Breadcrumb } from "@/components/Breadcrumb";
-import { MarkdownBody } from "@/components/MarkdownBody";
 import { Badge } from "@/components/Badge";
-import { getAllProjects } from "@/lib/projects";
+import { RichText } from "@/components/RichText";
+import { getAllProjects, getProject } from "@/lib/projects";
+
+const accentColors = ["accentOne", "accentTwo", "accentThree"] as const;
 
 export async function generateStaticParams() {
   const projects = await getAllProjects();
   return projects.map((project) => ({ slug: project.slug }));
 }
 
-export default async function ProjectPage({
-  params,
-}: {
+type ProjectPageProps = {
   params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const projects = await getAllProjects();
-  const project = projects.find((p) => p.slug === slug);
+};
 
-  if (!project) {
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { slug } = await params;
+
+  let project;
+  try {
+    project = await getProject(slug);
+  } catch {
     notFound();
   }
 
-  return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-6 pt-12 pb-12">
-      <Breadcrumb href="/#work" label="back to projects" />
+  const hideDraft =
+    project.draft === true && process.env.NODE_ENV === "production";
+  if (hideDraft) {
+    notFound();
+  }
 
-      <h1 className="font-display text-foreground text-6xl">{project.title}</h1>
+  const { Content } = project;
+
+  return (
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-6 pt-16 pb-24">
+      <h1 className="font-display text-6xl">{project.title}</h1>
 
       <ul className="flex flex-wrap gap-2.5">
-        {project.tags.map((tag) => (
+        {project.tags.map((tag, i) => (
           <li key={tag}>
-            <Badge size="sm">{tag}</Badge>
+            <Badge size="sm" color={accentColors[i % accentColors.length]}>
+              {tag}
+            </Badge>
           </li>
         ))}
       </ul>
@@ -45,7 +55,9 @@ export default async function ProjectPage({
         className="border-strong w-full rounded-lg border"
       />
 
-      <MarkdownBody html={project.bodyHtml} />
+      <RichText className="prose prose-lg max-w-none pt-4">
+        <Content />
+      </RichText>
     </div>
   );
 }
