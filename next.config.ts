@@ -1,9 +1,5 @@
-import { createRequire } from "node:module";
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-
-const require = createRequire(import.meta.url);
-const rehypeCode = require.resolve("./src/lib/rehype-code.mjs");
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -22,9 +18,11 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   extension: /\.mdx$/,
   options: {
-    // Local wrapper keeps themeCssSelector (a function) out of Turbopack's
-    // serializable plugin options — site theme stays a plain `.dark` class.
-    rehypePlugins: [rehypeCode],
+    // String package name so Turbopack's MDX loader can resolve it from
+    // node_modules (absolute paths and file: symlinks both fail in the loader
+    // pool — see .npmrc install-links). Local package wraps non-serializable
+    // options (themeCssSelector / customCreateRenderer); site theme stays `.dark`.
+    rehypePlugins: ["rehype-code"],
   },
 });
 

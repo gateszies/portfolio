@@ -10,6 +10,7 @@ export type ProjectMetadata = {
   tags: string[];
   thumbnail: string;
   hero: string;
+  order?: number;
   draft?: boolean;
 };
 
@@ -33,7 +34,13 @@ export async function getAllProjects(): Promise<Project[]> {
     files.map((file) => getProject(file.replace(/\.mdx$/, ""))),
   );
 
-  return projects.filter((project) => !project.draft);
+  return projects
+    .filter((project) => !project.draft)
+    .sort(
+      (a, b) =>
+        (a.order ?? Number.POSITIVE_INFINITY) -
+        (b.order ?? Number.POSITIVE_INFINITY),
+    );
 }
 
 export async function getProject(slug: string): Promise<Project> {

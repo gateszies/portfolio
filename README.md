@@ -16,7 +16,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 - **Fonts** (`src/app/fonts.ts`): next/font sets `--font-family-*`; `@theme inline` maps them to `font-display` (large titles), `font-label` (UI / section labels), `font-body` (copy + rich-text headings).
 - **Type scale**: Tailwind's default `text-*` utilities.
 - **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="class"`) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
-- **Code blocks**: inline `code` styled in `globals.css`; fenced blocks via Expressive Code (`src/lib/rehype-code.mjs`). Themes in `src/lib/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`, follows site `.dark`). Filename tab with VS Code file icons: ` ```ts title="greet.ts" ` (basename only).
+- **Code blocks**: inline `code` styled in `globals.css`; fenced blocks via Expressive Code (`plugins/rehype-code`, referenced as `"rehype-code"` in `next.config.ts`). Themes in `plugins/rehype-code/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`, follows site `.dark`). Filename tab with VS Code file icons: ` ```ts title="greet.ts" ` (basename only).
 - **Components** (`src/components/`, flat): generic `cva`-based primitives (`Badge`, `Icon`, `Highlight`) alongside domain-specific ones (`Section`, `ProjectCard`, `ProjectList`, `ExperienceList`, `LineItem`, `Footer`, `LinkList`, `RichText`, `ClickReveal`, `Eyebrow`, `ThemeToggle`).
 - Conventions for all of the above are written down in `AGENTS.md` and `.agents/skills/design-system/SKILL.md`.
 

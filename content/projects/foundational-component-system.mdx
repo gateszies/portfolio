@@ -2,26 +2,27 @@ export const project = {
   title: "Foundational Component System",
   description:
     "Built the foundational component library and design-token system for a multi-brand Symfony app from, replacing invented tags and one-off styling with a real component model.",
-  tags: ["Symfony", "Stimulus", "Storybook"],
-  thumbnail: "/placeholders/site-mockup.jpg",
-  hero: "/placeholders/project-hero.svg",
+  tags: ["Design Systems", "Component Architecture", "Theming"],
+  thumbnail: "/projects/foundational-component-system.png",
+  hero: "/projects/foundational-component-system.png",
+  order: 1,
 };
 
-### Context
+## Context
 
-Studio Projects is a web app that helps professional photographers organize gallery images and order print products for their clients at scale.
+[Studio Projects](https://www.whcc.com/studio/projects) help professional photographers organize gallery images and order print products for their clients at scale.
 
-I joined the engineering team to build a component library for Studio Projects on Symfony's Twig Components, migrating it off a legacy codebase with no real component model.
+I joined the engineering team to build a component library for a multi-brand app on [Symfony's Twig Components](https://symfony.com/bundles/ux-twig-component/current/index.html), migrating it off a legacy codebase with no real component model.
 
 ---
 
-### Problem
+## Problem
 
-**Custom tags instead of real components**
+### Custom tags instead of real components
 
-The legacy templates used invented tag names directly in the markup and styled them the same way you'd style a `div`:
+The legacy templates used invented tag names directly in the markup and styled them the same way you'd style a `div`.
 
-```twig title="settingsPanel.html.twig"
+```twig title="panel.html.twig"
 <panel accountSettings>
   <panelTitle largeHeader>Project Settings</panelTitle>
   <setting name=title>
@@ -31,7 +32,7 @@ The legacy templates used invented tag names directly in the markup and styled t
 </panel>
 ```
 
-```scss title="_settingsPanel.scss"
+```scss title="_panel.scss"
 [accountSettings] {
   panelTitle {
     border-bottom: 1px solid $lineColor1;
@@ -43,57 +44,49 @@ The legacy templates used invented tag names directly in the markup and styled t
 }
 ```
 
-This approach created real accessibility gaps and ongoing maintenance costs:
+This approach created accessibility gaps and ongoing maintenance costs:
 
 - `panelTitle` isn't a real heading, so a screen reader has no way to know it's one
-- Invented tags have no defined prop contract, so it's difficult to know what a tag like `panelTitle` actually accepts. Getting it wrong fails silently instead of erroring where the mistake was made
-- No autocomplete, no safe rename, and no easy way to find every usage across the codebase
-- Using `pascalCase` is incorrect syntax for [valid custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html); should use `kebab-case`
+- Invented tags have no defined prop contract, so it's difficult to know what a tag like `panelTitle` actually accepts
+- Using `pascalCase` is incorrect syntax for [valid custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html)
 
-**No shared design-token connection**
+### No shared design system
 
-Styles were one-offs, disconnected from the design system used elsewhere in the product. No source of truth meant that elements were frequently repeated with slightly different values in different files.
+No source of truth meant that elements were frequently repeated with slightly different values in different files.
 
-```scss title="_settingsPanel.scss"
+```scss title="_panel.scss"
+// _panel.scss
 [accountSettings] {
   panelTitle {
-    color: #1a1a1a;
+    color: #2b2b2b;
     font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     padding-bottom: 12px;
+    border-bottom: 1px solid #e5e5e5;
   }
 }
 
-// styles/_accountBrand.scss
+// _panelBrand.scss, same role with slightly different values
 [tab="brand"] {
   panelTitle {
-    color: #1c1c1c;
+    color: #1f1f1f;
     font-size: 16px;
+    font-weight: 700;
     padding-bottom: 14px;
+    border-bottom: 1px solid #ddd;
   }
 }
 ```
 
 Design debt slowly accumulated with small mismatches in styling and Figma prototypes that were out of date with production.
 
-**Triple the upkeep for multi-brand**
+### Triple the upkeep for multi-brand
 
 The product runs the same interface across several brands, including a generic "unbranded" brand. The legacy approach meant maintaining near-identical copies of each page, one per brand, instead of one component with brand-level configuration:
 
-```twig title="accountDetails.html.twig"
-<panel tab=details accountSettings>
-  <panelTitle largeHeader>Account Details</panelTitle>
-  <setting name=name>...</setting>
-</panel>
-
-// templates/brandB/accountDetails.html.twig
-
-<panel tab=details accountSettings>
-  <panelTitle largeHeader>Account Details</panelTitle>
-  <setting name=name>...</setting>
-</panel>
-
-// templates/brandC/accountDetails.html.twig
-
+```twig title="details.html.twig"
+{# studio/, brandB/, brandC/, unbranded/ — four separate copies #}
 <panel tab=details accountSettings>
   <panelTitle largeHeader>Account Details</panelTitle>
   <setting name=name>...</setting>
@@ -104,17 +97,11 @@ Elements that functionally served the same purpose were stored in separate files
 
 ---
 
-### Approach
+## Approach
 
-**Define the pattern, not just a component**
+### Define the pattern, not just a component
 
-The very first PR in the project built a `Button`, but the real work was defining the pattern every component after it would follow: how the file structure would work, how props are named, how variants and colors are handled, and how tokens are structured per brand.
-
-File structure came first: components live in their own folder with a matching Twig file, style file, and props definition, so any future component follows the same layout without guessing.
-
-Props got a consistent naming convention (`color`, `variant`, boolean variables like `rounded`) that every component built afterward could reuse.
-
-Class names were stored in a filtered array at the top, kept separate from the markup itself. The template's job is to render, not to work out which classes apply, so that logic lives in one place above the markup instead of being tangled into conditionals inside the markup.
+The very first PR in the project built a `Button`, but the real work was defining the pattern every component after it would follow: how props are named, how variants and colors are handled, and how tokens are structured per brand.
 
 ```twig title="Button.html.twig"
 {% props
@@ -139,27 +126,40 @@ Class names were stored in a filtered array at the top, kept separate from the m
 </button>
 ```
 
-Tokens were organized in three tiers:
+Props got a consistent naming convention (`color`, `variant`, boolean variables like `rounded`) that every component built afterward could reuse.
+
+Class names resolve in a filtered array above the markup to keep the template clean.
+
+**Tokens were organized in three tiers:**
 
 - Primitives → raw values unique to each brand, e.g. `--color-purple-8`
 - Semantic tokens → mapped to brand-specific primitive via `[data-brand]`, e.g. `--bgColor-brand-primary`
 - Component tokens → private to a single component and resolved from the semantic layer, e.g. `--_button-bgColor`
 
-This meant a square purple button, a slightly rounded green one, and a fully rounded button would come out of the same `<twig:Core:Button>` call. Adding `BrandZ` means writing a third token file, not touching the component at all.
+```scss title="_tokens.scss"
+// Primitives, raw values per brand
+[data-brand="brandA"] {
+  --color-purple-8: #5b2d8e;
+  --radius-none: 0;
+}
 
-```scss title="_brandA.scss"
+[data-brand="brandB"] {
+  --color-green-8: #1f6b4a;
+  --radius-sm: 4px;
+}
+
+// Semantic, roles map to those primitives
 [data-brand="brandA"] {
   --bgColor-brand-primary: var(--color-purple-8);
-  --borderRadius: 0;
+  --borderRadius: var(--radius-none);
 }
 
-// tokens/brandB/_brandB.scss
 [data-brand="brandB"] {
   --bgColor-brand-primary: var(--color-green-8);
-  --borderRadius: 4px;
+  --borderRadius: var(--radius-sm);
 }
 
-// components/_Button.scss
+// Component, private tokens resolve from semantic
 .Button {
   background-color: var(--_button-bgColor);
   border-radius: var(--_button-borderRadius, var(--borderRadius));
@@ -169,22 +169,16 @@ This meant a square purple button, a slightly rounded green one, and a fully rou
   --_button-bgColor: var(--bgColor-brand-primary);
 }
 
-.Button--neutralSecondary {
-  --_button-bgColor: var(--bgColor-neutral-secondary);
-}
-
 .Button--rounded {
   --_button-borderRadius: 50%;
 }
 ```
 
-**Extend that pattern to interactivity and state**
+### Extend pattern to interactivity
 
-Everything up to this point was props and markup. `Dropdown` was the first component that had to manage real state over time. This meant wiring up a Stimulus controller, the standard way this stack pairs JavaScript with server-rendered Twig markup.
+`Dropdown` was the first component that had to manage state over time. This meant wiring up a Stimulus controller, the standard way this stack pairs JavaScript with server-rendered Twig markup.
 
-`data-controller` attaches the controller and `data-*-target` gives the controller a direct reference to a child element so it doesn't have to search the DOM for it. `data-action` registers an event listener, declared as an attribute right in the markup.
-
-```twig title="_Dropdown.html.twig"
+```twig title="Dropdown.html.twig"
 {% props
   controller = 'core-dropdown',
   actions = {},
@@ -263,11 +257,9 @@ export default class extends Dropdown {
 }
 ```
 
-**Ship Storybook coverage alongside the component**
+### Ship Storybook coverage alongside the component
 
 In the legacy codebase, there was no documentation beyond the code itself. Visually previewing elements meant reading the Twig and CSS, spinning up the local dev environment, or checking whatever happened to be live on dev, stage, or prod at the time.
-
-Storybook documentation shipped alongside components from the first `Button` onward, giving designers and engineers a live reference to compare against Figma prototypes and a simplified view of a component's full API and behavior, all without having to look in the codebase.
 
 ```js
 import { ICONS } from "./Icon.stories";
@@ -317,24 +309,26 @@ export const WithoutIcons = {
 
 ---
 
-### Key Decisions
+## Key Decisions
 
-**Invest disproportionately on the foundation, on purpose**
+### Invest disproportionately on the foundation, on purpose
 
-`Button` and the file structure around it took longer than either seemed to deserve on its own. That was intentional, whatever patterns we set there would ripple out to everything built afterward. The cost of getting it right early was worth paying _once_ instead of paying in small increments over and over on every component that followed.
+Building the first `Button` component and setting up the tokens took longer than almost any other work I did on this project. I did it deliberately, as whatever patterns we set there would ripple out to everything built afterward. The cost of getting it right early was worth paying _once_ instead of paying in small increments over and over on every component that followed.
 
-**Keep components dumb**
+### Keep components dumb
 
-A component only needs to know what it's been given and how to display it, never why. A `Card` doesn't need to know why an image is missing, only whether one is. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
+A component only needs to know what it's been given and how to display it. A `Card` doesn't need to know why an image is missing, only whether one is. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
 
-**Don't reinvent common patterns, only customize where there's a real gap**
+### Don't reinvent common patterns, only customize where there's a real gap
 
-`Dropdown` started from an existing base rather than being built from zero, and the only things added were the pieces that the base didn't already handle correctly: real keyboard accessibility and focus management. Customization was spent closing actual gaps, not rebuilding what already worked.
+`Dropdown` started from an existing base rather than being built from zero. The only things custom built were the pieces that the base didn't already handle correctly: real keyboard accessibility and focus management. Customization was spent closing actual gaps, not rebuilding what already worked.
 
 ---
 
-### Impact
+## Impact
 
-Studio Projects is now running on real, reusable components instead of one-off markup. Contributors were able to quickly iterate on new features, shipping a Product Detail page (with duplicate, share, payment link, and delete actions) on top of the same `Button`, `Card` and `Dropdown` components built during this project.
+Studio Projects runs on real, reusable components with a fully integrated design system. Contributors are able to quickly iterate on new features with a consistent design language and a shared understanding of how to use the components.
 
-**Postscript.** About a year later, the work on this project is a primary reference for the team's frontend conventions doc, advising both humans and agents on which component patterns to follow for any new work.
+{/* insert image of the ux/ui */}
+
+_Postscript: About a year later, the work on this project is a primary reference for the team's frontend conventions doc, advising both humans and agents on which component patterns to follow for any new work._
