@@ -1,4 +1,4 @@
-# Aly Gates Portfolio
+# Portfolio
 
 The source for [alygates.com](https://alygates.com). Built with Next.js, Tailwind CSS v4, and MDX, and deployed on Vercel.
 
