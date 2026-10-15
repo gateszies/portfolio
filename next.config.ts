@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
+import { join } from "node:path";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -14,11 +15,11 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   extension: /\.mdx$/,
   options: {
-    // String package name so Turbopack's MDX loader can resolve it from
-    // node_modules (absolute paths and file: symlinks both fail in the loader
-    // pool — see .npmrc install-links). Local package wraps non-serializable
-    // options (themeCssSelector / customCreateRenderer); site theme stays `.dark`.
-    rehypePlugins: ["rehype-code"],
+    // Absolute path: the MDX loader resolves relative specifiers against its
+    // own directory in node_modules, not the project root. The local module
+    // wraps non-serializable options (themeCssSelector / customCreateRenderer),
+    // which cannot cross the loader boundary; site theme stays `.dark`.
+    rehypePlugins: [join(import.meta.dirname, "plugins/rehype-code/index.mjs")],
   },
 });
 
