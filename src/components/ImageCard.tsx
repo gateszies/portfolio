@@ -32,10 +32,7 @@ export function ImageCard({
   return (
     <figure className={cn("not-prose my-0 flex flex-col gap-3", className)}>
       <Dialog>
-        <DialogTrigger
-          aria-label={expandLabel}
-          className="block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
-        >
+        <div className="relative">
           <MediaFrame>
             <Image
               src={src}
@@ -46,7 +43,11 @@ export function ImageCard({
               className="my-0 block w-full"
             />
           </MediaFrame>
-        </DialogTrigger>
+          <DialogTrigger
+            aria-label={expandLabel}
+            className="absolute inset-0 hidden cursor-zoom-in sm:block"
+          />
+        </div>
         {hasCaption ? (
           <figcaption className="text-subtle text-center text-base">
             {caption}

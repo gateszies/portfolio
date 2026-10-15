@@ -184,7 +184,7 @@ export function ClickReveal({
   useEffect(() => {
     if (!showSnap) return;
 
-    function onScroll() {
+    function dismiss() {
       if (holdTimerRef.current !== null) {
         window.clearTimeout(holdTimerRef.current);
         holdTimerRef.current = null;
@@ -195,13 +195,15 @@ export function ClickReveal({
       });
     }
 
-    window.addEventListener("scroll", onScroll, {
+    window.addEventListener("scroll", dismiss, {
       capture: true,
       passive: true,
     });
+    document.addEventListener("pointerdown", dismiss, { capture: true });
 
     return () => {
-      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("scroll", dismiss, true);
+      document.removeEventListener("pointerdown", dismiss, true);
     };
   }, [showSnap]);
 
@@ -228,7 +230,7 @@ export function ClickReveal({
       type="button"
       aria-label={`Snap a photo: ${alt}`}
       className={cn(
-        "cursor-pointer motion-safe:transition-transform motion-safe:duration-300 motion-safe:active:scale-[0.98] motion-safe:active:duration-0",
+        "cursor-pointer motion-safe:transition-transform motion-safe:duration-300 motion-safe:pointer-fine:active:scale-[0.98] motion-safe:pointer-fine:active:duration-0",
         className,
       )}
       onClick={handleClick}
