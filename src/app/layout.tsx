@@ -7,7 +7,7 @@ import { fontVariables } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://about-gateszies.vercel.app"),
+  metadataBase: new URL("https://alygates.com"),
   title: "Aly Gates",
   description:
     "Aly Gates, designer and engineer who enjoys building interfaces and design systems",
