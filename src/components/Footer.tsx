@@ -12,24 +12,28 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="bg-chrome mx-4 mb-4 grid grid-cols-1 items-center justify-items-start gap-6 rounded-2xl px-4 py-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-10">
-      <p className="font-label text-xs leading-5 font-medium tracking-widest">
-        <TextLink
-          tone="chrome"
-          href="https://www.figma.com/design/FQ2ZX1aw2lo4NR552AoaQ2/portfolio?node-id=1-2"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          designed in figma
-        </TextLink>{" "}
-        ·{" "}
-        <TextLink
-          tone="chrome"
-          href="https://github.com/gateszies/about"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          built with react &amp; next.js
-        </TextLink>
+      <p className="font-label @container w-full text-xs leading-7 font-medium tracking-widest">
+        <span className="block @md:inline">
+          <TextLink
+            tone="chrome"
+            href="https://www.figma.com/design/FQ2ZX1aw2lo4NR552AoaQ2/portfolio?node-id=1-2"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            designed in figma
+          </TextLink>
+        </span>
+        <span className="hidden @md:inline"> · </span>
+        <span className="block @md:inline">
+          <TextLink
+            tone="chrome"
+            href="https://github.com/gateszies/about"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            built with react &amp; next.js
+          </TextLink>
+        </span>
       </p>
       <Icon
         name="glimmer"

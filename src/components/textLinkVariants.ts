@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const textLinkVariants = cva(
-  "squiggle-underline motion-safe:transition-transform motion-safe:duration-300 motion-safe:active:scale-[0.98] motion-safe:active:duration-0",
+  "squiggle-underline motion-safe:transition-transform motion-safe:duration-300 motion-safe:pointer-fine:active:scale-[0.98] motion-safe:pointer-fine:active:duration-0",
   {
     variants: {
       tone: {

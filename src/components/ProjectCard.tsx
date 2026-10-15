@@ -23,7 +23,7 @@ export function ProjectCard({
   return (
     <Link
       href={`/projects/${slug}`}
-      className="border-subtle bg-chrome flex w-full flex-col gap-6 rounded-2xl border p-6 motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:active:scale-[0.98] motion-safe:active:duration-0"
+      className="border-subtle bg-chrome @container flex w-full flex-col gap-6 rounded-2xl border p-6 motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:pointer-fine:active:scale-[0.98] motion-safe:pointer-fine:active:duration-0"
     >
       <Image
         src={image}
@@ -36,7 +36,7 @@ export function ProjectCard({
         <h3 className="font-display text-4xl">{title}</h3>
         <p className="text-base">{description}</p>
       </div>
-      <ul className="flex flex-wrap gap-2.5">
+      <ul className="flex flex-col items-start gap-2.5 @min-[34rem]:flex-row @min-[34rem]:flex-wrap">
         {tags.map((tag, i) => (
           <li key={tag}>
             <Badge color={badgeColors[i % badgeColors.length]}>{tag}</Badge>
