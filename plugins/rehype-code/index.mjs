@@ -1,6 +1,4 @@
-import rehypeExpressiveCode, {
-  createRenderer,
-} from "rehype-expressive-code";
+import rehypeExpressiveCode, { createRenderer } from "rehype-expressive-code";
 import { pluginFileIcons } from "@xt0rted/expressive-code-file-icons";
 import { CODE_THEMES } from "./code-themes.mjs";
 
