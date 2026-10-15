@@ -9,7 +9,7 @@
 
 ## UI work
 
-- Before creating or editing components, styles, or tokens, read and follow `.agents/skills/design-system/SKILL.md`.
+- Before creating or editing components, styles, or tokens, read and follow `.claude/skills/design-system/SKILL.md`.
 
 ## Comments
 
@@ -28,7 +28,7 @@
 
 ## Inside components
 
-- Every condition becomes a named const above the JSX (isPrimary, showIcon). No inline comparisons in the markup; the JSX should read as a sequence of named booleans. Static `className` strings stay inline on the element — see `.agents/skills/design-system/SKILL.md`.
+- Every condition becomes a named const above the JSX (isPrimary, showIcon). No inline comparisons in the markup; the JSX should read as a sequence of named booleans. Static `className` strings stay inline on the element — see `.claude/skills/design-system/SKILL.md`.
 - Derive values during render instead of syncing state with useEffect. Don't add useMemo/useCallback by default.
 
 ## Next.js
@@ -44,6 +44,16 @@
 - All components live flat in components/, one per file. The cn helper lives in lib/utils.ts.
 - File names and component names are both PascalCase (Button.tsx, ProjectCard.tsx).
 - No unused variants, props, exports, or dead code. No console.log left in.
+
+## Case study media
+
+- Use `ImageCard` for a single screenshot, `ImageCarousel` for a related set in one slot (prev/next, dots, shared lightbox), and `VideoCard` for an MP4 screen recording in the same chrome (inline controls, no lightbox).
+- Image components use `next/image` with `unoptimized` so the original file is served. Don't re-enable optimization for these screenshots.
+- The image frame is a button that opens a native `<dialog>` lightbox (Escape, backdrop, close control). Keep that behavior when editing the image components.
+- Images must be true 2× exports, at least ~1250px wide (624 CSS px column × 2). The standard size is 2560×1440 (`PROJECT_MEDIA_WIDTH` / `PROJECT_MEDIA_HEIGHT` in `src/lib/project-media.ts`), shared by `ImageCard`, `ImageCarousel`, `ProjectCard`, and the project page hero.
+- Chat attachments are often downscaled to 1024px, so never use those as source files. Full-res files and `.mp4` recordings go in `public/projects/<slug>/`.
+- Don't pass `width` / `height` in MDX for 2560×1440 files; the components default to that. Override only when a file's real dimensions differ. `VideoCard` takes an optional `poster`.
+- After replacing a file at the same path, hard-refresh, and clear `.next` if a stale image is still cached.
 
 ## Before finishing
 
