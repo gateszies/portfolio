@@ -61,7 +61,7 @@ This approach created accessibility gaps and ongoing maintenance costs:
 
 - `panelTitle` isn't a real heading, so a screen reader has no way to know it's one
 - Invented tags have no defined prop contract, so it's difficult to know what a tag like `panelTitle` actually accepts
-- Using `pascalCase` is incorrect syntax for [valid custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html)
+- Using `camelCase` is incorrect syntax for [valid custom elements](https://html.spec.whatwg.org/multipage/custom-elements.html)
 
 ### No shared design system
 
@@ -146,7 +146,7 @@ Class names resolve in a filtered array above the markup to keep the template cl
 **Tokens were organized in three tiers:**
 
 - Primitives → raw values unique to each brand, e.g. `--color-purple-8`
-- Semantic tokens → mapped to brand-specific primitive via `[data-brand]`, e.g. `--bgColor-brand-primary`
+- Semantic tokens → mapped to a brand-specific primitive via `[data-brand]`, e.g. `--bgColor-brand-primary`
 - Component tokens → private to a single component and resolved from the semantic layer, e.g. `--_button-bgColor`
 
 ```scss title="_tokens.scss"
