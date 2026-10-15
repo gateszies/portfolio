@@ -1,6 +1,6 @@
 import { Icon } from "@/components/Icon";
 import { LinkList } from "@/components/LinkList";
-import { textLinkVariants } from "@/components/TextLink";
+import { textLinkVariants } from "@/components/textLinkVariants";
 
 const socialLinks = [
   { label: "github", href: "https://github.com/gateszies" },
@@ -22,7 +22,6 @@ export function Footer() {
       />
       <LinkList
         links={socialLinks}
-        size="xs"
         linkClassName={textLinkVariants({ tone: "chrome" })}
         className="flex-col gap-6 sm:flex-row sm:justify-self-end"
       />

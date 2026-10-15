@@ -16,6 +16,7 @@ const options = {
     showCopyToClipboardButton: false,
   },
   styleOverrides: {
+    borderRadius: "var(--radius-2xl)",
     codeFontSize: "14px",
     frames: {
       editorActiveTabIndicatorTopColor: "transparent",

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { fontVariables } from "./fonts";
 import "./globals.css";
 
@@ -10,7 +10,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://about-gateszies.vercel.app"),
   title: "Aly Gates",
   description:
-    "Aly Gates — design-minded frontend engineer building scalable component systems and the interfaces that extend them.",
+    "Aly Gates, designer and engineer who enjoys building interfaces and design systems",
+  icons: {
+    icon: [{ url: "/aly-gates-logo.svg", type: "image/svg+xml" }],
+  },
 };
 
 type RootLayoutProps = {

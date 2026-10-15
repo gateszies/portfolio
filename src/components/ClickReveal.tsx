@@ -7,7 +7,6 @@ import {
   useState,
   useSyncExternalStore,
   type CSSProperties,
-  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -21,7 +20,7 @@ const VIEWPORT_EDGE = 8;
 const TILT_DEG = 6;
 const HOLD_MS = 2800;
 const FADE_MS = 450;
-const SHUTTER_SRC = "/hover-reveal/shutter.mp3";
+const SHUTTER_SRC = "/click-reveal/shutter.mp3";
 
 type Position = { x: number; y: number };
 type Size = { width: number; height: number };
@@ -169,20 +168,17 @@ export function ClickReveal({
     }, HOLD_MS);
   }
 
-  function handleClick(event: MouseEvent<HTMLSpanElement>) {
+  function handleClick(event: MouseEvent<HTMLButtonElement>) {
+    const isKeyboardActivation = event.detail === 0;
+    if (isKeyboardActivation) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      takeSnap({
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      });
+      return;
+    }
     takeSnap({ x: event.clientX, y: event.clientY });
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
-    const isActivate = event.key === "Enter" || event.key === " ";
-    if (!isActivate) return;
-
-    event.preventDefault();
-    const rect = event.currentTarget.getBoundingClientRect();
-    takeSnap({
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
-    });
   }
 
   useEffect(() => {
@@ -228,16 +224,14 @@ export function ClickReveal({
   }, []);
 
   return (
-    <span
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       aria-label={`Snap a photo: ${alt}`}
       className={cn(
         "cursor-pointer motion-safe:transition-transform motion-safe:duration-300 motion-safe:active:scale-[0.98] motion-safe:active:duration-0",
         className,
       )}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
     >
       {children}
       {showSnap &&
@@ -266,7 +260,7 @@ export function ClickReveal({
                 />
               </span>
               <Image
-                src="/hover-reveal/frame.png"
+                src="/click-reveal/frame.png"
                 alt=""
                 width={FRAME_WIDTH * 2}
                 height={FRAME_HEIGHT * 2}
@@ -280,6 +274,6 @@ export function ClickReveal({
           </span>,
           document.body,
         )}
-    </span>
+    </button>
   );
 }

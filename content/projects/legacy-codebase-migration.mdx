@@ -1,114 +1,221 @@
 export const project = {
   title: "Legacy CMS Migration",
   description:
-    "Led a full rebuild of a direct-to-consumer print lab's marketing site on Craft 5, replacing one-off templates with a flexible section-based page builder marketing can build with on their own.",
+    "Leading the ground-up rebuild of a direct-to-consumer brand's ecommerce storefront on a modular page system built for its authors",
   tags: [
     "Component Architecture",
-    "Content Modelling",
+    "Content Modeling",
     "Information Architecture",
   ],
-  thumbnail: "/projects/legacy-codebase-migration.png",
-  hero: "/projects/legacy-codebase-migration.png",
+  thumbnail:
+    "/projects/legacy-codebase-migration/legacy-codebase-migration.png",
+  hero: "/projects/legacy-codebase-migration/legacy-codebase-migration.png",
+  specs: [
+    { label: "Role", value: "Lead Developer" },
+    {
+      label: "Stack",
+      value: "Twig, TypeScript, SCSS, Vite, PHP, Craft CMS, Figma",
+    },
+    {
+      label: "Live",
+      value: "ProDPI",
+      href: "https://prodpi.com",
+    },
+  ],
   order: 3,
 };
 
 ---
 
-### Context
+## Context
 
-ProDPI is a direct-to-consumer print lab selling custom prints, wall art, cards, and albums. The marketing site is the primary storefront.
+ProDPI is a direct-to-consumer print lab that specializes in custom prints, wall art, cards, and albums. Its website is the primary storefront, where customers choose sizes, materials, and finishes before designing their product in an editor.
 
-I led a full rebuild of the site from scratch on Craft 5: every page template (38 product pages consolidated from six separate templates down to one flexible pattern, 6 category pages, 8 artist features, homepage, about), the navigation, the footer, a flexible section-based page builder, and a full jQuery-to-TypeScript migration. I also managed the content migration from the old CMS to the new one, coordinating migration work across the team through Jira tickets and a Slack-based tracking table.
+I led a complete rebuild of the storefront, moving it off an aging CMS and onto a component-based system that engineers and marketers can both extend.
 
-I worked closely with the marketing manager throughout to make sure the system worked for how they actually build and maintain pages.
+## Problem
 
----
+### No shared architecture
 
-### Problem
+The site had no component model. Every non-product page was its own template, and the 38 product pages were split across six templates that did essentially the same job.
 
-**Marketing couldn't build pages without engineering**
+```ansi
+templates/
+├── landing-fall-promo.twig
+├── landing-holiday.twig
+├── landing-spring.twig
+├── landing-wedding.twig
+├── product-prints.twig
+├── product-wall-art.twig
+├── product-cards.twig
+├── product-albums.twig
+├── product-canvas.twig
+└── product-metal.twig
+```
 
-Every non-product page on the site was a one-off. The marketing manager couldn't assemble a new homepage layout or a campaign landing page from existing pieces because there were no existing pieces to assemble. Each page was its own template, and new layouts required engineering time to build from scratch.
+Every new page cost engineering time, and that cost grew with the site.
 
-**The page builder was a single file that only grew**
+### Every section lived in one file
 
-The entire page builder was one `switch` statement in one file. Each section type (hero, split layout, editorial scroll, text callout) was its own inline case block with fully duplicated image-handling logic copy-pasted per image:
+Pages on the site were built from sections, and each section type was a hand-coded case block inside a single `switch` statement.
 
 ```twig title="generalBuilder.twig"
 {% switch block.type.handle %}
-  {% case "wideHero" %}
-    {% set img1 = block.imageDesktop.one() %}
-    {% set optimizedImages1 = img1.imageOptimize %}
+
+  {% case "fullHero" %}
+    {% set img1 = block.heroImage.one() %}
+    {% set transforms1 = img1.transforms %}
     {% set x = 'center' %}
     {% set y = 'center' %}
     {% if img1.hasFocalPoint %}
       {% set x = img1.focalPoint | first * 100 ~ '%' %}
       {% set y = img1.focalPoint | last * 100 ~ '%' %}
     {% endif %}
-    <img src="{{ optimizedImages1.src() }}"
-         srcset="{{ optimizedImages1.srcset() }}"
-         sizes="100vw" class="cover">
+    <div class="hero-wide" style="padding: 80px 0;">
+      <img src="{{ transforms1.src() }}"
+           srcset="{{ transforms1.srcset() }}"
+           sizes="100vw"
+           style="object-position: {{ x }} {{ y }};"
+           class="cover">
+      <h1 class="hero-title">{{ block.heading }}</h1>
+      <p class="hero-copy">{{ block.text }}</p>
+      <a href="{{ block.linkUrl }}" class="btn btn-primary">
+        {{ block.linkText }}
+      </a>
+    </div>
 
-{% case "halfSplitHero" %}
-{% set img1 = block.backgroundImageOne.one() %}
-{# ...the exact same focal point and srcset logic, repeated #}
+  {% case "splitHero" %}
+    {% set img2 = block.sideImage.one() %}
+    {% set transforms2 = img2.transforms %}
+    {% set posX = 'center' %}
+    {% set posY = 'center' %}
+    {% if img2.hasFocalPoint %}
+      {% set posX = img2.focalPoint | first * 100 ~ '%' %}
+      {% set posY = img2.focalPoint | last * 100 ~ '%' %}
+    {% endif %}
+    <div class="split-hero" style="padding: 64px 0; background-color: {{ block.bgColor.hex }};">
+      <img src="{{ transforms2.src() }}"
+           srcset="{{ transforms2.srcset() }}"
+           sizes="50vw"
+           style="object-position: {{ posX }} {{ posY }};"
+           class="split-img">
+      <h2 class="split-heading">{{ block.headline }}</h2>
+      <div class="split-text">{{ block.body }}</div>
+      <a href="{{ block.ctaLink }}" class="button-dark">
+        {{ block.ctaLabel }}
+      </a>
+    </div>
+
+  {% case "textCallout" %}
+    <div class="callout" style="padding: 48px 24px; background-color: {{ block.backgroundColor.hex }};">
+      <h3 class="callout-heading" style="color: {{ block.textColor.hex }};">
+        {{ block.title }}
+      </h3>
+      <p>{{ block.copy }}</p>
+      <a href="{{ block.buttonUrl }}" class="btn-outline">
+        {{ block.buttonText }}
+      </a>
+    </div>
+
+  {# ...and the same again for every other section type #}
+
 {% endswitch %}
 ```
 
-Nothing was shared. The file only grew.
+Nothing documented how a section should look or what options it had. The code was the only spec, and nobody wanted to touch it because it was so fragile.
 
-**Styling decisions lived in the content, not in a system**
+### The site had aged out
 
-Colors and layout choices were stored as raw hex values and inline `style` attributes on per-entry fields, not pulled from any design token system:
+The site was still running on CraftCMS 3, two major versions and about six years behind. Years of campaigns had also left it full of outdated pages and duplicate copy. Before migrating anything, someone had to figure out what was worth keeping.
 
-```twig
-<div style="background-color: {{ entry.columnOneBackground.hex }}">
-  <div style="color: {{ entry.columnOneColor.hex }}">
-    {{ entry.columnOneText }}
-  </div>
-</div>
-```
+## Approach
 
-A global visual change required auditing every page and entry individually. Marketing couldn't do it on their own, and engineering couldn't do it safely without checking every page first.
+### Audit everything first
 
----
+I catalogued every page on the old site and what was worth keeping, then reworked how products were grouped. That became the six category pages and the new navigation.
 
-### Approach
+<ImageCard
+  src="/projects/legacy-codebase-migration/information-architecture.png"
+  alt="Diagram mapping legacy CMS entry types, categories, and globals into a consolidated new content model"
+  caption="Content model map from the site audit"
+  width={2560}
+  height={1440}
+/>
+### Design the sections
 
-**Design a section system, not individual pages**
+Working with the marketing manager, I defined the page types they needed and the sections that could cover them.
 
-The first step was documenting every existing page and defining the sections marketing actually needed to build a variety of layouts from a shared set of parts. I worked with the marketing manager to figure out what page types they needed to create (homepage, campaign landing pages, editorial content) and what building blocks would cover those cases without requiring one-off templates.
+<ImageCard
+  src="/projects/legacy-codebase-migration/wireframes.png"
+  alt="Wireframes showing page layouts composed from reusable section blocks"
+  caption="Various section wireframes"
+  width={2560}
+  height={1440}
+/>
 
-I designed each section type in Figma, both visually and functionally: how it looks at each breakpoint, what authoring options an editor has (theme, spacing, text alignment, media crop, heading size), and how sections compose together on a page. The goal was a system where the marketing manager builds pages by choosing sections and filling in fields, not by requesting a new template from engineering.
+I took each wireframe through to a full design, then built the content model around how an author would actually use it. Sharing fields across sections meant a few simple options could compose a wide range of layouts.
 
-**Build composable sections backed by design tokens**
+<ImageCarousel
+  images={[
+    {
+      src: "/projects/legacy-codebase-migration/media-banner.png",
+      alt: "Media banner section with full-width imagery, heading, and call to action",
+      caption: "Media Banner section",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/media-with-text.png",
+      alt: "Media with text section showing image beside heading, body copy, and links",
+      caption: "Media with Text section",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/card-grid-1.png",
+      alt: "Card grid section showing a row of content cards with imagery and labels",
+      caption: "Card Grid section",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/card-grid-2.png",
+      alt: "Card grid section variant with alternate card layout and content",
+      caption: "Card Grid section with alternate layout",
+      width: 2560,
+      height: 1440,
+    },
+  ]}
+/>
 
-Each section is its own file instead of a case block in a monolithic switch statement. Shared concerns (images, video, buttons, content blocks) live in reusable components that sections include rather than re-implementing:
+### Build on a shared foundation
 
-```twig title="mediaWithText.twig"
-{% set heading = section.heading %}
-{% set description = section.description %}
-{% set mediaOne = section.mediaOne.one() %}
-{% set theme = section.theme.value %}
-{% set mediaPosition = section.mediaPosition.value %}
-{% set headingSize = section.headingSize.value %}
+With the design settled, I started building. Each section has its own file and shared pieces like images and buttons are written as components.
 
-<section class="{{ sectionClasses }}" data-section-theme="{{ theme }}">
-  <div class="{{ containerClasses }}">
-    <div class="{{ mediaClasses }}">
-      {% if mediaOne.kind == 'image' %}
-        {% include '_components/image' with {
-          asset: mediaOne,
+```twig title="media-text.twig"
+{% set title = section.title %}
+{% set body = section.body %}
+{% set media = section.media.one() %}
+{% set colorScheme = section.colorScheme.value %}
+{% set mediaSide = section.mediaSide.value %}
+{% set titleSize = section.titleSize.value %}
+
+<section class="{{ rootClasses }}" data-color-scheme="{{ colorScheme }}">
+  <div class="{{ innerClasses }}">
+    <div class="{{ mediaWrapperClasses }}">
+      {% if media.kind == 'image' %}
+        {% include '_partials/picture' with {
+          asset: media,
           class: 'cover',
           sizes: '(min-width: 1024px) 50vw, 100vw'
         } only %}
       {% endif %}
     </div>
 
-    {% include "_components/section-content" with {
-      heading,
-      headingSize,
-      description,
+    {% include '_partials/content-block' with {
+      title,
+      titleSize,
+      body,
       links,
     } only %}
 
@@ -116,54 +223,86 @@ Each section is its own file instead of a case block in a monolithic switch stat
 </section>
 ```
 
-Image handling now lives in a single `_components/image` component reused by every section, instead of each one reimplementing the focal-point and srcset logic from scratch. Every include uses the `only` keyword, so a component only ever sees what it's explicitly passed.
+The settings selected in the CMS become the `rootClasses` above, one modifier class per choice, so the markup reads like the section's settings.
 
-Styling moved out of inline hex values and into a design token system with primitive and semantic layers:
+```html
+<section
+  class="Section MediaText MediaText--mediaRight Section--compact Section--alignStart Section--mobileAlignCenter"
+></section>
+```
+
+I also brought the full design system into the repo as tokens, with a semantic layer for color. This allows a brand color change to happen in one file.
 
 ```scss title="_theme.scss"
 :root {
-  --bgColor-neutral-primary: var(--brass-1);
-  --bgColor-neutral-secondary: var(--brass-2);
-  --bgColor-brand-strong: var(--teal-12);
+  --bgColor-neutral-primary: var(--gold-1);
+  --bgColor-neutral-secondary: var(--gold-2);
+  --bgColor-brand-strong: var(--ocean-12);
   --fgColor-neutral-primary: var(--gray-12);
-  --fgColor-brand-strong: var(--brass-8);
+  --fgColor-brand-strong: var(--gold-8);
 }
 ```
 
-Components reference the semantic layer (`--bgColor-brand-strong`), not raw values. A brand-level color change happens in one file.
+I also moved the site's legacy jQuery to TypeScript and wrote the repo's coding conventions as rules for both humans and agents, so new work follows the same patterns.
 
-I also authored coding convention rules for the repo alongside the migration (Twig conventions, CSS conventions, TypeScript conventions, PR conventions), so both human and AI-assisted contributors have a real spec to work from instead of inferring patterns from existing code.
+### Consolidate the product pages
 
-**Manage the content migration**
+The same foundation let six product templates become one. A single field layout in the CMS covers every product, and details that used to need their own template, like an album's cover materials, became optional fields.
 
-The data migration covered 38 product pages, 6 category pages, 8 artist features, the homepage, and the about page. All of it was manual. I tracked three migration phases:
+<ImageCarousel
+  images={[
+    {
+      src: "/projects/legacy-codebase-migration/product-page-1.png",
+      alt: "Layflat Albums product page with material styles, color swatches, size selector, and lifestyle photography",
+      caption: "Albums & Books",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/product-page-2.png",
+      alt: "Acrylic Blocks product page with size selector, shop and browse CTAs, and lifestyle photography of a tabletop acrylic block",
+      caption: "Keepsakes",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/product-page-3.png",
+      alt: "Modern Metal Frames product page with finish swatches, size selector, and framed lifestyle photography",
+      caption: "Wall Art",
+      width: 2560,
+      height: 1440,
+    },
+    {
+      src: "/projects/legacy-codebase-migration/product-page-4.png",
+      alt: "Acrylic Ornaments product page with browse designs CTA and lifestyle photography of photo ornaments",
+      caption: "Ornaments",
+      width: 2560,
+      height: 1440,
+    },
+  ]}
+/>
 
-- **Base content**: existing copy and images carried over from the old site
-- **Editorial content**: new content written specifically for the updated layouts and section types
-- **Field restructuring**: mapping old CMS fields to new ones where the data model had changed as a result of improving the system
+### Run the migration and launch
 
-I wrote and assigned the migration tickets, tracked progress weekly, and coordinated the work across the team through a Slack-based tracking table.
+The new site was a brand-new Craft 5 project. Craft 3 was full of bugs it would never get fixes for, and starting fresh got the site current without working through two major upgrades.
+
+It also meant there was no automatic path for content, so 50+ pages moved by hand in three phases:
+
+- **Base content**: existing copy and images from the old site
+- **Editorial content**: new copy written for the new sections
+- **Field restructuring**: mapping old fields to new ones where the content model changed
+
+I wrote the tickets, tracked progress weekly, and kept the other developers and the marketing manager in sync through testing and launch.
 
 ---
 
-### Key Decisions
+## Impact
 
-**Design for authoring, not just rendering**
+The new storefront launched in March 2026, replacing the entire site at once: 50+ pages, the full product catalog, and a codebase rebuilt on a current platform.
 
-The sections weren't designed to look good in a one-off mockup. They were designed around the authoring experience: what fields does the marketing manager see in the CMS, what options do those fields expose, and how do different combinations of those options compose into real pages. The Figma file reflects this. Each section shows its variants and authoring options, not just a single "ideal" state.
+<VideoCard
+  src="/projects/legacy-codebase-migration/evergreen-hp.mov"
+  alt="Screen recording scrolling through the ProDPI homepage built from reusable sections"
+/>
 
-**Scope every component include with `only`**
-
-A component only ever sees what it's explicitly passed, not the parent template's full context. Its behavior is predictable from the call site alone, and a change upstream can't quietly break something three levels down that happened to be relying on ambient variables.
-
-**Write the conventions alongside the code, not after it**
-
-The coding rules were written during the migration, not as documentation backlog. Once conventions are something you write after the fact, they're the first thing that gets skipped under deadline pressure, and a new contributor joins a codebase where the patterns are implicit instead of stated.
-
----
-
-### Impact
-
-The marketing site is live at [prodpi.com](https://prodpi.com). The marketing manager builds and maintains pages independently using the section system, choosing from a shared set of section types and filling in fields, instead of filing engineering requests for new templates. Six product page templates are now one. All JavaScript is typed. 50+ pages of content were migrated, tracked, and verified across three phases.
-
-I led this end to end: design direction, component architecture, content migration management, the majority of the implementation, and the documentation that lets the rest of the team work inside it consistently.
+New pages are now shipped without engineering. Other engineers and AI agents can contribute to the codebase because the patterns are documented. A site nobody wanted to touch is now one the whole team can work in.

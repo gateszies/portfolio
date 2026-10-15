@@ -1,16 +1,29 @@
 export const project = {
   title: "Foundational Component System",
   description:
-    "Built the foundational component library and design-token system for a multi-brand Symfony app from, replacing invented tags and one-off styling with a real component model.",
+    "Building the multi-brand component library and design token system behind a production platform for professional photographers",
   tags: ["Design Systems", "Component Architecture", "Theming"],
-  thumbnail: "/projects/foundational-component-system.png",
-  hero: "/projects/foundational-component-system.png",
+  thumbnail:
+    "/projects/foundational-component-system/foundational-component-system.png",
+  hero: "/projects/foundational-component-system/foundational-component-system.png",
+  specs: [
+    { label: "Role", value: "Frontend Engineer" },
+    {
+      label: "Stack",
+      value: "Twig Components, Storybook, Stimulus, SCSS, Symfony",
+    },
+    {
+      label: "Live",
+      value: "Studio Projects",
+      href: "https://www.whcc.com/studio/projects",
+    },
+  ],
   order: 1,
 };
 
 ## Context
 
-[Studio Projects](https://www.whcc.com/studio/projects) help professional photographers organize gallery images and order print products for their clients at scale.
+Studio Projects help professional photographers organize gallery images and order print products for their clients at scale.
 
 I joined the engineering team to build a component library for a multi-brand app on [Symfony's Twig Components](https://symfony.com/bundles/ux-twig-component/current/index.html), migrating it off a legacy codebase with no real component model.
 
@@ -176,7 +189,9 @@ Class names resolve in a filtered array above the markup to keep the template cl
 
 ### Extend pattern to interactivity
 
-`Dropdown` was the first component that had to manage state over time. This meant wiring up a Stimulus controller, the standard way this stack pairs JavaScript with server-rendered Twig markup.
+`Dropdown` was the first component with behavior, so it set the pattern for how JavaScript attaches to a component.
+
+The Stimulus controller and its actions are props with sensible defaults, so a consumer can easily swap in their own controller or override a single action.
 
 ```twig title="Dropdown.html.twig"
 {% props
@@ -216,9 +231,9 @@ Class names resolve in a filtered array above the markup to keep the template cl
 </div>
 ```
 
-The controller itself extends a base dropdown controller and adds what it doesn't provide: accessible keyboard navigation and keeping `aria-expanded`/`tabindex` in sync with whether the menu is actually open.
+The controller extends an existing dropdown controller and only adds what it was missing: keyboard navigation and keeping `aria-expanded` and `tabindex` in sync with the menu's open/closed state.
 
-```js
+```js title="dropdown_controller.js"
 import Dropdown from "@stimulus-components/dropdown";
 
 export default class extends Dropdown {
@@ -257,56 +272,6 @@ export default class extends Dropdown {
 }
 ```
 
-### Ship Storybook coverage alongside the component
-
-In the legacy codebase, there was no documentation beyond the code itself. Visually previewing elements meant reading the Twig and CSS, spinning up the local dev environment, or checking whatever happened to be live on dev, stage, or prod at the time.
-
-```js
-import { ICONS } from "./Icon.stories";
-
-export default {
-  title: "Core/Dropdown",
-  parameters: {
-    docs: {
-      description: { component: "A dropdown for displaying a list of items." },
-    },
-  },
-  argTypes: {
-    icon: {
-      control: "select",
-      options: ICONS,
-    },
-  },
-};
-
-export const Default = {
-  args: {
-    items: [
-      { label: "Edit", url: "#" },
-      { label: "Duplicate", url: "#" },
-      { label: "Delete", url: "#" },
-    ],
-  },
-  render: () => ({
-    template: twig`
-      <twig:Core:Dropdown :items="items">
-        <twig:block name="trigger">
-          <twig:Core:Button text="Open Menu" />
-        </twig:block>
-      </twig:Core:Dropdown>
-    `,
-  }),
-};
-
-export const WithoutIcons = {
-  args: {
-    ...Default.args,
-    items: Default.args.items.map(({ icon, ...item }) => item),
-  },
-  render: Default.render,
-};
-```
-
 ---
 
 ## Key Decisions
@@ -317,18 +282,13 @@ Building the first `Button` component and setting up the tokens took longer than
 
 ### Keep components dumb
 
-A component only needs to know what it's been given and how to display it. A `Card` doesn't need to know why an image is missing, only whether one is. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
-
-### Don't reinvent common patterns, only customize where there's a real gap
-
-`Dropdown` started from an existing base rather than being built from zero. The only things custom built were the pieces that the base didn't already handle correctly: real keyboard accessibility and focus management. Customization was spent closing actual gaps, not rebuilding what already worked.
+A component only needs to know what it's been given and how to display it. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
 
 ---
 
 ## Impact
 
-Studio Projects runs on real, reusable components with a fully integrated design system. Contributors are able to quickly iterate on new features with a consistent design language and a shared understanding of how to use the components.
-
+Studio Projects runs on real, reusable components with a fully integrated design system. Contributors are able to quickly iterate on new features with a consistent design language and a shared understanding of how to use the components, and every component is documented in Storybook.
 {/* insert image of the ux/ui */}
 
 _Postscript: About a year later, the work on this project is a primary reference for the team's frontend conventions doc, advising both humans and agents on which component patterns to follow for any new work._

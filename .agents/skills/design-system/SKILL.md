@@ -16,21 +16,22 @@ description: Conventions for this repo's design system — Tailwind v4 design to
 | ------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `--color-background`                              | `bg-background`                                    | Page / shell fill                                                                                    |
 | `--color-foreground`                              | `text-foreground`                                  | Default text on background                                                                           |
+| `--color-subtle`                                  | `text-subtle`                                      | Secondary / supporting text (captions, de-emphasized copy)                                           |
 | `--color-chrome`                                  | `bg-chrome`                                        | Header / footer fill; translucent `--cream-lift` / `--wine-lift` so backdrop blur can read           |
 | `--color-brand`                                   | `bg-brand`, `text-brand`, `border-brand`           | Brand fill or brand-colored UI                                                                       |
 | `--color-brand-foreground`                        | `text-brand-foreground`, `border-brand-foreground` | Cream ink on solid brand (and solid accent) fills — same idea as Supabase `primary-solid-foreground` |
 | `--border-color-strong` / `--border-color-subtle` | `border-strong` / `border-subtle`                  | Edges / dividers                                                                                     |
 | `--color-accent-one` / `-two` / `-three`          | `bg-accent-*`, `text-accent-*`, `border-accent-*`  | Highlight slots (not color names)                                                                    |
 
-Not `inline` — utilities must reference the semantic vars so dark mode can reassign them. Vocabulary is Supabase-style (`background` / `foreground` / `brand` / `chrome` / `border-strong`); no `surface-100` ladder, no `foreground-muted`, no brand subtle/strong — add a role only when a real call site needs it.
+Not `inline` — utilities must reference the semantic vars so dark mode can reassign them. Vocabulary is Supabase-style (`background` / `foreground` / `subtle` / `brand` / `chrome` / `border-strong`); no `surface-100` ladder, no brand subtle/strong — add a role only when a real call site needs it.
 
-- Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `brand-foreground` is verified on brand; solid accent fills in dark mode are not fully verified yet.
-- Typical pairings: body `bg-background text-foreground`; chrome bands `bg-chrome`; primary button `bg-brand text-brand-foreground`; outline control `border-brand text-brand`.
+- Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `brand-foreground` is verified on brand; `subtle` is verified on `background` / `chrome` in both themes; solid accent fills in dark mode are not fully verified yet.
+- Typical pairings: body `bg-background text-foreground`; supporting copy `text-subtle`; chrome bands `bg-chrome`; primary button `bg-brand text-brand-foreground`; outline control `border-brand text-brand`.
 - **Typography**: next/font sets `--font-family-*` (with fallbacks) in `src/app/fonts.ts`. `@theme inline` maps them to role utilities:
-  - `font-display` — display-font; large page titles only
+  - `font-display` — display-font; large page titles only. Also sets `text-wrap: balance` in `globals.css`
   - `font-label` — Google Sans Code (500 only); small UI chrome / section labels (nav, eyebrows, buttons, badges, footer). Always pair with `font-medium` and usually `tracking-widest`.
   - `font-body` — Nunito (400/500/700); body copy and rich-text headings
-    Use Tailwind's default `text-*` scale for size, except page-title display: `text-display` (`clamp` from 6xl→8xl).
+    Use Tailwind's default `text-*` scale for size, except: `text-display` for the home name (`clamp` 7xl→9xl, leading 1); `text-title` for project page titles (`clamp` 5xl→5rem, leading 1.15).
 - Use native utilities from the table above — never hex values, primitive names, palette class names, or arbitrary-value color classes that reach into another token's CSS variable. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against `globals.css`.
@@ -39,7 +40,7 @@ Not `inline` — utilities must reference the semantic vars so dark mode can rea
 
 ## Typography
 
-- Use Tailwind's default `text-*` scale, plus `text-display` for the page-title size (`clamp` from 6xl→8xl). Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label.
+- Use Tailwind's default `text-*` scale, plus `text-display` for the home name (`clamp` 7xl→9xl, leading 1) and `text-title` for project page titles (`clamp` 5xl→5rem, leading 1.15). Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label. Body uses `text-pretty`; `font-display` uses `text-balance` for large titles.
 - Project / rich MDX bodies are wrapped in `RichText` at the call site (`src/components/RichText.tsx`). Pass typography via `className` — home uses `text-lg`; case studies use `@tailwindcss/typography` (`prose prose-lg`). Default `prose` colors are overridden in `globals.css` (text `--tw-prose-*` inherit / follow `body` / `text-foreground`; links/borders use semantic tokens) — not a wall of `prose-*:…` modifiers. Dark mode follows via token swaps under `.dark`. Inline `code` is styled in `globals.css` (`:not(pre) > code`); fenced blocks via Expressive Code (`plugins/rehype-code`, wired from `next.config.ts` as the string plugin `"rehype-code"`) — Shiki + editor frames; `themeCssSelector` follows the site `.dark` class. Filename: ` ```ts title="file.ts" ` (basename only; VS Code file icons via `@xt0rted/expressive-code-file-icons`). Themes in `plugins/rehype-code/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`). Prose headings stay on `font-body` via inheritance from `body` — do not switch them to `font-display` / `font-label`.
 
 ## Styling and variants

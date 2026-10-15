@@ -1,10 +1,9 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import {
-  Check as check,
-  Code01 as code,
-  Copy01 as copy,
-  Mail01 as mail,
+  ArrowLeft as arrowLeft,
+  ArrowRight as arrowRight,
+  ArrowUpRight as arrowUpRight,
   Menu01 as menu,
   Moon01 as moon,
   Sun as sun,
@@ -32,25 +31,23 @@ function glimmer({ className, ...props }: ComponentProps<"svg">) {
 const icons = {
   sun,
   moon,
-  copy,
-  check,
-  mail,
-  code,
   menu,
   close,
   glimmer,
+  arrowLeft,
+  arrowRight,
+  arrowUpRight,
 };
 
-export type IconName = keyof typeof icons;
+type IconName = keyof typeof icons;
 
-export const iconVariants = cva(
+const iconVariants = cva(
   "shrink-0 motion-safe:transition-colors motion-safe:duration-300",
   {
     variants: {
       size: {
         sm: "size-4",
         md: "size-5",
-        lg: "size-6",
       },
     },
     defaultVariants: { size: "md" },

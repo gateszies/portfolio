@@ -21,6 +21,7 @@
 @theme {
   --color-background: var(--cream);
   --color-foreground: var(--brown);
+  --color-subtle: var(--mauve);
   --color-chrome: color-mix(in oklab, var(--cream-lift) 85%, transparent);
   --color-brand: var(--brown);
   --color-brand-foreground: var(--cream);
@@ -29,7 +30,10 @@
   --color-accent-three: var(--olive);
   --border-color-strong: var(--brown);
   --border-color-subtle: var(--taupe);
-  --text-display: clamp(3.75rem, 1.5rem + 10vw, 6rem);
+  --text-display: clamp(4.5rem, 1.5rem + 12vw, 7rem);
+  --text-display--line-height: 1;
+  --text-title: clamp(3rem, 1.5rem + 7vw, 5rem);
+  --text-title--line-height: 1.15;
 }
 
 @theme inline {
@@ -42,6 +46,7 @@
   :root.dark {
     --color-background: var(--wine);
     --color-foreground: var(--sand);
+    --color-subtle: color-mix(in oklab, var(--sand) 75%, var(--wine));
     --color-chrome: color-mix(in oklab, var(--wine-lift) 85%, transparent);
     --border-color-strong: var(--sand);
     --border-color-subtle: var(--mauve);
@@ -54,6 +59,7 @@
     :root:not(.light) {
       --color-background: var(--wine);
       --color-foreground: var(--sand);
+      --color-subtle: color-mix(in oklab, var(--sand) 75%, var(--wine));
       --color-chrome: color-mix(in oklab, var(--wine-lift) 85%, transparent);
       --border-color-strong: var(--sand);
       --border-color-subtle: var(--mauve);
@@ -82,6 +88,10 @@
   --tw-prose-th-borders: var(--border-color-subtle);
   --tw-prose-td-borders: var(--border-color-subtle);
   --tw-prose-kbd: inherit;
+}
+
+.font-display {
+  text-wrap: balance;
 }
 
 /* Typography adds decorative backticks around inline code; chip styles replace them. */
@@ -128,6 +138,12 @@
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
+}
+
+.expressive-code .frame pre {
+  max-height: 20rem;
+  min-height: 0;
+  overflow: auto;
 }
 
 .expressive-code + .expressive-code {

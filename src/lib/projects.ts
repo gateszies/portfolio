@@ -4,17 +4,24 @@ import type { ComponentType } from "react";
 
 const PROJECTS_DIR = path.join(process.cwd(), "content/projects");
 
-export type ProjectMetadata = {
+type ProjectSpec = {
+  label: string;
+  value: string;
+  href?: string;
+};
+
+type ProjectMetadata = {
   title: string;
   description: string;
   tags: string[];
   thumbnail: string;
   hero: string;
+  specs?: ProjectSpec[];
   order?: number;
   draft?: boolean;
 };
 
-export type Project = ProjectMetadata & {
+type Project = ProjectMetadata & {
   slug: string;
   Content: ComponentType;
 };

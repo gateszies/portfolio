@@ -7,10 +7,6 @@ const nextConfig: NextConfig = {
   },
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {
-    // Placeholder art under /public and /placeholders is SVG; safe since it's
-    // our own static, trusted content, not user-uploaded.
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "inline",
     qualities: [75, 92],
   },
 };

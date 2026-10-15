@@ -32,15 +32,13 @@ export function ProjectCard({
         className="w-full rounded-xl"
       />
       <div className="flex flex-col gap-2.5">
-        <h3 className="font-display text-3xl">{title}</h3>
+        <h3 className="font-display text-4xl">{title}</h3>
         <p className="text-base">{description}</p>
       </div>
       <ul className="flex flex-wrap gap-2.5">
         {tags.map((tag, i) => (
           <li key={tag}>
-            <Badge size="sm" color={badgeColors[i % badgeColors.length]}>
-              {tag}
-            </Badge>
+            <Badge color={badgeColors[i % badgeColors.length]}>{tag}</Badge>
           </li>
         ))}
       </ul>

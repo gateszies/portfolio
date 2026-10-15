@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
-export const highlightVariants = cva(
+const highlightVariants = cva(
   "inline cursor-pointer font-bold underline decoration-transparent decoration-wavy underline-offset-4 hover:decoration-current motion-safe:transition-[text-decoration-color] motion-safe:duration-300",
   {
     variants: {

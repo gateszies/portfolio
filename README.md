@@ -7,7 +7,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 - **Next.js (App Router) + React + TypeScript** — Server Components for the static pages, a few client islands (`ThemeToggle`, `ClickReveal`) for interactivity.
 - **Tailwind CSS v4** — design tokens are plain CSS custom properties defined in `src/app/globals.css` via `@theme`, not a JS config file.
 - **No CMS** — home copy and project case studies are MDX (`content/home/`, `content/projects/`); experience and social links live next to the components that render them.
-- **MDX** — `@next/mdx` compiles `.mdx` files; shared components (`Highlight`, `ClickReveal`) are registered in `src/mdx-components.tsx`.
+- **MDX** — `@next/mdx` compiles `.mdx` files; shared components (`Highlight`, `ClickReveal`, `ImageCard`) are registered in `src/mdx-components.tsx`.
 - **Vercel** — connect this repo in the Vercel dashboard for automatic deploys on push; the free Hobby plan covers a personal portfolio.
 
 ## Design system
@@ -17,7 +17,7 @@ Next.js 15+ (App Router) portfolio, styled with Tailwind CSS v4 and deployed on 
 - **Type scale**: Tailwind's default `text-*` utilities.
 - **Theme switching**: [`next-themes`](https://github.com/pacocoursey/next-themes) (`attribute="class"`) handles the no-flash script, persistence, and system-preference default. `ThemeToggle` calls its `useTheme()` hook.
 - **Code blocks**: inline `code` styled in `globals.css`; fenced blocks via Expressive Code (`plugins/rehype-code`, referenced as `"rehype-code"` in `next.config.ts`). Themes in `plugins/rehype-code/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`, follows site `.dark`). Filename tab with VS Code file icons: ` ```ts title="greet.ts" ` (basename only).
-- **Components** (`src/components/`, flat): generic `cva`-based primitives (`Badge`, `Icon`, `Highlight`) alongside domain-specific ones (`Section`, `ProjectCard`, `ProjectList`, `ExperienceList`, `LineItem`, `Footer`, `LinkList`, `RichText`, `ClickReveal`, `Eyebrow`, `ThemeToggle`).
+- **Components** (`src/components/`, flat): generic `cva`-based primitives (`Badge`, `Icon`, `Highlight`) alongside domain-specific ones (`Section`, `ProjectCard`, `ImageCard`, `ProjectList`, `ProjectSpecList`, `ProjectSpecItem`, `ExperienceList`, `ExperienceLineItem`, `Footer`, `LinkList`, `RichText`, `ClickReveal`, `Eyebrow`, `ThemeToggle`).
 - Conventions for all of the above are written down in `AGENTS.md` and `.agents/skills/design-system/SKILL.md`.
 
 ## Editing home copy
@@ -40,8 +40,13 @@ export const project = {
   title: "Project Title",
   description: "One-sentence summary shown on the homepage card.",
   tags: ["Typescript", "JavaScript", "CraftCMS"],
-  thumbnail: "/placeholders/project-thumb.svg",
-  hero: "/placeholders/project-hero.svg",
+  thumbnail: "/projects/example/example.png",
+  hero: "/projects/example/example.png",
+  specs: [
+    { label: "Role", value: "Frontend Engineer" },
+    { label: "Stack", value: "TypeScript, Twig, CraftCMS" },
+    { label: "Live", value: "Example", href: "https://example.com" },
+  ],
 };
 
 The write-up goes here as regular Markdown — paragraphs, **bold**,
@@ -57,19 +62,25 @@ function greet(name: string) {
 
 Images work too — drop the file under `public/` (e.g.
 `public/projects/prodpi/screenshot.png`) and reference it by that
-absolute path:
+absolute path. Use a plain Markdown image, or `<ImageCard>` for a
+full-bleed framed figure with an optional caption:
 
 ![a screenshot](/projects/prodpi/screenshot.png)
+
+<ImageCard
+  src="/projects/prodpi/screenshot.png"
+  alt="A screenshot of the migrated homepage"
+  caption="Homepage after migration"
+/>
 ````
 
 `src/lib/projects.ts` imports every `.mdx` file in that folder automatically, so there's no separate list to keep in sync.
 
-## Placeholders to replace
+## Static assets
 
-- `public/placeholders/` — Aly, Ivy, design-school photos, and project image placeholders.
-- `public/hover-reveal/` — polaroid frame and CC0 shutter click (`shutter.mp3` from BigSoundBank / Joseph Sardin) used by `ClickReveal`.
-- `content/home/*.mdx` / `content/projects/*.mdx` / experience rows in `ExperienceList` — real copy and dates (Figma itself only had lorem ipsum / "2020 - Now" placeholders for these).
-- Color palette and fonts, as above.
+- `public/about/` — photos used by `ClickReveal` in the about section.
+- `public/click-reveal/` — polaroid frame and CC0 shutter click (`shutter.mp3` from BigSoundBank / Joseph Sardin) used by `ClickReveal`.
+- `public/projects/<slug>/` — case study images and video.
 
 ## Development
 
