@@ -36,7 +36,7 @@ export function ProjectCard({
         <h3 className="font-display text-4xl">{title}</h3>
         <p className="text-base">{description}</p>
       </div>
-      <ul className="flex flex-col items-start gap-2.5 @min-[34rem]:flex-row @min-[34rem]:flex-wrap">
+      <ul className="@tag-row:flex-row @tag-row:flex-wrap flex flex-col items-start gap-2.5">
         {tags.map((tag, i) => (
           <li key={tag}>
             <Badge color={badgeColors[i % badgeColors.length]}>{tag}</Badge>

@@ -96,12 +96,11 @@ function ImageCarouselBody({ images, className }: ImageCarouselBodyProps) {
     >
       <div className="relative">
         <Dialog>
+          <CarouselFrame images={images} index={index} />
           <DialogTrigger
             aria-label={expandLabel}
-            className="block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
-          >
-            <CarouselFrame images={images} index={index} />
-          </DialogTrigger>
+            className="absolute inset-0 hidden cursor-zoom-in sm:block"
+          />
           <DialogContent onKeyDown={onRegionKeyDown}>
             <DialogClose />
             <CarouselPrevious tabIndex={-1} />
