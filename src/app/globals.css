@@ -16,6 +16,8 @@
   --blue-bright: #7ea5dc;
   --olive: #7a741e;
   --olive-bright: #b3ab2c;
+  --wave-squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  --wave-underline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 6'%3E%3Cpath d='M-3 3 Q-1.5 0.85 0 3 T3 3 T6 3 T9 3 T12 3 T15 3' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='butt'/%3E%3C/svg%3E");
 }
 
 @theme {
@@ -104,15 +106,61 @@
   border: none;
   height: 0.5rem;
   background-color: var(--tw-prose-hr);
-  --hr-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  -webkit-mask-image: var(--hr-wave);
-  mask-image: var(--hr-wave);
+  -webkit-mask-image: var(--wave-squiggle);
+  mask-image: var(--wave-squiggle);
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
   -webkit-mask-position: center;
   mask-position: center;
   -webkit-mask-size: 1.5rem 0.5rem;
   mask-size: 1.5rem 0.5rem;
+}
+
+.squiggle-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.squiggle-underline::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 6px;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-mask-image: var(--wave-underline);
+  mask-image: var(--wave-underline);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: 12px 6px;
+  mask-size: 12px 6px;
+  transition: opacity 0.3s ease;
+}
+
+.squiggle-underline-inline {
+  line-height: 1;
+}
+
+.squiggle-underline-inline::after {
+  top: auto;
+  bottom: -7px;
+}
+
+.squiggle-underline-chrome::after {
+  top: calc(100% + 2px);
+  bottom: auto;
+}
+
+.squiggle-underline:hover::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squiggle-underline::after {
+    transition: none;
+  }
 }
 
 :where(:not(pre) > code) {
@@ -148,6 +196,15 @@
 
 .expressive-code + .expressive-code {
   margin-block-start: 1.5rem;
+}
+
+::selection {
+  background-color: color-mix(
+    in oklab,
+    var(--color-accent-one) 40%,
+    var(--color-background)
+  );
+  color: var(--color-foreground);
 }
 
 :focus-visible {

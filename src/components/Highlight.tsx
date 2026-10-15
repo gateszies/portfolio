@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 const highlightVariants = cva(
-  "inline cursor-pointer font-bold underline decoration-transparent decoration-wavy underline-offset-4 hover:decoration-current motion-safe:transition-[text-decoration-color] motion-safe:duration-300",
+  "squiggle-underline squiggle-underline-inline inline-block cursor-pointer font-bold after:bg-current",
   {
     variants: {
       color: {
