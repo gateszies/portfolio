@@ -6,6 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/Dialog";
 import { MediaFrame } from "@/components/MediaFrame";
+import { PROJECT_MEDIA_HEIGHT, PROJECT_MEDIA_WIDTH } from "@/lib/project-media";
 import { cn } from "@/lib/utils";
 
 type ImageCardProps = {
@@ -22,8 +23,8 @@ export function ImageCard({
   alt,
   caption,
   className,
-  width = 1280,
-  height = 720,
+  width = PROJECT_MEDIA_WIDTH,
+  height = PROJECT_MEDIA_HEIGHT,
 }: ImageCardProps) {
   const hasCaption = Boolean(caption);
   const expandLabel = `View larger: ${alt}`;

@@ -16,6 +16,7 @@ type ProjectMetadata = {
   tags: string[];
   thumbnail: string;
   hero: string;
+  heroAlt: string;
   specs?: ProjectSpec[];
   order?: number;
   draft?: boolean;

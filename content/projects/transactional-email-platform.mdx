@@ -6,6 +6,8 @@ export const project = {
   thumbnail:
     "/projects/transactional-email-platform/transactional-email-platform.png",
   hero: "/projects/transactional-email-platform/transactional-email-platform.png",
+  heroAlt:
+    "Four branded transactional email templates side by side, including order confirmation and shipping notification",
   specs: [
     { label: "Role", value: "Lead Designer & Developer" },
     {
@@ -56,8 +58,6 @@ The brands had evolved significantly over ten years, but the emails never kept u
   src="/projects/transactional-email-platform/email-design-legacy.png"
   alt="Side-by-side comparison of a plain legacy order email and a later branded template with a blue geometric header"
   caption="Legacy order receipt and order confirmation designs"
-  width={2560}
-  height={1440}
 />
 
 This meant a disjointed brand experience for users who received emails from both brands.
@@ -149,8 +149,6 @@ The first step was getting the emails to actually look like the brands they repr
   src="/projects/transactional-email-platform/email-design-in-progress.png"
   alt="Three shipping confirmation email explorations labeled Good, Better, and Best, showing progressive hierarchy improvements from brand styling to CTA placement to grouped delivery details"
   caption="Layout exploration for shipping confirmation email"
-  width={2560}
-  height={1440}
 />
 
 Each template went through initial exploration, stakeholder review, and iteration before any code was written. Once the layouts were settled, I took them apart. I wanted every piece to exist exactly once.
@@ -159,11 +157,9 @@ Each template went through initial exploration, stakeholder review, and iteratio
   src="/projects/transactional-email-platform/email-design-components.png"
   alt="Figma component library for transactional emails, including Hero, Header, Footer, and body content variants"
   caption="Email component library in Figma"
-  width={2560}
-  height={1440}
 />
 
-The smallest atoms were tokens from the existing design system. Those built into single-purpose pieces like `Product Line Item` and `Price Line Item`, which then combined into larger sections like `Item Table` and `Price Table`.
+The smallest atoms were tokens from the existing design system. Those combined into single-purpose pieces like `Product Line Item` and `Price Line Item`, which then combined into larger sections like `Item Table` and `Price Table`.
 
 Together, they made up the email component library in Figma that every template was assembled from.
 
@@ -328,29 +324,21 @@ The platform sends roughly 3,000 emails a day across both brands. Those emails n
       src: "/projects/transactional-email-platform/order-confirmation.png",
       alt: "Side-by-side order received emails for both brands, showing itemized prints, specs, and order totals",
       caption: "Order confirmation",
-      width: 2560,
-      height: 1440,
     },
     {
       src: "/projects/transactional-email-platform/order-shipped.png",
       alt: "Side-by-side shipping confirmation emails for both brands with track package CTAs and shipping details",
       caption: "Order shipped",
-      width: 2560,
-      height: 1440,
     },
     {
       src: "/projects/transactional-email-platform/order-delivery.png",
       alt: "Side-by-side out for delivery emails for both brands with delivery window, progress tracker, and shipping details",
       caption: "Out for delivery",
-      width: 2560,
-      height: 1440,
     },
     {
       src: "/projects/transactional-email-platform/order-delivered.png",
       alt: "Side-by-side delivered emails for both brands with completed progress tracker, porch photo, map pin, and shipping details",
       caption: "Order delivered",
-      width: 2560,
-      height: 1440,
     },
   ]}
 />

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
+import { PROJECT_MEDIA_HEIGHT, PROJECT_MEDIA_WIDTH } from "@/lib/project-media";
 
 const badgeColors = ["accentOne", "accentTwo", "accentThree"] as const;
 
@@ -27,8 +28,8 @@ export function ProjectCard({
       <Image
         src={image}
         alt=""
-        width={1280}
-        height={720}
+        width={PROJECT_MEDIA_WIDTH}
+        height={PROJECT_MEDIA_HEIGHT}
         className="w-full rounded-xl"
       />
       <div className="flex flex-col gap-2.5">

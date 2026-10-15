@@ -9,7 +9,7 @@ alwaysApply: false
 - Use `ImageCard` for a single screenshot. Use `ImageCarousel` when showing a related set of images in one slot (prev/next, dots, shared lightbox). Use `VideoCard` for an MP4 screen recording in the same chrome (inline controls, no lightbox).
 - Image components use `next/image` with `unoptimized` so the original file bytes are served (no optimizer downscale/recompress). Do not re-enable optimization for these screenshots.
 - The frame image is a button that opens a native `<dialog>` lightbox (Escape / backdrop / close control). `ImageCarousel` also navigates between slides in the lightbox. Keep that expand behavior when editing the image components.
-- Case study images must be true **2× retina** exports: at least **~1250px wide** (624 CSS px column × 2). Prefer **2560×1440** (or same aspect) for lightbox headroom.
+- Case study images must be true **2× retina** exports: at least **~1250px wide** (624 CSS px column × 2). Standard size is **2560×1440** (`PROJECT_MEDIA_WIDTH` / `PROJECT_MEDIA_HEIGHT` in `src/lib/project-media.ts`) — shared by `ImageCard`, `ImageCarousel`, `ProjectCard`, and the project page hero.
 - Chat/image attachments are often downscaled to 1024px — never rely on those. Copy full-res files straight into `public/projects/<slug>/` from Finder/export. Put `.mp4` screen recordings in the same folder.
-- Set `width` / `height` to the file’s real pixel dimensions after replacing images. Optional `poster` on `VideoCard` for a still before play.
+- Do not pass `width` / `height` in MDX when the file is 2560×1440; the components default to that. Only override when a file’s real pixel dimensions differ. Optional `poster` on `VideoCard` for a still before play.
 - After replacing a file at the same path, hard-refresh; clear `.next` if a stale optimized URL is still cached from earlier.

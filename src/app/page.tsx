@@ -8,7 +8,7 @@ import { Section } from "@/components/Section";
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-16 px-6 pt-16 pb-24">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-16 px-6 pt-16 pb-12 sm:pb-24">
       <section className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
           <Eyebrow>hi there, it&apos;s me...</Eyebrow>

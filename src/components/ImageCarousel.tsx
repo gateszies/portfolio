@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/Dialog";
 import { MediaFrame } from "@/components/MediaFrame";
+import { PROJECT_MEDIA_HEIGHT, PROJECT_MEDIA_WIDTH } from "@/lib/project-media";
 import { cn } from "@/lib/utils";
 
 type ImageCarouselImage = {
@@ -45,8 +46,8 @@ function CarouselFrame({ images, index, imageClassName }: CarouselFrameProps) {
       >
         {images.map((image, i) => {
           const isCurrent = i === index;
-          const width = image.width ?? 1280;
-          const height = image.height ?? 720;
+          const width = image.width ?? PROJECT_MEDIA_WIDTH;
+          const height = image.height ?? PROJECT_MEDIA_HEIGHT;
 
           return (
             <div key={image.src} className="w-full shrink-0">

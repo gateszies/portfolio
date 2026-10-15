@@ -6,6 +6,7 @@ import { ProjectSpecItem } from "@/components/ProjectSpecItem";
 import { ProjectSpecList } from "@/components/ProjectSpecList";
 import { RichText } from "@/components/RichText";
 import { TextLink } from "@/components/TextLink";
+import { PROJECT_MEDIA_HEIGHT, PROJECT_MEDIA_WIDTH } from "@/lib/project-media";
 import { getAllProjects, getProject } from "@/lib/projects";
 
 const accentColors = ["accentOne", "accentTwo", "accentThree"] as const;
@@ -39,7 +40,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const specs = project.specs;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pt-16 pb-24">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 pt-16 pb-12 sm:pb-24">
       <TextLink
         href="/#work"
         tone="chrome"
@@ -95,9 +96,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <Image
           src={project.hero}
-          alt=""
-          width={1082}
-          height={572}
+          alt={project.heroAlt}
+          width={PROJECT_MEDIA_WIDTH}
+          height={PROJECT_MEDIA_HEIGHT}
           className="border-strong w-full rounded-lg border"
         />
       </div>
