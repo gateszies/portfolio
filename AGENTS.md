@@ -45,6 +45,12 @@
 - File names and component names are both PascalCase (Button.tsx, ProjectCard.tsx).
 - No unused variants, props, exports, or dead code. No console.log left in.
 
+## Content
+
+- Case studies are `content/projects/<slug>.mdx` with a named `project` export (`title`, `description`, `tags`, `thumbnail`, `hero`, `heroAlt`, optional `specs`, `order`, `draft`); the type lives in `src/lib/projects.ts`. `order` sets homepage position and `draft: true` hides a project.
+- MDX components available in content are registered in `src/mdx-components.tsx`. Code fences take a `title="file.ts"` meta for a filename tab.
+- In `content/home/about.mdx`, keep each `<ClickReveal` opening on the same line as the surrounding sentence, with the closing `>` on the last attribute line. Otherwise MDX treats it as a block and breaks the paragraph. That file is Prettier-ignored for this reason.
+
 ## Case study media
 
 - Use `ImageCard` for a single screenshot, `ImageCarousel` for a related set in one slot (prev/next, dots, shared lightbox), and `VideoCard` for an MP4 screen recording in the same chrome (inline controls, no lightbox).
