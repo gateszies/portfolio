@@ -1,0 +1,346 @@
+export const project = {
+  title: "Transactional Email Platform",
+  description:
+    "Designing and building a multi-brand React Email system that powers ~3,000 transactional emails a day",
+  tags: ["Design Systems", "Component Libraries", "Figma-to-Code"],
+  thumbnail:
+    "/projects/transactional-email-platform/transactional-email-platform.png",
+  hero: "/projects/transactional-email-platform/transactional-email-platform.png",
+  heroAlt:
+    "Four branded transactional email templates side by side, including order confirmation and shipping notification",
+  specs: [
+    { label: "Role", value: "Lead Designer & Developer" },
+    {
+      label: "Stack",
+      value: "React, TypeScript, React Email, Tailwind, Figma",
+    },
+  ],
+  order: 2,
+};
+
+## Context
+
+When a user places a print order, a series of emails follows that order from receipt to delivery with timely, order-critical information. These emails are crucial to the customer experience and must be delivered on time and without errors.
+
+I designed and built the system behind those emails from scratch. That included all the design work in Figma, a multi-brand component library built on [React Email](https://react.email/), and a themed token system.
+
+## Problem
+
+### No safe way to iterate
+
+HTML email doesn't render like a website. There's no flexbox, no grid, limited CSS support, and every client has its own rendering engine (in fact, Outlook uses the same one as [Microsoft Word](https://www.litmus.com/blog/a-guide-to-rendering-differences-in-microsoft-outlook-clients)). The only layout tool that works reliably everywhere is nested tables with inline styles:
+
+```html
+<table cellpadding="0" cellspacing="0" border="0" align="center">
+  <tr>
+    <td>
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td
+            style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 22px; color: #333333;"
+          >
+            Your order has shipped, #{{order_number}}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+```
+
+Yuck! Without a component system abstracting this away, making even a small change meant editing raw table markup by hand and testing across a dozen rendering engines, with no guarantee it wouldn't break somewhere you didn't check.
+
+### Outdated visual design
+
+The brands had evolved significantly over ten years, but the emails never kept up because updating them all was too costly to justify.
+
+<ImageCard
+  src="/projects/transactional-email-platform/email-design-legacy.png"
+  alt="Side-by-side comparison of a plain legacy order email and a later branded template with a blue geometric header"
+  caption="Legacy order receipt and order confirmation designs"
+/>
+
+This meant a disjointed brand experience for users who received emails from both brands.
+
+### No component library for email
+
+Each email template was designed as its own standalone artifact. There were no shared components across templates: every header, footer, button, and content block was recreated from scratch per email, per brand.
+
+```html title="order-receipt-legacy.html"
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="background-color: #f5f5f5; padding: 24px 0;"
+>
+  <tr>
+    <td align="center">
+      <table
+        width="600"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        style="background-color: #ffffff; font-family: Helvetica, Arial, sans-serif;"
+      >
+        <tr>
+          <td style="padding: 20px 24px; border-bottom: 1px solid #e0e0e0;">
+            <img
+              src="https://example.com/logo.png"
+              width="120"
+              height="32"
+              alt="Logo"
+              style="display: block; border: 0;"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="padding: 24px; font-size: 15px; line-height: 22px; color: #333333;"
+          >
+            Hi {{customer_name}}, thanks for order
+            <strong>#{{order_number}}</strong>.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 0 24px 16px;">
+            <table
+              width="100%"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              style="border: 1px solid #e0e0e0; background-color: #f5f5f5;"
+            >
+              <tr>
+                <td
+                  style="padding: 10px 14px; background-color: #e0e0e0; font-size: 14px; font-weight: bold;"
+                >
+                  Order Information:
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 14px; font-size: 14px; color: #333333;">
+                  Order Number:
+                  <a href="{{order_url}}" style="color: #0066cc;"
+                    >#{{order_number}}</a
+                  ><br />
+                  Order Date: {{order_date}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- same nested table again for Billing, Shipping, line items, footer… -->
+      </table>
+    </td>
+  </tr>
+</table>
+```
+
+---
+
+## Approach
+
+### Design the system first
+
+The first step was getting the emails to actually look like the brands they represent today. I worked within the existing design system used for the web app to bring the email templates in line with the current brand identities.
+
+<ImageCard
+  src="/projects/transactional-email-platform/email-design-in-progress.png"
+  alt="Three shipping confirmation email explorations labeled Good, Better, and Best, showing progressive hierarchy improvements from brand styling to CTA placement to grouped delivery details"
+  caption="Layout exploration for shipping confirmation email"
+/>
+
+Each template went through initial exploration, stakeholder review, and iteration before any code was written. Once the layouts were settled, I took them apart. I wanted every piece to exist exactly once.
+
+<ImageCard
+  src="/projects/transactional-email-platform/email-design-components.png"
+  alt="Figma component library for transactional emails, including Hero, Header, Footer, and body content variants"
+  caption="Email component library in Figma"
+/>
+
+The smallest atoms were tokens from the existing design system. Those combined into single-purpose pieces like `Product Line Item` and `Price Line Item`, which then combined into larger sections like `Item Table` and `Price Table`.
+
+Together, they made up the email component library in Figma that every template was assembled from.
+
+### Build the foundation
+
+With the design work done, I moved into code.
+
+I started with a `Layout` component that wraps every email, sets the brand in context, and loads that brand's Tailwind theme.
+
+```tsx title="Layout.tsx"
+import { BrandProvider, EmailTheme, Html } from "@react-email/components";
+import { themeConfig } from "@/config";
+
+export function Layout({ brand, children }: LayoutProps) {
+  return (
+    <BrandProvider brand={brand}>
+      <EmailTheme config={themeConfig[brand]}>
+        <Html>
+          <Header />
+          {children}
+          <Footer />
+        </Html>
+      </EmailTheme>
+    </BrandProvider>
+  );
+}
+```
+
+Each brand's theme lives in its own config. The second brand extends the first and only overrides what's different, so changing a value they share, like spacing, updates both brands at once.
+
+```ts title="config.ts"
+// brands/brandA/config.ts
+export const config = {
+  theme: {
+    fontFamily: {
+      display: ["Serif-Font", "serif"],
+      body: ["Sans-Font", "sans-serif"],
+    },
+    backgroundColor: {
+      "brand-strong": "#0E5FD3",
+      "neutral-secondary": "#F5F6F6",
+    },
+    borderRadius: {
+      button: "4px",
+    },
+    spacing: {
+      section: "32px",
+      gutter: "24px",
+    },
+  },
+};
+
+// brands/brandB/config.ts
+import { merge } from "lodash";
+import { config as brandAConfig } from "@/brands/brandA/config";
+
+const overrides = {
+  theme: {
+    fontFamily: {
+      display: ["Different-Serif", "serif"],
+      body: ["Different-Sans", "sans-serif"],
+    },
+    backgroundColor: {
+      "brand-strong": "#09272F",
+      "neutral-secondary": "#F9F5F0",
+    },
+    borderRadius: {
+      button: "0px",
+    },
+  },
+};
+
+export const config = merge({}, brandAConfig, overrides);
+```
+
+One component tree, two brands, zero duplicated templates.
+
+### Build real components
+
+With the foundation in place, I began building the components, keeping the same names and variant structure as defined in Figma.
+
+Each component was built on top of React Email's base components, which are already tested against the major email clients.
+
+```tsx title="ProductLineItem.tsx"
+import { Column, Img, Row, Section, Text } from "@react-email/components";
+
+export function ProductLineItem({
+  name,
+  quantity,
+  total,
+  imageUrl,
+}: ProductLineItemProps) {
+  return (
+    <Section>
+      <Row>
+        <Column className="w-[72px] pr-4">
+          <Img src={imageUrl} width="72" height="72" alt="" />
+        </Column>
+        <Column>
+          <Text className="text-neutral-primary m-0 text-base font-medium">
+            {name}
+          </Text>
+          <Text className="text-neutral-secondary m-0 text-sm">
+            Qty {quantity}
+          </Text>
+        </Column>
+        <Column align="right">
+          <Text className="text-neutral-primary m-0 text-base">{total}</Text>
+        </Column>
+      </Row>
+    </Section>
+  );
+}
+```
+
+All of the table markup lives inside those primitives. I never have to write or even look at a `<table>` element.
+
+Components that need brand-specific behavior read from the same context the `Layout` sets. A `Button` applies brand-specific spacing and casing without the template needing to know which brand it's rendering.
+
+```tsx title="Button.tsx"
+export function Button({ url, label, variant }: ButtonProps) {
+  const brand = useContext(BrandContext);
+  const classes = cx(baseClasses, variantClasses[variant], brandStyles[brand]);
+  return (
+    <EmailButton href={url} className={classes}>
+      {label}
+    </EmailButton>
+  );
+}
+```
+
+### Make it safe to send
+
+The last piece was ensuring an email couldn't break on send. I moved every template's props into one shared `types.ts` and added a build step that reads those types and generates a JSON schema for each template, listing which props are required and which are optional.
+
+```json title="schema.json"
+{
+  "OrderShipped": {
+    "required": [
+      "brand",
+      "email",
+      "orderNumber",
+      "orderProductType",
+      "shippingCarrier",
+      "trackingNumbers",
+      "trackingUrl"
+    ],
+    "optional": ["invoiceUrl", "shippingToName", "shippingToAddress"]
+  }
+}
+```
+
+The backend notifications service checks props against that schema before rendering. Generating it from `types.ts` means it can't drift; a mismatch fails the build instead of landing in someone's inbox.
+
+## Impact
+
+The platform sends roughly 3,000 emails a day across both brands. Those emails now match the web app and marketing site, which means an order update no longer feels like it's from a different company.
+
+<ImageCarousel
+  images={[
+    {
+      src: "/projects/transactional-email-platform/order-confirmation.png",
+      alt: "Side-by-side order received emails for both brands, showing itemized prints, specs, and order totals",
+      caption: "Order confirmation",
+    },
+    {
+      src: "/projects/transactional-email-platform/order-shipped.png",
+      alt: "Side-by-side shipping confirmation emails for both brands with track package CTAs and shipping details",
+      caption: "Order shipped",
+    },
+    {
+      src: "/projects/transactional-email-platform/order-delivery.png",
+      alt: "Side-by-side out for delivery emails for both brands with delivery window, progress tracker, and shipping details",
+      caption: "Out for delivery",
+    },
+    {
+      src: "/projects/transactional-email-platform/order-delivered.png",
+      alt: "Side-by-side delivered emails for both brands with completed progress tracker, porch photo, map pin, and shipping details",
+      caption: "Order delivered",
+    },
+  ]}
+/>
+
+Updating a template or building a new one is mostly a matter of arranging components that already exist. Since the table markup and client quirks live inside the primitives, contributors don't need any background in email development to work in the codebase.

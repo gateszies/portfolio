@@ -1,0 +1,2 @@
+export const PROJECT_MEDIA_WIDTH = 2560;
+export const PROJECT_MEDIA_HEIGHT = 1440;
