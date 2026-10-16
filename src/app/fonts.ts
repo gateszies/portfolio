@@ -1,9 +1,9 @@
-import localFont from "next/font/local";
-import { Google_Sans_Code, Nunito } from "next/font/google";
+import { Google_Sans_Code, Nunito, Roboto_Serif } from "next/font/google";
 
-const fontDisplay = localFont({
-  src: "./fonts/display-font/display-font",
+const fontDisplay = Roboto_Serif({
   variable: "--font-family-display",
+  axes: ["wdth"],
+  subsets: ["latin"],
   fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
