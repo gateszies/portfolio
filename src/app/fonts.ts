@@ -1,9 +1,11 @@
-import { Google_Sans_Code, Nunito, Roboto_Serif } from "next/font/google";
+import localFont from "next/font/local";
+import { Google_Sans_Code, Nunito } from "next/font/google";
 
-const fontDisplay = Roboto_Serif({
+const fontDisplay = localFont({
+  src: "./fonts/roboto-serif/RobotoSerif-UltraCondensed-SemiBold.woff2",
   variable: "--font-family-display",
-  axes: ["wdth"],
-  subsets: ["latin"],
+  weight: "600",
+  style: "normal",
   fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
