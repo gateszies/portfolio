@@ -28,7 +28,7 @@ Not `inline` — utilities must reference the semantic vars so dark mode can rea
 - Contrast-check (WCAG 2.1, 4.5:1 text / 3:1 large-text and non-text UI) before tokenizing. `brand-foreground` is verified on brand; `subtle` is verified on `background` / `chrome` in both themes; solid accent fills in dark mode are not fully verified yet.
 - Typical pairings: body `bg-background text-foreground`; supporting copy `text-subtle`; chrome bands `bg-chrome`; primary button `bg-brand text-brand-foreground`; outline control `border-brand text-brand`.
 - **Typography**: next/font sets `--font-family-*` (with fallbacks) in `src/app/fonts.ts`. `@theme inline` maps them to role utilities:
-  - `font-display` — Corben; large page titles only. Also sets `font-weight: 400` and `text-wrap: balance` in `globals.css`
+  - `font-display` — Corben (400 only, latin subset); large page titles only. Also sets `font-weight: 400` and `text-wrap: balance` in `globals.css`
   - `font-label` — Google Sans Code (500 only); small UI chrome / section labels (nav, eyebrows, buttons, badges, footer). Always pair with `font-medium` and usually `tracking-widest`.
   - `font-body` — Nunito (400/500/700); body copy and rich-text headings
     Use Tailwind's default `text-*` scale for size, except: `text-display` for the home name (`clamp` 7xl→9xl, leading 1); `text-title` for project page titles (`clamp` 2.5rem→5rem, leading 1.15).
