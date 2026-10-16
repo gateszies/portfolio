@@ -44,7 +44,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <TextLink
         href="/#work"
         tone="chrome"
-        className="font-label inline-flex items-center gap-1.5 text-sm font-medium tracking-widest"
+        className="font-label inline-flex items-center gap-1.5 self-start text-sm font-medium tracking-widest"
       >
         <Icon name="arrowLeft" size="sm" aria-hidden />
         back to projects
@@ -52,7 +52,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-9">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8">
             <h1 className="font-display text-title">{project.title}</h1>
 
             <ul className="flex flex-wrap gap-2.5">

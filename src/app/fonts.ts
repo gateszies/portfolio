@@ -1,9 +1,9 @@
-import localFont from "next/font/local";
-import { Google_Sans_Code, Nunito } from "next/font/google";
+import { Corben, Google_Sans_Code, Nunito } from "next/font/google";
 
-const fontDisplay = localFont({
-  src: "./fonts/display-font/display-font",
+const fontDisplay = Corben({
   variable: "--font-family-display",
+  weight: "400",
+  subsets: ["latin"],
   fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
