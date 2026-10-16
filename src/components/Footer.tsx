@@ -27,7 +27,7 @@ export function Footer() {
         <span className="block @md:inline">
           <TextLink
             tone="chrome"
-            href="https://github.com/gateszies/about"
+            href="https://github.com/gateszies/portfolio"
             target="_blank"
             rel="noopener noreferrer"
           >
