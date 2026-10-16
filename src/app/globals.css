@@ -35,7 +35,7 @@
   --container-tag-row: 34rem;
   --text-display: clamp(4.5rem, 1.5rem + 12vw, 7rem);
   --text-display--line-height: 1;
-  --text-title: clamp(3rem, 1.5rem + 7vw, 5rem);
+  --text-title: clamp(2.5rem, 1.25rem + 7vw, 5rem);
   --text-title--line-height: 1.15;
 }
 
@@ -94,7 +94,7 @@
 }
 
 .font-display {
-  font-weight: 600;
+  font-weight: 400;
   text-wrap: balance;
 }
 
