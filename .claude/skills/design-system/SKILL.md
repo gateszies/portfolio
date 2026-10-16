@@ -31,7 +31,7 @@ Not `inline` — utilities must reference the semantic vars so dark mode can rea
   - `font-display` — Corben (400 only, latin subset); large page titles only. Also sets `font-weight: 400` and `text-wrap: balance` in `globals.css`
   - `font-label` — Google Sans Code (500 only); small UI chrome / section labels (nav, eyebrows, buttons, badges, footer). Always pair with `font-medium` and usually `tracking-widest`.
   - `font-body` — Nunito (400/500/700); body copy and rich-text headings
-    Use Tailwind's default `text-*` scale for size, except: `text-display` for the home name (`clamp` 3.5rem→4.5rem, leading 1); `text-title` for project page titles (`clamp` 1.25rem→1.75rem, leading 1.15).
+    Use Tailwind's default `text-*` scale for size, except: `text-display` for the home name (`clamp` 4rem→5rem, leading 1); `text-title` for project page titles (`clamp` 3rem→4rem, leading 1).
 - Use native utilities from the table above — never hex values, primitive names, palette class names, or arbitrary-value color classes that reach into another token's CSS variable. Stick to the spacing and type scales otherwise. Opacity values and structural zeros are not violations.
 - Tokenize radius, fonts, and shadows as well as colors, but only the ones the site uses.
 - Every token-based class must map to a theme variable that is actually defined. A class referencing a missing token generates no CSS and fails silently, so verify against `globals.css`.
@@ -40,7 +40,7 @@ Not `inline` — utilities must reference the semantic vars so dark mode can rea
 
 ## Typography
 
-- Use Tailwind's default `text-*` scale, plus `text-display` for the home name (`clamp` 3.5rem→4.5rem, leading 1) and `text-title` for project page titles (`clamp` 1.25rem→1.75rem, leading 1.15). Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label. Body uses `text-pretty`; `font-display` uses `text-balance` for large titles.
+- Use Tailwind's default `text-*` scale, plus `text-display` for the home name (`clamp` 4rem→5rem, leading 1) and `text-title` for project page titles (`clamp` 3rem→4rem, leading 1). Pair with `font-display` / `font-label` / `font-body` as above; `font-label` always with `font-medium`, plus `tracking-widest` when it reads as a section label. Body uses `text-pretty`; `font-display` uses `text-balance` for large titles.
 - Project / rich MDX bodies are wrapped in `RichText` at the call site (`src/components/RichText.tsx`). Pass typography via `className` — home uses `text-lg`; case studies use `@tailwindcss/typography` (`prose prose-lg`). Default `prose` colors are overridden in `globals.css` (text `--tw-prose-*` inherit / follow `body` / `text-foreground`; links/borders use semantic tokens) — not a wall of `prose-*:…` modifiers. Dark mode follows via token swaps under `.dark`. Inline `code` is styled in `globals.css` (`:not(pre) > code`); fenced blocks via Expressive Code (`plugins/rehype-code`, wired from `next.config.ts` by absolute path) — Shiki + editor frames; `themeCssSelector` follows the site `.dark` class. Filename: ` ```ts title="file.ts" ` (basename only; VS Code file icons via `@xt0rted/expressive-code-file-icons`). Themes in `plugins/rehype-code/code-themes.mjs` (`gruvbox-light-hard` / `gruvbox-dark-hard`). Prose headings stay on `font-body` via inheritance from `body` — do not switch them to `font-display` / `font-label`.
 
 ## Styling and variants
