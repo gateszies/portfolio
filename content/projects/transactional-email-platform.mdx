@@ -18,11 +18,16 @@ export const project = {
   order: 2,
 };
 
-## Context
+## The Short Version
 
-When a user places a print order, a series of emails follows that order from receipt to delivery with timely, order-critical information. These emails are crucial to the customer experience and must be delivered on time and without errors.
+Every print order placed with WHCC or ProDPI triggers a chain of transactional emails, from the receipt through shipping, delivery, and pickup, adding up to about 3,000 sends a day across both brands. Each one carries order-critical details, so they have to arrive on time and without errors. I designed and built the system behind them from scratch, in Figma and in code.
 
-I designed and built the system behind those emails from scratch. That included all the design work in Figma, a multi-brand component library built on [React Email](https://react.email/), and a themed token system.
+- **Redesign for both brands**: I brought templates that hadn't changed in about ten years up to date with their current brand identities.
+- **One component library**: I set up the library on React Email so email's rendering workarounds live in one place, and teammates now ship new templates on their own.
+- **Email-safe tokens**: I translated the existing design system into tokens that work within email's CSS limits, so the emails share a visual language with the web app and marketing site.
+- **Validated sends**: I generated a JSON schema from the TypeScript types for the backend to validate against, which keeps a broken template from ever reaching a customer.
+
+---
 
 ## Problem
 
@@ -344,3 +349,9 @@ The platform sends roughly 3,000 emails a day across both brands. Those emails n
 />
 
 Updating a template or building a new one is mostly a matter of arranging components that already exist. Since the table markup and client quirks live inside the primitives, contributors don't need any background in email development to work in the codebase.
+
+---
+
+## Key Learnings
+
+Not every design token survives the trip into email. I spent the early Figma work deciding which tokens could translate directly and which needed email-specific versions, and that made the component build much more predictable.

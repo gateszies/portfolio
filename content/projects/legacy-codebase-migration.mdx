@@ -29,11 +29,16 @@ export const project = {
 
 ---
 
-## Context
+## The Short Version
 
-ProDPI is a direct-to-consumer print lab that specializes in custom prints, wall art, cards, and albums. Its website is the primary storefront, where customers choose sizes, materials, and finishes before designing their product in an editor.
+ProDPI is a direct-to-consumer print lab, and its website is the storefront where customers choose sizes, materials, and finishes before designing their product. I led a complete rebuild of the site, moving it off an aging CMS and onto a component-based system.
 
-I led a complete rebuild of the storefront, moving it off an aging CMS and onto a component-based system that engineers and marketers can both extend.
+- **15 reusable sections**: I audited the old site's content and architected the storefront as 15 sections on a shared content model, so the marketing manager now publishes new pages without an engineering ticket.
+- **38 products, one model**: Each product had its own options to explain before handing the customer into the editor with those choices selected. One shared product model now handles them all, from photo prints to layflat albums.
+- **Design tokens and conventions**: I set up a semantic token layer for the design system and wrote the repo's conventions as rules for both developers and agents.
+- **50+ page migration**: I planned and led the migration in phases, coordinating the other developers and the marketing manager through the March 2026 launch.
+
+---
 
 ## Problem
 
@@ -288,3 +293,11 @@ The new storefront launched in March 2026, replacing the entire site at once: 50
 />
 
 New pages are now shipped without engineering. Other engineers and AI agents can contribute to the codebase because the patterns are documented. A site nobody wanted to touch is now one the whole team can work in.
+
+---
+
+## Key Learnings
+
+Starting from a fresh build, rather than lifting and shifting the old codebase, was the decision that made this project work. It also demonstrated how much harder an update gets the longer it waits.
+
+I ran the project management along with the code, and next time I'd keep all of the tracking in one place. Progress was spread across Slack, Jira, and Confluence, and our team's move to Linear since then would have made that much easier.
