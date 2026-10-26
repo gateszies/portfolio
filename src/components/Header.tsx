@@ -10,9 +10,9 @@ import { collapsedHeaderOffset, desktopMediaQuery } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
+  { href: "/#about", label: "about" },
   { href: "/#work", label: "projects" },
   { href: "/#experience", label: "experience" },
-  { href: "/#about", label: "about" },
 ];
 
 const headerScrollThreshold = 24;

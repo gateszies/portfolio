@@ -19,18 +19,18 @@ export default function Home() {
         </RichText>
       </section>
 
+      <Section id="about" title="a little about me">
+        <RichText className="text-lg">
+          <About />
+        </RichText>
+      </Section>
+
       <Section id="work" title="a few projects I'm proud of">
         <ProjectList />
       </Section>
 
       <Section id="experience" title="some places I've worked">
         <ExperienceList />
-      </Section>
-
-      <Section id="about" title="a little about me">
-        <RichText className="text-lg">
-          <About />
-        </RichText>
       </Section>
     </div>
   );
