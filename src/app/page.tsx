@@ -17,7 +17,7 @@ export default function Home() {
         <RichText className="text-lg">
           <Intro />
         </RichText>
-        <RichText className="text-base">
+        <RichText className="text-lg">
           <About />
         </RichText>
       </section>
