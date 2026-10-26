@@ -23,11 +23,11 @@ export const project = {
   order: 1,
 };
 
-## Context
+## The Short Version
 
-Studio Projects help professional photographers organize gallery images and order print products for their clients at scale.
+Studio Projects helps professional photographers organize gallery images and order print products for their clients. I joined a team of engineers and a UX/UI designer to move this multi-brand app off a legacy codebase with no real component model and rebuild it on [Symfony's Twig Components](https://symfony.com/bundles/ux-twig-component/current/index.html).
 
-I joined the engineering team to build a component library for a multi-brand app on [Symfony's Twig Components](https://symfony.com/bundles/ux-twig-component/current/index.html), migrating it off a legacy codebase with no real component model.
+I built the first components of what became a comprehensive multi-brand library of 40 core components. These components set the patterns the rest of the library followed for props, variants, and per-brand tokens. From there I built out much of the library, including layout primitives, cards, and interactive components like `Dropdown` with full keyboard navigation and ARIA support. I also integrated the library into Storybook and tied each component to the design system's tokens, which brought production back in line with the designs in Figma. A year later, its patterns are the primary reference in the team's frontend conventions doc for both engineers and agents.
 
 ---
 
@@ -109,6 +109,18 @@ The product runs the same interface across several brands, including a generic "
 ```
 
 Elements that functionally served the same purpose were stored in separate files with no single shared source of truth.
+
+---
+
+## Key Decisions
+
+### Invest disproportionately on the foundation, on purpose
+
+Building the first `Button` component and setting up the tokens took longer than almost any other work I did on this project. I did it deliberately, as whatever patterns we set there would ripple out to everything built afterward. The cost of getting it right early was worth paying _once_ instead of paying in small increments over and over on every component that followed.
+
+### Keep components dumb
+
+A component only needs to know what it's been given and how to display it. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
 
 ---
 
@@ -273,18 +285,6 @@ export default class extends Dropdown {
   }
 }
 ```
-
----
-
-## Key Decisions
-
-### Invest disproportionately on the foundation, on purpose
-
-Building the first `Button` component and setting up the tokens took longer than almost any other work I did on this project. I did it deliberately, as whatever patterns we set there would ripple out to everything built afterward. The cost of getting it right early was worth paying _once_ instead of paying in small increments over and over on every component that followed.
-
-### Keep components dumb
-
-A component only needs to know what it's been given and how to display it. Pushing decisions and business logic up to the caller keeps every component simple enough to reason about on its own.
 
 ---
 

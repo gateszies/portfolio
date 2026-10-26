@@ -29,11 +29,11 @@ export const project = {
 
 ---
 
-## Context
+## The Short Version
 
-ProDPI is a direct-to-consumer print lab that specializes in custom prints, wall art, cards, and albums. Its website is the primary storefront, where customers choose sizes, materials, and finishes before designing their product in an editor.
+ProDPI is a direct-to-consumer print lab, and its website is the storefront where customers choose sizes, materials, and finishes before designing their product. I led a complete rebuild of the site, moving it off an aging CMS and onto a component-based system.
 
-I led a complete rebuild of the storefront, moving it off an aging CMS and onto a component-based system that engineers and marketers can both extend.
+I audited the old site's content, then architected the storefront as 15 reusable sections on a shared content model, so the marketing manager now publishes new pages without an engineering ticket. I took the same approach to the product pages, the most complex part of the build. Each of the 38 custom products had its own options to explain before handing the customer into the editor with those choices selected. One shared product model now handles them all, from photo prints to layflat albums. I also set up a semantic token layer for the design system and wrote the repo's conventions for both developers and agents. I then led the migration of all 50+ pages through the March 2026 launch.
 
 ## Problem
 
