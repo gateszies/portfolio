@@ -10,11 +10,11 @@
   --sand: #e6d0ba;
   --taupe: #e6d0ba;
   --mauve: #7b595a;
-  --poppy: #cf3f00;
-  --poppy-bright: #ff4d00;
-  --blue: #3671c6;
+  --poppy: #c03a00;
+  --poppy-bright: #ff550c;
+  --blue: #3269b8;
   --blue-bright: #7ea5dc;
-  --olive: #7a741e;
+  --olive: #726c1c;
   --olive-bright: #b3ab2c;
   --wave-squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
   --wave-underline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 6'%3E%3Cpath d='M-3 3 Q-1.5 0.85 0 3 T3 3 T6 3 T9 3 T12 3 T15 3' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='butt'/%3E%3C/svg%3E");
