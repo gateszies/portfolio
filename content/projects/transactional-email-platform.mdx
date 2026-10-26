@@ -22,10 +22,10 @@ export const project = {
 
 Every print order placed with WHCC or ProDPI triggers a chain of transactional emails, from the receipt through shipping, delivery, and pickup, adding up to about 3,000 sends a day across both brands. Each one carries order-critical details, so they have to arrive on time and without errors. I designed and built the system behind them from scratch, in Figma and in code.
 
-- **Redesigned for both brands**: I brought templates that hadn't changed in about ten years up to date with their current brand identities.
-- **React Email library**: I set up the component library so email's rendering workarounds live in one place, and teammates now ship new templates on their own.
+- **Redesign for both brands**: I brought templates that hadn't changed in about ten years up to date with their current brand identities.
+- **One component library**: I set up the library on React Email so email's rendering workarounds live in one place, and teammates now ship new templates on their own.
 - **Email-safe tokens**: I translated the existing design system into tokens that work within email's CSS limits, so the emails share a visual language with the web app and marketing site.
-- **Checked on every send**: I generated a JSON schema from the TypeScript types that the backend checks on each send, which keeps a broken template from ever reaching a customer.
+- **Validated sends**: I generated a JSON schema from the TypeScript types for the backend to validate against, which keeps a broken template from ever reaching a customer.
 
 ---
 
