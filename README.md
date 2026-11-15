@@ -2,6 +2,34 @@
 
 The source for [alygates.com](https://alygates.com). Built with Next.js, Tailwind CSS v4, and MDX, and deployed on Vercel.
 
+## Structure
+
+```text
+.
+├── content/
+│   ├── home/                  # intro.mdx, about.mdx
+│   └── projects/              # one <slug>.mdx per case study
+├── plugins/
+│   └── rehype-code/           # code fence highlighting and themes
+├── public/
+│   ├── about/                 # about section photos
+│   ├── click-reveal/          # ClickReveal frame and sound
+│   └── projects/<slug>/       # case study images and video
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx           # homepage
+│   │   ├── projects/[slug]/   # case study page
+│   │   ├── fonts.ts
+│   │   └── globals.css        # Tailwind theme and tokens
+│   ├── components/            # one PascalCase component per file
+│   ├── lib/                   # projects, media sizes, layout, cn helper, tests
+│   └── mdx-components.tsx     # components available in MDX
+├── .claude/skills/            # design-system and react-doctor skills
+├── AGENTS.md                  # code and content conventions
+└── next.config.ts
+```
+
 ## Content
 
 - `content/home/` holds the intro and about copy.
